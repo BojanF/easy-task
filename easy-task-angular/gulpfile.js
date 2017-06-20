@@ -17,30 +17,10 @@ var connect = require('gulp-connect');
 var fs = require("fs");
 
 var JS_APP = [
-  'app/app.js',
-  'app/c1/c1.state.js',
-  'app/c1/first.controller.js',
-  'app/c1/second.controller.js',
-  'app/group/group.state.js',
-  'app/group/group.controller.js',
-  //'app/group/group.local.factory.js',//ova treba da se smeni lab6
-  'app/group/group-service-remote.js', // za lab6
-  'app/default-page/**.js',
-  'app/student/student.controller.js',
-  'app/student/student.state.js',
-  'app/student/student.local.factory.js',
-  'app/directives/showcase-directive/showcase-directive.directive.js',
-  'app/directives/wp-combo/wp-combo.directive.js',
-  'app/components/wp-input/wp-input-component.component.js',
-  'app/components/group-select/group-select-component.component.js'
-
+  'app/app.js'
 ];
 
-var TEMPLATES_SRC = [
-  'app/group/group.view.html',
-  'app/student/student.view.html',
-  'app/default-page/**.html'
-];
+var TEMPLATES_SRC = [];
 
 var CSS_APP = [
   'css/main.css'

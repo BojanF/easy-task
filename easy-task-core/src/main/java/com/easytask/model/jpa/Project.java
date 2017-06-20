@@ -37,7 +37,6 @@ public class Project {
     @NotNull
     private State projectState;
 
-    private String testTest;
 
     //getters
     public Integer getId() {
