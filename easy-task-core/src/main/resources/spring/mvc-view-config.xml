@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="viewResolvers">
+            <list>
+                <!-- Default viewClass: JSTL view (JSP with HTML output) -->
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <!-- Example: a logical view name od 'vets' is mapped to '/WEB_INF/jsp/vets.jsp' -->
+                    <property name="prefix" value="/WEB-INF/jsp/"/>
+                    <property name="suffix" value=".jsp"/>
+                </bean>
+                <!-- used for 'xml' and 'atom' views -->
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+            </list>
+        </property>
+
+    </bean>
+</beans>

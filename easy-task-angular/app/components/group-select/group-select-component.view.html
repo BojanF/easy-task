@@ -1,0 +1,14 @@
+<label>Select your Lab group</label>
+<ui-select ng-model="$ctrl.gsModel"
+           ng-required="true"
+           title="Lab group">
+  <ui-select-match
+    placeholder="Select your Lab group...">
+    <span>{{$select.selected.name}}</span>
+  </ui-select-match>
+  <ui-select-choices
+    repeat="group in ($ctrl.LabGroups | filter:$select.search)"
+    position="auto">
+    {{group.name}}
+  </ui-select-choices>
+</ui-select>
