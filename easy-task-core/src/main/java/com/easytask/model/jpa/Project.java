@@ -20,11 +20,11 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    private Team team;
-
     @NotNull
     private String name;
+
+    @Column(length = 5000)
+    public String description;
 
     @NotNull
     private DateTime startedOn;
@@ -36,6 +36,9 @@ public class Project {
 
     @NotNull
     private State projectState;
+
+    @ManyToOne
+    private Team team;
 
 
     //getters
@@ -67,6 +70,10 @@ public class Project {
         return projectState;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
 
     //setters
     public void setId(Integer id) {
@@ -95,5 +102,9 @@ public class Project {
 
     public void setProjectState(State projectState) {
         this.projectState = projectState;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -46,6 +46,8 @@ public class Worker {
     @ManyToMany(mappedBy = "workers", fetch = FetchType.EAGER)
     private Set<Task> tasks = new HashSet<Task>();
 
+
+    //getters
     public Integer getId() {
         return id;
     }
@@ -79,5 +81,36 @@ public class Worker {
     }
 
 
+    //setters
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurename(String surename) {
+        this.surename = surename;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
 }

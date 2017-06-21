@@ -21,14 +21,11 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    private Leader leader;
-
-    @ManyToOne
-    private  Project project;
-
     @NotNull
     private String name;
+
+    @Column(length = 5000)
+    public String description;
 
     @NotNull
     private DateTime startedOn;
@@ -40,6 +37,12 @@ public class Task {
 
     @NotNull
     private State taskState;
+
+    @ManyToOne
+    private Leader leader;
+
+    @ManyToOne
+    private  Project project;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -87,6 +90,9 @@ public class Task {
         return taskState;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
     //setters
     public void setId(Integer id) {
@@ -123,5 +129,9 @@ public class Task {
 
     public void setWorkers(Set<Worker> workers) {
         this.workers = workers;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

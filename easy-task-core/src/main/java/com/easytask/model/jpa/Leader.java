@@ -18,11 +18,23 @@ public class Leader {
     @ManyToOne
     private Worker worker;
 
+
+    //getters
     public Integer getId() {
         return id;
     }
 
     public Worker getWorker() {
         return worker;
+    }
+
+
+    //setters
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 }

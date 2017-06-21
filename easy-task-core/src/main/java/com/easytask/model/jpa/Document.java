@@ -19,12 +19,16 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    private Project project;
-
     @NotNull
     private DateTime postedOn;
 
+    @ManyToOne
+    private Project project;
+
+    @ManyToOne
+    private Worker worker;
+
+    //getters
     public Integer getId() {
         return id;
     }
@@ -35,5 +39,26 @@ public class Document {
 
     public DateTime getPostedOn() {
         return postedOn;
+    }
+
+    public Worker getWorker() {
+        return worker;
+    }
+
+    //setters
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setPostedOn(DateTime postedOn) {
+        this.postedOn = postedOn;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 }

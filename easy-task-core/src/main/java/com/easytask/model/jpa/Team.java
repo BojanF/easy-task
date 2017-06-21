@@ -3,6 +3,7 @@ package com.easytask.model.jpa;
 import javax.persistence.Entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,10 +14,12 @@ import java.util.Set;
 @Table(name = "teams")
 public class Team {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull
+    private String name;
 
     @OneToOne
     private Leader leader;
@@ -29,6 +32,8 @@ public class Team {
     )
     private Set<Worker> workers = new HashSet<Worker>();
 
+
+    //getters
     public Integer getId() {
         return id;
     }
@@ -40,4 +45,30 @@ public class Team {
     public Set<Worker> getWorkers() {
         return workers;
     }
+
+    public String getName() {
+        return name;
+    }
+
+
+    //setters
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLeader(Leader leader) {
+        this.leader = leader;
+    }
+
+    public void setWorkers(Set<Worker> workers) {
+        this.workers = workers;
+    }
+
+
+
+
 }

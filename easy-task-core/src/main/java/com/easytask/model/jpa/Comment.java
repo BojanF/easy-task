@@ -20,12 +20,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    private Worker worker;
-
-    @ManyToOne
-    private Project project;
-
     @NotNull
     @Column(length = 5000)
     private String text;
@@ -33,6 +27,14 @@ public class Comment {
     @NotNull
     private DateTime date;
 
+    @ManyToOne
+    private Worker worker;
+
+    @ManyToOne
+    private Project project;
+
+
+    //getters
     public Integer getId() {
         return id;
     }
@@ -54,4 +56,24 @@ public class Comment {
     }
 
 
+    //setters
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }
