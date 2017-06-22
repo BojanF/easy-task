@@ -18,7 +18,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull
     private String name;
@@ -42,7 +42,7 @@ public class Project {
 
 
     //getters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -76,7 +76,7 @@ public class Project {
 
 
     //setters
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

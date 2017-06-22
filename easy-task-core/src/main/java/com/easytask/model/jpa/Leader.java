@@ -13,14 +13,14 @@ public class Leader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     private Worker worker;
 
 
     //getters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -30,7 +30,7 @@ public class Leader {
 
 
     //setters
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

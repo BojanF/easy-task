@@ -22,7 +22,7 @@ public class Worker {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull
     private String name;
@@ -32,6 +32,9 @@ public class Worker {
 
     @NotNull
     private String username;
+
+    @NotNull
+    private String password;
 
     @NotNull
     private String email;
@@ -48,7 +51,7 @@ public class Worker {
 
 
     //getters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -62,6 +65,10 @@ public class Worker {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
@@ -82,7 +89,7 @@ public class Worker {
 
 
     //setters
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -96,6 +103,10 @@ public class Worker {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setEmail(String email) {

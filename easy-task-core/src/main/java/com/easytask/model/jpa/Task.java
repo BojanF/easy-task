@@ -19,7 +19,7 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotNull
     private String name;
@@ -54,7 +54,7 @@ public class Task {
     //getters
     private Set<Worker> workers = new HashSet<Worker>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,7 +95,7 @@ public class Task {
     }
 
     //setters
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
