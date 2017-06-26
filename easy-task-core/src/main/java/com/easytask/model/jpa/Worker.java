@@ -17,7 +17,9 @@ import java.util.Set;
  * Created by Bojan on 6/7/2017.
  */
 @Entity
-@Table(name =  "workers")
+@Table(name =  "workers",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
+)
 public class Worker {
 
     @Id
@@ -121,7 +123,25 @@ public class Worker {
         this.teams = teams;
     }
 
+    public void addTeam(Team team){
+        this.teams.add(team);
+    }
+
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
+
+    public void addTask(Task task){
+        this.tasks.add(task);
+    }
+
+    public void removeTeam(Team team){
+        this.teams.remove(team);
+    }
+
+    public void removeTask(Task task){
+        this.tasks.remove(task);
+    }
+
+
 }

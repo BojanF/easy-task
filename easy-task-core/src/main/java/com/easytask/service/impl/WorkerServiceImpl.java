@@ -1,8 +1,8 @@
 package com.easytask.service.impl;
 
 import com.easytask.model.jpa.Worker;
-import com.easytask.persistence.WorkerCrudRepository;
-import com.easytask.service.WorkerService;
+import com.easytask.persistence.IWorkerCrudRepository;
+import com.easytask.service.IWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,12 @@ import java.util.List;
  * Created by Marijo on 21-Jun-17.
  */
 @Service
-public class WorkerServiceImpl implements WorkerService{
+public class WorkerServiceImpl implements IWorkerService {
 
-    WorkerCrudRepository repository;
+    IWorkerCrudRepository repository;
 
     @Autowired
-    public WorkerServiceImpl(WorkerCrudRepository repository) {
+    public WorkerServiceImpl(IWorkerCrudRepository repository) {
         this.repository = repository;
     }
 

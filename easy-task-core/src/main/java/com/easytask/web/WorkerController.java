@@ -1,7 +1,7 @@
 package com.easytask.web;
 
 import com.easytask.model.jpa.Worker;
-import com.easytask.service.WorkerService;
+import com.easytask.service.IWorkerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,14 +20,14 @@ import java.util.List;
 public class WorkerController implements ApplicationContextAware {
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        WorkerService bean = applicationContext.getBean(WorkerService.class);
+        IWorkerService bean = applicationContext.getBean(IWorkerService.class);
         System.out.println(bean);
     }
 
-    private WorkerService service;
+    private IWorkerService service;
 
     @Autowired
-    public WorkerController(WorkerService service) {
+    public WorkerController(IWorkerService service) {
         this.service = service;
     }
 

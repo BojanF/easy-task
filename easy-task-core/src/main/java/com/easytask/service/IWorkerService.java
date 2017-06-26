@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Marijo on 21-Jun-17.
  */
-public interface WorkerService {
+public interface IWorkerService {
 
     List<Worker> findAll();
 

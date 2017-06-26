@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Marijo on 21-Jun-17.
  */
-public interface WorkerCrudRepository {
+public interface IWorkerCrudRepository {
 
     List<Worker> findAll();
 
@@ -18,5 +18,7 @@ public interface WorkerCrudRepository {
     void update(Worker worker);
 
     void deleteById(Long id);
+    
+    
 
 }

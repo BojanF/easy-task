@@ -46,7 +46,7 @@
                     email: $("#email").val(),
                     name: $("#name").val(),
                     surename: $("#surename").val(),
-                    role:0,
+                    role:1,
                     password: $("#password").val(),
                     username: $("#username").val()
                 }), // post data || get data

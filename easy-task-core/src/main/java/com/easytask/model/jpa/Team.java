@@ -68,7 +68,13 @@ public class Team {
         this.workers = workers;
     }
 
+    public void addWorker(Worker worker){
+        this.workers.add(worker);
+    }
 
+    public void removeWorker(Worker worker){
+        this.workers.remove(worker);
+    }
 
 
 }

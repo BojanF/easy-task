@@ -1,7 +1,7 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Worker;
-import com.easytask.persistence.WorkerCrudRepository;
+import com.easytask.persistence.IWorkerCrudRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Primary
 @Repository
-public class WorkerCrudRepositoryImpl implements WorkerCrudRepository {
+public class WorkerCrudRepositoryImpl implements IWorkerCrudRepository {
 
     @PersistenceContext(name = "easy_task_DB")
     EntityManager entityManager;
@@ -30,6 +30,7 @@ public class WorkerCrudRepositoryImpl implements WorkerCrudRepository {
         return entityManager.createQuery(cq).getResultList();
 
     }
+
     @Transactional
     public Worker findById(Long id) {
         Worker worker = entityManager.find(Worker.class, id);
@@ -38,9 +39,11 @@ public class WorkerCrudRepositoryImpl implements WorkerCrudRepository {
         }
         return worker;
     }
+
     @Transactional
     public Worker insert(Worker worker) {
-        worker = entityManager.merge(worker);
+        //worker = entityManager.merge(worker);
+        entityManager.persist(worker);
         entityManager.flush();
         return worker;
     }
@@ -50,6 +53,7 @@ public class WorkerCrudRepositoryImpl implements WorkerCrudRepository {
         entityManager.merge(worker);
         entityManager.flush();
     }
+
     @Transactional
     public void deleteById(Long id) {
         entityManager.remove(findById(id));
