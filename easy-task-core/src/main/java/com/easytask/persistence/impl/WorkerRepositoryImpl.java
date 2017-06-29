@@ -1,7 +1,7 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Worker;
-import com.easytask.persistence.IWorkerCrudRepository;
+import com.easytask.persistence.IWorkerRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Primary
 @Repository
-public class WorkerCrudRepositoryImpl implements IWorkerCrudRepository {
+public class WorkerRepositoryImpl implements IWorkerRepository {
 
     @PersistenceContext(name = "easy_task_DB")
     EntityManager entityManager;
@@ -42,16 +42,16 @@ public class WorkerCrudRepositoryImpl implements IWorkerCrudRepository {
 
     @Transactional
     public Worker insert(Worker worker) {
-        //worker = entityManager.merge(worker);
         entityManager.persist(worker);
         entityManager.flush();
         return worker;
     }
 
     @Transactional
-    public void update(Worker worker) {
-        entityManager.merge(worker);
+    public Worker update(Worker worker) {
+        worker = entityManager.merge(worker);
         entityManager.flush();
+        return worker;
     }
 
     @Transactional

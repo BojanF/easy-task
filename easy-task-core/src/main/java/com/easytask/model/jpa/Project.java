@@ -3,10 +3,14 @@ package com.easytask.model.jpa;
 import javax.persistence.Entity;
 
 import com.easytask.model.enums.State;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+
 
 /**
  * Created by Bojan on 6/7/2017.
@@ -23,22 +27,27 @@ public class Project {
     @NotNull
     private String name;
 
+    @NotNull
     @Column(length = 5000)
     public String description;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime startedOn;
 
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime finishedOn;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime deadline;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private State projectState;
 
     @ManyToOne
-    private Team team;
+    private Team projectTeam;
 
 
     //getters
@@ -46,8 +55,8 @@ public class Project {
         return id;
     }
 
-    public Team getTeam() {
-        return team;
+    public Team getProjectTeam() {
+        return projectTeam;
     }
 
     public String getName() {
@@ -80,8 +89,8 @@ public class Project {
         this.id = id;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setProjectTeam(Team team) {
+        this.projectTeam = team;
     }
 
     public void setName(String name) {

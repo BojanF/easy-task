@@ -1,6 +1,7 @@
 package com.easytask.model.jpa;
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
 
@@ -25,13 +26,14 @@ public class Comment {
     private String text;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime date;
 
     @ManyToOne
-    private Worker worker;
+    private Worker commentOwner;
 
     @ManyToOne
-    private Project project;
+    private Project onProject;
 
 
     //getters
@@ -39,12 +41,12 @@ public class Comment {
         return id;
     }
 
-    public Worker getWorker() {
-        return worker;
+    public Worker getCommentOwner() {
+        return commentOwner;
     }
 
-    public Project getProject() {
-        return project;
+    public Project getOnProject() {
+        return onProject;
     }
 
     public String getText() {
@@ -69,11 +71,11 @@ public class Comment {
         this.date = date;
     }
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
+    public void setCommentOwner(Worker commentOwner) {
+        this.commentOwner = commentOwner;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setOnProject(Project onProject) {
+        this.onProject = onProject;
     }
 }

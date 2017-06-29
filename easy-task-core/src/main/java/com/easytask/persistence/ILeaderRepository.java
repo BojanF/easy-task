@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Bojan on 6/22/2017.
  */
-public interface ILeaderCrudRepository {
+public interface ILeaderRepository {
 
     Leader insert (Leader leader);
 

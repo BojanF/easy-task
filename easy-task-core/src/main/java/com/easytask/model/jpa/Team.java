@@ -50,7 +50,6 @@ public class Team {
         return name;
     }
 
-
     //setters
     public void setId(Long id) {
         this.id = id;
@@ -73,7 +72,14 @@ public class Team {
     }
 
     public void removeWorker(Worker worker){
-        this.workers.remove(worker);
+
+        Set<Worker> workers =  getWorkers();
+        for(Worker w : workers){
+            if(w.getId().equals(worker.getId())) {
+                this.workers.remove(w);
+                break;
+            }
+        }
     }
 
 

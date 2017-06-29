@@ -2,8 +2,7 @@ package com.easytask.service.impl;
 
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
-import com.easytask.persistence.ILeaderCrudRepository;
-import com.easytask.persistence.ITeamCrudRepository;
+import com.easytask.persistence.ITeamRepository;
 import com.easytask.service.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.List;
 public class TeamServiceImpl implements ITeamService {
     
     @Autowired
-    ITeamCrudRepository teamCrudRepository;
+    ITeamRepository teamCrudRepository;
     
     public Team insert(Team team) {
         return teamCrudRepository.insert(team);
@@ -36,7 +35,9 @@ public class TeamServiceImpl implements ITeamService {
         if(old != null){
             team = teamCrudRepository.update(team);
         }
+
         return team;
+
     }
 
     public void deleteById(Long id) {
@@ -46,16 +47,15 @@ public class TeamServiceImpl implements ITeamService {
         }
     }
 
-    public void insertTeamWorker(Team team, Worker worker) {
-        teamCrudRepository.insertTeamWorker(team, worker);
+    public Team insertTeamWorker(Team team, Worker worker) {
+        return teamCrudRepository.insertTeamWorker(team, worker);
     }
 
-    public void removeTeamWorker(Team team, Worker worker) {
-        teamCrudRepository.removeTeamWorker(team, worker);
+    public Team removeTeamWorker(Team team, Worker worker) {
+        return teamCrudRepository.removeTeamWorker(team, worker);
     }
 
-    public void removeAllTeamWorkers(Long teamId) {
-        //List<> workers = teamCrudRepository.findAll();
-        teamCrudRepository.removeAllTeamWorkers(teamId);
+    public Team removeAllTeamWorkers(Long teamId) {
+        return teamCrudRepository.removeAllTeamWorkers(teamId);
     }
 }

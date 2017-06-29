@@ -35,13 +35,13 @@ public class TeamServiceTest {
     @Autowired
     private ILeaderService leaderService;
 
-    private static boolean setUpfinished = false;
+    private static boolean setupFinished = false;
     private static List<Worker> workers;
     private static List<Leader> leaders;
 
     @Before
     public void createObjects(){
-        if(setUpfinished)
+        if(setupFinished)
             return;
         Worker w = new Worker();
         w.setEmail("dummy@mail.com");
@@ -70,84 +70,193 @@ public class TeamServiceTest {
         w3.setUsername("JD");
         w3 = workerService.insert(w3);
 
+        Worker w4 = new Worker();
+        w4.setEmail("savicaf@mail.com");
+        w4.setName("Savica");
+        w4.setPassword("pw3");
+        w4.setRole(Role.ROLE_USER);
+        w4.setSurename("Filipovska");
+        w4.setUsername("SF");
+        w4 = workerService.insert(w4);
+
         workers = new ArrayList<Worker>();
         workers.add(w);
         workers.add(w2);
         workers.add(w3);
+        workers.add(w4);
 
 
         Leader leader = new Leader();
         leader.setWorker(workers.get(0));
         leader = leaderService.insert(leader);
 
+        Leader leader2 = new Leader();
+        leader2.setWorker(workers.get(1));
+        leader2 = leaderService.insert(leader2);
+
+        Leader leader3 = new Leader();
+        leader3.setWorker(workers.get(2));
+        leader3 = leaderService.insert(leader3);
+
         leaders = new ArrayList<Leader>();
         leaders.add(leader);
+        leaders.add(leader2);
+        leaders.add(leader3);
 
 
 
 
-        setUpfinished = true;
+        setupFinished = true;
     }
 
-    @Test
-    public void createDeleteTeam(){
-        Team team = new Team();
-        team.setName("Promo Team");
-
-        Leader teamLeader = leaders.get(0);
-        team.setLeader(teamLeader);
-        Set<Worker> teamWorkers = new HashSet<Worker>();
-        Worker teamWorker = workers.get(1);
-        teamWorkers.add(teamWorker);
-        team.setWorkers(teamWorkers);;
-        Team team2;
-        team2 = teamService.insert(team);
-
-        Assert.assertEquals(team2.getId(), teamService.findById(team.getId()).getId());
-
-        teamService.removeAllTeamWorkers(team.getId());
-        Set<Worker> wrk = new HashSet<Worker>();
-        Assert.assertEquals(wrk, teamService.findById(team.getId()).getWorkers());
-
-        teamService.deleteById(team.getId());
-        Assert.assertEquals(null, teamService.findById(team.getId()));
-
-        leaderService.deleteById(teamLeader.getId());
-        Assert.assertEquals(null, leaderService.findById(teamLeader.getId()));
-
-        workerService.deleteById(teamWorker.getId());
-        workerService.deleteById(teamLeader.getWorker().getId());
-        Assert.assertEquals(null, workerService.findById(teamWorker.getId()));
-        Assert.assertEquals(null, workerService.findById(teamLeader.getWorker().getId()));
-
-    }
 
     @Test
-    public void addRemoveTeamWorker(){
-        Team team = new Team();
-        team.setName("Team Oreca");
+    public void addDeleteTeam(){
 
-        Leader teamLeader = leaders.get(0);
-        team.setLeader(teamLeader);
-        Set<Worker> teamWorkers = new HashSet<Worker>();
-        teamWorkers.add(workers.get(0));
-        team.setWorkers(teamWorkers);
-        Team team2;
-        team2 = teamService.insert(team);
-        Assert.assertEquals(team2.getId(), teamService.findById(team.getId()).getId());
+        //creating team #1
+        Team teamOreca = new Team();
+        teamOreca.setName("Team Oreca");
+        teamOreca.setLeader(leaders.get(0));
 
-        //teamService.insertTeamWorker(team2, workers.get(0));
-        teamService.insertTeamWorker(team2, workers.get(1));
-        teamService.insertTeamWorker(team2, workers.get(2));
-        Assert.assertEquals(2, teamService.findById(team2.getId()).getWorkers().size());
-        Assert.assertEquals(1, workerService.findById(workers.get(0).getId()).getTeams().size());
+        Team teamOrecaTest = teamService.insert(teamOreca);
+        Assert.assertEquals(teamOreca.getId(), teamService.findById(teamOrecaTest.getId()).getId());
 
-        //teamService.removeTeamWorker(team2, workers.get(0));
-        //teamService.removeTeamWorker(team2, workers.get(1));
-        /*teamService.deleteById(team2.getId());
+        Assert.assertEquals("Team Oreca", teamOrecaTest.getName());
+        teamOreca.setName("Team Oreca 2017");
+        //adding workers in the team oreca & checking number of workers in team after addition of workers
+        Assert.assertEquals(0, teamOrecaTest.getWorkers().size());
+        teamOrecaTest = teamService.insertTeamWorker(teamOrecaTest, workers.get(1));
+        Assert.assertEquals("Team Oreca 2017", teamOrecaTest.getName());
+        teamOrecaTest = teamService.insertTeamWorker(teamOrecaTest, workers.get(2));
+        Assert.assertEquals(2, teamOrecaTest.getWorkers().size());
+        teamOrecaTest = teamService.insertTeamWorker(teamOrecaTest, workers.get(3));
+        Assert.assertEquals(3, teamOrecaTest.getWorkers().size());
+
+        Assert.assertEquals(1, workerService.findById(workers.get(1).getId()).getTeams().size());
+        Assert.assertEquals(1, workerService.findById(workers.get(2).getId()).getTeams().size());
+        Assert.assertEquals(1, workerService.findById(workers.get(3).getId()).getTeams().size());
+
+        //creating team #2
+        Team teamToyota = new Team();
+        teamToyota.setName("Toyota Gazoo Racing");
+        teamToyota.setLeader(leaders.get(1));
+
+        Team teamToyotaTest = teamService.insert(teamToyota);
+        Assert.assertEquals(teamToyota.getId(), teamService.findById(teamToyotaTest.getId()).getId());
+
+        //adding workers in the team toyota & checking number of workers in team after addition of workers
+        Assert.assertEquals(0, teamToyotaTest.getWorkers().size());
+
+        teamToyotaTest = teamService.insertTeamWorker(teamToyotaTest, workers.get(2));
+        teamToyotaTest = teamService.insertTeamWorker(teamToyotaTest, workers.get(3));
+
+        Assert.assertEquals(2, teamToyotaTest.getWorkers().size());
+
+        //checking number of team in workers used previously
+        Assert.assertEquals(0, workerService.findById(workers.get(0).getId()).getTeams().size());
+        Assert.assertEquals(1, workerService.findById(workers.get(1).getId()).getTeams().size());
+        Assert.assertEquals(2, workerService.findById(workers.get(2).getId()).getTeams().size());
+        Assert.assertEquals(2, workerService.findById(workers.get(3).getId()).getTeams().size());
+
+        //OK until here
+
+        teamToyotaTest = teamService.removeAllTeamWorkers(teamToyotaTest.getId());
+        Assert.assertEquals(0, teamService.findById(teamToyotaTest.getId()).getWorkers().size());
+
+        teamToyotaTest = teamService.insertTeamWorker(teamToyotaTest, workers.get(2));
+        Assert.assertEquals(1, teamToyotaTest.getWorkers().size());
+        Assert.assertEquals(2, workerService.findById(workers.get(2).getId()).getTeams().size());
+        teamToyotaTest = teamService.removeTeamWorker(teamToyotaTest, workers.get(2));
+        Assert.assertEquals(1, workerService.findById(workers.get(2).getId()).getTeams().size());
+
+        //checking # of wrokers in team Toyota
+        Assert.assertEquals(0, teamService.findById(teamToyotaTest.getId()).getWorkers().size());
+
+        teamOrecaTest = teamService.removeTeamWorker(teamOrecaTest, workers.get(1));
+        teamOrecaTest = teamService.removeTeamWorker(teamOrecaTest, workers.get(2));
+        teamOrecaTest = teamService.removeTeamWorker(teamOrecaTest, workers.get(3));
+
+        //checking # of wrokers in team Oreca
+        Assert.assertEquals(0, teamService.findById(teamOrecaTest.getId()).getWorkers().size());
+
+        //checking number of team in workers used previously
+        Assert.assertEquals(0, workerService.findById(workers.get(0).getId()).getTeams().size());
+        Assert.assertEquals(0, workerService.findById(workers.get(1).getId()).getTeams().size());
+        Assert.assertEquals(0, workerService.findById(workers.get(2).getId()).getTeams().size());
+        Assert.assertEquals(0, workerService.findById(workers.get(3).getId()).getTeams().size());
+
+        //deliting process is here because this test is last
+        //deleting teams
+        teamService.deleteById(teamOrecaTest.getId());
+        teamService.deleteById(teamToyotaTest.getId());
+
+        Assert.assertEquals(null, teamService.findById(teamOrecaTest.getId()));
+        Assert.assertEquals(null, teamService.findById(teamToyotaTest.getId()));
+
+        //deleting @Before objects
+        //deleting leaders and workers
         leaderService.deleteById(leaders.get(0).getId());
+        leaderService.deleteById(leaders.get(1).getId());
+        leaderService.deleteById(leaders.get(2).getId());
+        Assert.assertEquals(null, leaderService.findById(leaders.get(0).getId()));
+        Assert.assertEquals(null, leaderService.findById(leaders.get(1).getId()));
+        Assert.assertEquals(null, leaderService.findById(leaders.get(2).getId()));
+
         workerService.deleteById(workers.get(0).getId());
-        workerService.deleteById(workers.get(1).getId());*/
+        workerService.deleteById(workers.get(1).getId());
+        workerService.deleteById(workers.get(2).getId());
+        workerService.deleteById(workers.get(3).getId());
+        Assert.assertEquals(null, workerService.findById(workers.get(0).getId()));
+        Assert.assertEquals(null, workerService.findById(workers.get(1).getId()));
+        Assert.assertEquals(null, workerService.findById(workers.get(2).getId()));
+        Assert.assertEquals(null, workerService.findById(workers.get(3).getId()));
 
     }
+
+    @Test
+    public void findAllTest(){
+        //creating team #1
+        Team teamOreca = new Team();
+        teamOreca.setName("Team Oreca");
+        teamOreca.setLeader(leaders.get(0));
+
+        Team teamOrecaTest = teamService.insert(teamOreca);
+        Assert.assertEquals(teamOreca.getId(), teamService.findById(teamOrecaTest.getId()).getId());
+        teamOrecaTest = teamService.insertTeamWorker(teamOrecaTest, workers.get(1));
+        Assert.assertEquals(1, teamOrecaTest.getWorkers().size());
+
+
+        //creating team #2
+        Team teamToyota = new Team();
+        teamToyota.setName("Toyota Gazoo Racing");
+        teamToyota.setLeader(leaders.get(1));
+
+        Team teamToyotaTest = teamService.insert(teamToyota);
+        Assert.assertEquals(teamToyota.getId(), teamService.findById(teamToyotaTest.getId()).getId());
+        teamToyotaTest = teamService.insertTeamWorker(teamToyotaTest, workers.get(2));
+        Assert.assertEquals(1, teamToyotaTest.getWorkers().size());
+
+
+        List<Team> teamsLocal = new ArrayList<Team>();
+        teamsLocal.add(teamOrecaTest);
+        teamsLocal.add(teamToyotaTest);
+
+        List<Team> teamsDB = teamService.findAll();
+        Assert.assertEquals(2, teamsDB.size());
+
+        List<Long> idTeams = new ArrayList<Long>();
+        for(Team t : teamsLocal)
+            idTeams.add(t.getId());
+
+        for(Team t : teamsDB){
+            Assert.assertEquals(true, idTeams.contains(t.getId()));
+        }
+
+        teamService.deleteById(teamOrecaTest.getId());
+        teamService.deleteById(teamToyotaTest.getId());
+        Assert.assertEquals(null, teamService.findById(teamOrecaTest.getId()));
+        Assert.assertEquals(null, teamService.findById(teamToyotaTest.getId()));
+
+    }
+
 }

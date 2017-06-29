@@ -3,6 +3,7 @@ package com.easytask.model.jpa;
 import javax.persistence.Entity;
 
 import com.easytask.model.enums.State;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -28,21 +29,25 @@ public class Task {
     public String description;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime startedOn;
 
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime finishedOn;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime deadline;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private State taskState;
 
     @ManyToOne
-    private Leader leader;
+    private Leader givenByLeader;
 
     @ManyToOne
-    private  Project project;
+    private  Project onProject;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -59,11 +64,11 @@ public class Task {
     }
 
     public Leader getLeader() {
-        return leader;
+        return givenByLeader;
     }
 
     public Project getProject() {
-        return project;
+        return onProject;
     }
 
     public String getName() {
@@ -100,11 +105,11 @@ public class Task {
     }
 
     public void setLeader(Leader leader) {
-        this.leader = leader;
+        this.givenByLeader = leader;
     }
 
     public void setProject(Project project) {
-        this.project = project;
+        this.onProject = project;
     }
 
     public void setName(String name) {
@@ -133,5 +138,19 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void addWorker(Worker worker){
+        this.workers.add(worker);
+    }
+
+    public void removeWorker(Worker worker){
+        Set<Worker> workers = getWorkers();
+        for(Worker w : workers){
+            if(w.getId().equals(worker.getId())){
+                this.workers.remove(w);
+                break;
+            }
+        }
     }
 }

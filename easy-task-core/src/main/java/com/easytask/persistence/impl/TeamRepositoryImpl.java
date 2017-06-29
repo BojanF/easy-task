@@ -2,24 +2,14 @@ package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
-import com.easytask.persistence.ITeamCrudRepository;
+import com.easytask.persistence.ITeamRepository;
 
-import com.easytask.service.ITeamService;
-import com.easytask.service.IWorkerService;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -31,16 +21,10 @@ import java.util.Set;
  */
 @Primary
 @Repository
-public class TeamCrudRepositoryImpl implements ITeamCrudRepository {
+public class TeamRepositoryImpl implements ITeamRepository {
 
     @PersistenceContext(name = "easy_task_DB")
     EntityManager entityManager;
-
-    /*@Autowired
-    ITeamService teamService;*/
-
-    @Autowired
-    IWorkerService workerService;
 
     @Transactional
     public Team insert(Team team) {
@@ -60,20 +44,15 @@ public class TeamCrudRepositoryImpl implements ITeamCrudRepository {
 
     public List<Team> findAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-
         CriteriaQuery<Team> cq = cb.createQuery(Team.class);
-        Root<Team> c = cq.from(Team.class);
-
-        cq.select(c);
-        TypedQuery<Team> q = entityManager.createQuery(cq);
-        return  q.getResultList();
+        Root<Team> from = cq.from(Team.class);
+        return entityManager.createQuery(cq).getResultList();
     }
 
     @Transactional
     public Team update(Team team) {
-        team = entityManager.merge(team);
+        team=entityManager.merge(team);
         entityManager.flush();
-
         return team;
     }
 
@@ -83,31 +62,23 @@ public class TeamCrudRepositoryImpl implements ITeamCrudRepository {
     }
 
     @Transactional
-    public void insertTeamWorker(Team team, Worker worker) {
+    public Team insertTeamWorker(Team team, Worker worker) {
         team.addWorker(worker);
-        update(team);
-
-        worker.addTeam(team);
-        workerService.update(worker);
-
+        return update(team);
     }
 
     @Transactional
-    public void removeTeamWorker(Team team, Worker worker) {
+    public Team removeTeamWorker(Team team, Worker worker) {
         team.removeWorker(worker);
-        update(team);
-
-        worker.removeTeam(team);
-        workerService.update(worker);
-
+        return update(team);
     }
 
     @Transactional
-    public void removeAllTeamWorkers(Long teamId) {
+    public Team removeAllTeamWorkers(Long teamId) {
         Team team = entityManager.find(Team.class, teamId);
         Set<Worker> workers = team.getWorkers();
         workers.clear();
         team.setWorkers(workers);
-        update(team);
+        return update(team);
     }
 }

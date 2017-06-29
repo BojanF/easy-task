@@ -18,4 +18,5 @@
     <bean class="com.easytask.service.impl.LeaderServiceImpl"/>
     <bean class="com.easytask.service.impl.WorkerServiceImpl"/>
     <bean class="com.easytask.service.impl.TeamServiceImpl"/>
+    <bean class="com.easytask.service.impl.ProjectServiceImpl"/>
 </beans>

@@ -2,6 +2,7 @@ package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -20,16 +21,17 @@ public class Document {
     private Long id;
 
     @NotNull
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime postedOn;
 
     @NotNull
     private String url;
 
     @ManyToOne
-    private Project project;
+    private Project forProject;
 
     @ManyToOne
-    private Worker worker;
+    private Worker fromWorker;
 
     //getters
     public Long getId() {
@@ -37,7 +39,7 @@ public class Document {
     }
 
     public Project getProject() {
-        return project;
+        return forProject;
     }
 
     public DateTime getPostedOn() {
@@ -45,7 +47,11 @@ public class Document {
     }
 
     public Worker getWorker() {
-        return worker;
+        return fromWorker;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     //setters
@@ -54,7 +60,7 @@ public class Document {
     }
 
     public void setProject(Project project) {
-        this.project = project;
+        this.forProject = project;
     }
 
     public void setPostedOn(DateTime postedOn) {
@@ -62,6 +68,10 @@ public class Document {
     }
 
     public void setWorker(Worker worker) {
-        this.worker = worker;
+        this.fromWorker = worker;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

@@ -15,7 +15,7 @@ public interface IWorkerService {
 
     Worker insert(Worker worker);
 
-    void update(Worker worker);
+    Worker update(Worker worker);
 
     void deleteById(Long id);
 

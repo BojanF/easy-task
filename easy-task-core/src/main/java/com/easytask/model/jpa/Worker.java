@@ -42,7 +42,7 @@ public class Worker {
     private String email;
 
     @NotNull
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToMany(mappedBy = "workers", fetch = FetchType.EAGER)
@@ -123,12 +123,12 @@ public class Worker {
         this.teams = teams;
     }
 
-    public void addTeam(Team team){
-        this.teams.add(team);
-    }
-
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    /*public void addTeam(Team team){
+        this.teams.add(team);
     }
 
     public void addTask(Task task){
@@ -137,11 +137,11 @@ public class Worker {
 
     public void removeTeam(Team team){
         this.teams.remove(team);
-    }
+
 
     public void removeTask(Task task){
         this.tasks.remove(task);
-    }
+    }*/
 
 
 }

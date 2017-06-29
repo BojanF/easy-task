@@ -20,10 +20,10 @@ public interface ITeamService {
 
     void deleteById(Long id);
 
-    void insertTeamWorker(Team team, Worker worker);
+    Team insertTeamWorker(Team team, Worker worker);
 
-    void removeTeamWorker(Team team, Worker worker);
+    Team removeTeamWorker(Team team, Worker worker);
 
-    void removeAllTeamWorkers(Long teamId);
+    Team removeAllTeamWorkers(Long teamId);
 
 }

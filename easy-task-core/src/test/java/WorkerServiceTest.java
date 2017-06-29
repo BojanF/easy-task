@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by Bojan on 6/23/2017.
  */
@@ -19,7 +23,6 @@ public class WorkerServiceTest {
     @Autowired
     private IWorkerService workerService;
 
-
     @Test
     public void createDeleteWorker(){
 
@@ -29,7 +32,7 @@ public class WorkerServiceTest {
         w.setPassword("pw");
         w.setRole(Role.ROLE_USER);
         w.setSurename("Filipovski");
-        w.setUsername("bf");
+        w.setUsername("ff");
         w = workerService.insert(w);
 
         Assert.assertEquals(w.getId(), workerService.findById(w.getId()).getId());
@@ -38,11 +41,10 @@ public class WorkerServiceTest {
         Assert.assertEquals(null, workerService.findById(w.getId()));
     }
 
-
     @Test
     public  void updateWorker(){
         Worker w = new Worker();
-        w.setEmail("dummy@mail.com");
+        w.setEmail("boko@mail.com");
         w.setName("Filip");
         w.setPassword("pw");
         w.setRole(Role.ROLE_USER);
@@ -51,16 +53,14 @@ public class WorkerServiceTest {
         w = workerService.insert(w);
 
         Assert.assertEquals(w.getId(), workerService.findById(w.getId()).getId());
+        Assert.assertEquals("bf", w.getUsername());
 
         w.setUsername("BojanF");
-        workerService.update(w);
+        Worker updated = workerService.update(w);
 
-
-
-        Worker updated;
-        updated = workerService.findById(w.getId());
         Assert.assertNotEquals("bf", updated.getUsername());
         Assert.assertEquals("BojanF", updated.getUsername());
+        Assert.assertEquals("Filip", updated.getName());
 
         updated.setEmail("novaMail@mail.com");
         updated.setName("Bojan");
@@ -68,14 +68,13 @@ public class WorkerServiceTest {
         updated.setPassword("superStrenght");
         updated.setUsername("BojFil");
         updated.setRole(Role.ROLE_ADMIN);
-        workerService.update(updated);
-        updated = workerService.findById(w.getId());
+        updated = workerService.update(updated);
 
         Assert.assertNotEquals("BojanF", updated.getUsername());
         Assert.assertEquals("BojFil", updated.getUsername());
         Assert.assertNotEquals("Filip", updated.getName());
         Assert.assertEquals("Bojan", updated.getName());
-        Assert.assertNotEquals("dummy@mail.com", updated.getEmail());
+        Assert.assertNotEquals("boko@mail.com", updated.getEmail());
         Assert.assertEquals("novaMail@mail.com", updated.getEmail());
         Assert.assertNotEquals("Filipovski", updated.getSurename());
         Assert.assertEquals("Prezime", updated.getSurename());
@@ -88,6 +87,59 @@ public class WorkerServiceTest {
         Assert.assertEquals(null, workerService.findById(updated.getId()));
 
 
+    }
+
+    @Test
+    public void testfindAll(){
+        Worker w = new Worker();
+        w.setEmail("boko@mail.com");
+        w.setName("Bojan");
+        w.setPassword("pw");
+        w.setRole(Role.ROLE_USER);
+        w.setSurename("Filipovski");
+        w.setUsername("BF");
+        w = workerService.insert(w);
+
+        Worker w2 = new Worker();
+        w2.setEmail("ivanaf@mail.com");
+        w2.setName("Ivana");
+        w2.setPassword("pw2");
+        w2.setRole(Role.ROLE_USER);
+        w2.setSurename("Filipovska");
+        w2.setUsername("IF");
+        w2 = workerService.insert(w2);
+
+        Worker w3 = new Worker();
+        w3.setEmail("savicaf@mail.com");
+        w3.setName("Savica");
+        w3.setPassword("pw3");
+        w3.setRole(Role.ROLE_USER);
+        w3.setSurename("Filipovska");
+        w3.setUsername("SF");
+        w3 = workerService.insert(w3);
+
+        List<Worker> workersLocal = new ArrayList<Worker>();
+        workersLocal.add(w);
+        workersLocal.add(w2);
+        workersLocal.add(w3);
+
+        List<Worker> workersDB = workerService.findAll();
+        Assert.assertEquals(3, workersDB.size());
+
+        List<Long> idWorkers = new ArrayList<Long>();
+        for(Worker wrk : workersLocal)
+            idWorkers.add(wrk.getId());
+
+        for(Worker wrk : workersDB){
+            Assert.assertEquals(true, idWorkers.contains(wrk.getId()));
+        }
+
+        workerService.deleteById(w3.getId());
+        Assert.assertEquals(2, workerService.findAll().size());
+
+        workerService.deleteById(w2.getId());
+        workerService.deleteById(w.getId());
+        Assert.assertEquals(0, workerService.findAll().size());
     }
 
 }
