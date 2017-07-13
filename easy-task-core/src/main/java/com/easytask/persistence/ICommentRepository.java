@@ -9,11 +9,11 @@ import java.util.List;
  */
 public interface ICommentRepository {
 
-    Comment insert(Comment project);
+    Comment insert(Comment comment);
 
     Comment findById(Long id);
 
-    Comment update(Comment project);
+    Comment update(Comment comment);
 
     void deleteById(Long id);
 
