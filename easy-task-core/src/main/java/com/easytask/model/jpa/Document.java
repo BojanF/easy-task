@@ -74,4 +74,9 @@ public class Document {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public static class FIELDS {
+        public static String WORKER = "fromWorker";
+        public static String PROJECT = "forProject";
+    }
 }

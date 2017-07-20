@@ -1,5 +1,6 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
 import com.easytask.persistence.ITeamRepository;
@@ -80,5 +81,21 @@ public class TeamRepositoryImpl implements ITeamRepository {
         workers.clear();
         team.setWorkers(workers);
         return update(team);
+    }
+
+    @Transactional
+    public List<Project> getAllProjectsByTeam(Long teamId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> cq = cb.createQuery(Project.class);
+        Root<Project> from= cq.from(Project.class);
+        cq.where(
+                cb.equal(
+                        from.get(Project.FIELDS.TEAM).get("id"),
+                        teamId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+
     }
 }

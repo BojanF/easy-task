@@ -1,6 +1,9 @@
 package com.easytask.service;
 
+import com.easytask.model.jpa.Comment;
+import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
+import com.easytask.model.jpa.Task;
 
 import java.util.List;
 
@@ -18,5 +21,13 @@ public interface IProjectService {
     void deleteById(Long id);
 
     List<Project> findAll();
+
+    List<Task> getAllTasksForProject(Long projectId);
+
+    List<Document> getAllDocumentsForProject(Long projectId);
+
+    List<Comment> getAllCommentsForProject(Long projectId);
+
+    List<Task> getAllTasksForWorkerOnProject(Long projectId,Long workerId);
 
 }

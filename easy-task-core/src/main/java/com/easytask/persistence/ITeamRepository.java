@@ -1,5 +1,6 @@
 package com.easytask.persistence;
 
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
 
@@ -26,5 +27,5 @@ public interface ITeamRepository {
 
     Team removeAllTeamWorkers(Long teamId);
 
-
+    List<Project> getAllProjectsByTeam(Long teamId);
 }

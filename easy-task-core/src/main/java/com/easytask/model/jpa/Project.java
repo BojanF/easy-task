@@ -116,4 +116,8 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public static class FIELDS {
+        public static String TEAM = "projectTeam";
+    }
 }

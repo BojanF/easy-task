@@ -1,5 +1,6 @@
 package com.easytask.service.impl;
 
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
 import com.easytask.persistence.ITeamRepository;
@@ -16,24 +17,24 @@ import java.util.List;
 public class TeamServiceImpl implements ITeamService {
     
     @Autowired
-    ITeamRepository teamCrudRepository;
+    ITeamRepository teamRepository;
     
     public Team insert(Team team) {
-        return teamCrudRepository.insert(team);
+        return teamRepository.insert(team);
     }
 
     public Team findById(Long id) {
-        return teamCrudRepository.findById(id);
+        return teamRepository.findById(id);
     }
 
     public List<Team> findAll() {
-        return teamCrudRepository.findAll();
+        return teamRepository.findAll();
     }
 
     public Team update(Team team) {
-        Team old = teamCrudRepository.findById(team.getId());
+        Team old = teamRepository.findById(team.getId());
         if(old != null){
-            team = teamCrudRepository.update(team);
+            team = teamRepository.update(team);
         }
 
         return team;
@@ -41,21 +42,25 @@ public class TeamServiceImpl implements ITeamService {
     }
 
     public void deleteById(Long id) {
-        Team team = teamCrudRepository.findById(id);
+        Team team = teamRepository.findById(id);
         if (team != null) {
-            teamCrudRepository.deleteById(id);
+            teamRepository.deleteById(id);
         }
     }
 
     public Team insertTeamWorker(Team team, Worker worker) {
-        return teamCrudRepository.insertTeamWorker(team, worker);
+        return teamRepository.insertTeamWorker(team, worker);
     }
 
     public Team removeTeamWorker(Team team, Worker worker) {
-        return teamCrudRepository.removeTeamWorker(team, worker);
+        return teamRepository.removeTeamWorker(team, worker);
     }
 
     public Team removeAllTeamWorkers(Long teamId) {
-        return teamCrudRepository.removeAllTeamWorkers(teamId);
+        return teamRepository.removeAllTeamWorkers(teamId);
+    }
+
+    public List<Project> getAllProjectsByTeam(Long teamId) {
+        return teamRepository.getAllProjectsByTeam(teamId);
     }
 }

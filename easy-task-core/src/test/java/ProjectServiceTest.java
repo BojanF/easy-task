@@ -1,13 +1,8 @@
 import com.easytask.model.enums.Role;
 import com.easytask.model.enums.State;
-import com.easytask.model.jpa.Leader;
-import com.easytask.model.jpa.Project;
-import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
-import com.easytask.service.ILeaderService;
-import com.easytask.service.IProjectService;
-import com.easytask.service.ITeamService;
-import com.easytask.service.IWorkerService;
+import com.easytask.model.jpa.*;
+import com.easytask.service.*;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,10 +34,20 @@ public class ProjectServiceTest {
     @Autowired
     ITeamService teamService;
 
+    @Autowired
+    IDocumentService documentService;
+
+    @Autowired
+    ICommentService commentService;
+
+    @Autowired
+    ITaskService taskService;
+
     private static boolean setupFinished = false;
     private static List<Worker> workers = new ArrayList<Worker>();
     private static List<Leader> leaders = new ArrayList<Leader>();
     private static List<Team> teams = new ArrayList<Team>();
+    private static Team teamToyota;
 
     @Before
     public void createObjects(){
@@ -114,7 +119,7 @@ public class ProjectServiceTest {
         teamOreca = teamService.insertTeamWorker(teamOreca, workers.get(3));
 
         //team two
-        Team teamToyota = new Team();
+        teamToyota = new Team();
         teamToyota.setName("Toyota Gazoo Racing");
         teamToyota.setLeader(leaders.get(1));
         teamToyota = teamService.insert(teamToyota);
@@ -263,5 +268,123 @@ public class ProjectServiceTest {
         projectService.deleteById(projectOrecaTest.getId());
         Assert.assertEquals(null, projectService.findById(projectOrecaTest.getId()));
     }
+    @Test
+    public void nonCrudTest(){
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("Test Project");
+        project.setStartedOn(DateTime.now());
+        project.setDeadline(DateTime.now().plusMonths(8));
+        project.setProjectState(State.IN_PROGRESS);
+        project.setProjectTeam(teamToyota);
+        project = projectService.insert(project);
 
+        Document doc = new Document();
+        doc.setPostedOn(DateTime.now());
+        doc.setProject(project);
+        doc.setUrl("kostancev.com/documents/"+doc.getId());
+        doc.setWorker(workers.get(0));
+        doc = documentService.insert(doc);
+
+        doc = new Document();
+        doc.setPostedOn(DateTime.now());
+        doc.setProject(project);
+        doc.setUrl("kostancev.com/documents/"+doc.getId());
+        doc.setWorker(workers.get(0));
+        doc = documentService.insert(doc);
+
+        Comment comment = new Comment();
+        comment.setCommentOwner(workers.get(0));
+        comment.setDate(DateTime.now());
+        comment.setOnProject(project);
+        comment.setText("text");
+        comment = commentService.insert(comment);
+
+        comment = new Comment();
+        comment.setCommentOwner(workers.get(0));
+        comment.setDate(DateTime.now());
+        comment.setOnProject(project);
+        comment.setText("text");
+        comment = commentService.insert(comment);
+
+        comment = new Comment();
+        comment.setCommentOwner(workers.get(0));
+        comment.setDate(DateTime.now());
+        comment.setOnProject(project);
+        comment.setText("text");
+        comment = commentService.insert(comment);
+
+        Task task = new Task();
+        task.setName("task1");
+        task.setStartedOn(DateTime.now());
+        task.setDeadline(DateTime.now().plusMonths(8));
+        task.setTaskState(State.NOT_STARTED);
+        task.setLeader(leaders.get(0));
+        task.setProject(project);
+        task.addWorker(workers.get(0));
+        task.addWorker(workers.get(1));
+        task = taskService.insert(task);
+
+        task = new Task();
+        task.setName("task2");
+        task.setStartedOn(DateTime.now());
+        task.setDeadline(DateTime.now().plusMonths(8));
+        task.setTaskState(State.NOT_STARTED);
+        task.setLeader(leaders.get(0));
+        task.setProject(project);
+        task.addWorker(workers.get(0));
+        task.addWorker(workers.get(1));
+        task = taskService.insert(task);
+
+        task = new Task();
+        task.setName("task3");
+        task.setStartedOn(DateTime.now());
+        task.setDeadline(DateTime.now().plusMonths(8));
+        task.setTaskState(State.NOT_STARTED);
+        task.setLeader(leaders.get(0));
+        task.setProject(project);
+        task.addWorker(workers.get(0));
+        task.addWorker(workers.get(2));
+        task = taskService.insert(task);
+
+        Assert.assertEquals(projectService.getAllDocumentsForProject(project.getId()).size(),2);
+        Assert.assertEquals(projectService.getAllCommentsForProject(project.getId()).size(),3);
+        Assert.assertEquals(projectService.getAllTasksForProject(project.getId()).size(),3);
+        Assert.assertEquals(projectService.getAllTasksForWorkerOnProject(project.getId(),workers.get(0).getId()).size(),3);
+        Assert.assertEquals(projectService.getAllTasksForWorkerOnProject(project.getId(),workers.get(1).getId()).size(),2);
+        Assert.assertEquals(projectService.getAllTasksForWorkerOnProject(project.getId(),workers.get(2).getId()).size(),1);
+
+        for(Task t : taskService.findAll()){
+            taskService.deleteById(t.getId());
+        }
+
+        for(Comment c : commentService.findAll()){
+            commentService.deleteById(c.getId());
+        }
+
+        for(Document d : documentService.findAll()){
+            documentService.deleteById(d.getId());
+        }
+
+        for(Project p : projectService.findAll()){
+            projectService.deleteById(p.getId());
+        }
+
+
+        for(Team t : teamService.findAll()){
+            teamService.deleteById(t.getId());
+        }
+
+        for(Leader l : leaderService.findAll()){
+            leaderService.deleteById(l.getId());
+        }
+
+        for(Worker w : workerService.findAll()){
+            workerService.deleteById(w.getId());
+        }
+
+
+
+
+    }
 }

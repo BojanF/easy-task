@@ -1,5 +1,6 @@
 package com.easytask.service;
 
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
 
@@ -25,5 +26,7 @@ public interface ITeamService {
     Team removeTeamWorker(Team team, Worker worker);
 
     Team removeAllTeamWorkers(Long teamId);
+
+    List<Project> getAllProjectsByTeam(Long teamId);
 
 }

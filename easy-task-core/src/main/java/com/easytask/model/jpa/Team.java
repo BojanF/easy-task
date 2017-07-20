@@ -82,5 +82,9 @@ public class Team {
         }
     }
 
+    public static class FIELDS {
+        public static String LEADER = "leader";
+    }
+
 
 }

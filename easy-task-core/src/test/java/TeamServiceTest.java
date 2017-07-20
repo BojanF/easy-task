@@ -1,11 +1,15 @@
 import com.easytask.model.enums.Role;
+import com.easytask.model.enums.State;
 import com.easytask.model.jpa.Leader;
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.Worker;
 import com.easytask.service.ILeaderService;
+import com.easytask.service.IProjectService;
 import com.easytask.service.ITeamService;
 import com.easytask.service.IWorkerService;
 import com.easytask.service.impl.TeamServiceImpl;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +39,9 @@ public class TeamServiceTest {
 
     @Autowired
     private ILeaderService leaderService;
+
+    @Autowired
+    private IProjectService projectService;
 
     private static boolean setupFinished = false;
     private static List<Worker> workers;
@@ -257,6 +265,53 @@ public class TeamServiceTest {
         Assert.assertEquals(null, teamService.findById(teamOrecaTest.getId()));
         Assert.assertEquals(null, teamService.findById(teamToyotaTest.getId()));
 
+    }
+
+    @Test
+    public void getAllTeamProjects(){
+        Team teamOreca = new Team();
+        teamOreca.setName("Team Oreca");
+        teamOreca.setLeader(leaders.get(0));
+        teamOreca = teamService.insert(teamOreca);
+        teamOreca = teamService.insertTeamWorker(teamOreca, workers.get(1));
+        teamOreca = teamService.insertTeamWorker(teamOreca, workers.get(2));
+        teamOreca = teamService.insertTeamWorker(teamOreca, workers.get(3));
+
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("Test Project1");
+        project.setStartedOn(DateTime.now());
+        project.setDeadline(DateTime.now().plusMonths(8));
+        project.setProjectState(State.IN_PROGRESS);
+        project.setProjectTeam(teamOreca);
+        project = projectService.insert(project);
+
+        project = new Project();
+        project.setName("Project2");
+        project.setDescription("Test Project2");
+        project.setStartedOn(DateTime.now());
+        project.setDeadline(DateTime.now().plusMonths(8));
+        project.setProjectState(State.IN_PROGRESS);
+        project.setProjectTeam(teamOreca);
+        project = projectService.insert(project);
+
+        Assert.assertEquals(teamService.getAllProjectsByTeam(teamOreca.getId()).size(),2);
+
+        for(Project p : projectService.findAll()){
+            projectService.deleteById(p.getId());
+        }
+
+        for(Team t : teamService.findAll()){
+            teamService.deleteById(t.getId());
+        }
+
+        for(Leader l : leaderService.findAll()){
+            leaderService.deleteById(l.getId());
+        }
+
+        for(Worker w : workerService.findAll()){
+            workerService.deleteById(w.getId());
+        }
     }
 
 }

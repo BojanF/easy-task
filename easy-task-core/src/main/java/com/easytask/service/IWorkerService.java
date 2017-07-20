@@ -1,6 +1,7 @@
 package com.easytask.service;
 
-import com.easytask.model.jpa.Worker;
+import com.easytask.model.enums.State;
+import com.easytask.model.jpa.*;
 
 import java.util.List;
 
@@ -18,5 +19,17 @@ public interface IWorkerService {
     Worker update(Worker worker);
 
     void deleteById(Long id);
+
+    List<Document> getDocumentsByWorker(Long workerId);
+
+    List<Comment> getCommentsByWorker(Long workerId);
+
+    List<Project> getProjectsByWorker(Long workerId);
+
+    List<Task> getTasksByWorker(Long workerId, State state);
+
+    List<Team> getTeamsLeadByWorker(Long workerId);
+
+    List<Project> getProjectsLeadByWorker(Long workerId);
 
 }

@@ -153,4 +153,8 @@ public class Task {
             }
         }
     }
+
+    public static class FIELDS {
+        public static String PROJECT = "onProject";
+    }
 }

@@ -78,4 +78,9 @@ public class Comment {
     public void setOnProject(Project onProject) {
         this.onProject = onProject;
     }
+
+    public static class FIELDS {
+        public static String WORKER = "commentOwner";
+        public static String PROJECT = "onProject";
+    }
 }

@@ -37,4 +37,8 @@ public class Leader {
     public void setWorker(Worker worker) {
         this.worker = worker;
     }
+
+    public static class FIELDS {
+        public static String WORKER = "worker";
+    }
 }

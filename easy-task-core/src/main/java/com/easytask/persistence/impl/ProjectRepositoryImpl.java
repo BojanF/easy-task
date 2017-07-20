@@ -1,6 +1,9 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.jpa.Comment;
+import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
+import com.easytask.model.jpa.Task;
 import com.easytask.persistence.IProjectRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -52,10 +55,58 @@ public class ProjectRepositoryImpl implements IProjectRepository {
 
     }
 
+    @Transactional
     public List<Project> findAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Project> cq = cb.createQuery(Project.class);
         Root<Project> from = cq.from(Project.class);
         return entityManager.createQuery(cq).getResultList();
     }
+
+    @Transactional
+    public List<Task> getAllTasksForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> from= cq.from(Task.class);
+        cq.where(
+                cb.equal(
+                        from.get(Task.FIELDS.PROJECT).get("id"),
+                        projectId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Transactional
+    public List<Document> getAllDocumentsForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Document> cq = cb.createQuery(Document.class);
+        Root<Document> from= cq.from(Document.class);
+        cq.where(
+                cb.equal(
+                        from.get(Document.FIELDS.PROJECT).get("id"),
+                        projectId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Transactional
+    public List<Comment> getAllCommentsForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Comment> cq = cb.createQuery(Comment.class);
+        Root<Comment> from= cq.from(Comment.class);
+        cq.where(
+                cb.equal(
+                        from.get(Comment.FIELDS.PROJECT).get("id"),
+                        projectId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+
 }
