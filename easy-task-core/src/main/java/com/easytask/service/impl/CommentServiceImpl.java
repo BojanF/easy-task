@@ -5,12 +5,12 @@ import com.easytask.persistence.ICommentRepository;
 import com.easytask.service.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
  * Created by Bojan on 6/28/2017.
  */
+
 @Service
 public class CommentServiceImpl implements ICommentService {
 

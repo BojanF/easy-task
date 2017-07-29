@@ -1,13 +1,6 @@
 package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
-
-//import Role;
-
-
-
-import com.easytask.model.enums.Role;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.HashSet;
@@ -16,11 +9,11 @@ import java.util.Set;
 /**
  * Created by Bojan on 6/7/2017.
  */
+
 @Entity
-@Table(name =  "workers",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
+@Table(name =  "users",uniqueConstraints = {@UniqueConstraint(columnNames = {"username","email"})}
 )
-public class Worker {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +23,7 @@ public class Worker {
     private String name;
 
     @NotNull
-    private String surename;
+    private String surname;
 
     @NotNull
     private String username;
@@ -41,14 +34,10 @@ public class Worker {
     @NotNull
     private String email;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @ManyToMany(mappedBy = "workers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Team> teams = new HashSet<Team>();
 
-    @ManyToMany(mappedBy = "workers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Task> tasks = new HashSet<Task>();
 
 
@@ -61,8 +50,8 @@ public class Worker {
         return name;
     }
 
-    public String getSurename() {
-        return surename;
+    public String getSurname() {
+        return surname;
     }
 
     public String getUsername() {
@@ -75,10 +64,6 @@ public class Worker {
 
     public String getEmail() {
         return email;
-    }
-
-    public Role getRole() {
-        return role;
     }
 
     public Set<Team> getTeams() {
@@ -99,8 +84,8 @@ public class Worker {
         this.name = name;
     }
 
-    public void setSurename(String surename) {
-        this.surename = surename;
+    public void setSurename(String surname) {
+        this.surname = surname;
     }
 
     public void setUsername(String username) {
@@ -115,10 +100,6 @@ public class Worker {
         this.email = email;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public void setTeams(Set<Team> teams) {
         this.teams = teams;
     }
@@ -127,21 +108,24 @@ public class Worker {
         this.tasks = tasks;
     }
 
-    /*public void addTeam(Team team){
-        this.teams.add(team);
+
+    //fields
+    public static class FIELDS {
+
+        public static String ID = "id";
+
+        public static String NAME = "name";
+
+        public static String SURNAME = "surname";
+
+        public static String USERNAME = "username";
+
+        public static String PASSWORD = "password";
+
+        public static String EMAIL = "email";
+
+        public static String TEAMS = "teams";
+
+        public static String TASKS = "tasks";
     }
-
-    public void addTask(Task task){
-        this.tasks.add(task);
-    }
-
-    public void removeTeam(Team team){
-        this.teams.remove(team);
-
-
-    public void removeTask(Task task){
-        this.tasks.remove(task);
-    }*/
-
-
 }

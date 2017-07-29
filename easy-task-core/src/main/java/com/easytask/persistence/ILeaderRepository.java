@@ -1,12 +1,12 @@
 package com.easytask.persistence;
 
 import com.easytask.model.jpa.Leader;
-
 import java.util.List;
 
 /**
  * Created by Bojan on 6/22/2017.
  */
+
 public interface ILeaderRepository {
 
     Leader insert (Leader leader);
@@ -18,6 +18,5 @@ public interface ILeaderRepository {
     void deleteById(Long id);
 
     Leader findById(Long id);
-
 
 }

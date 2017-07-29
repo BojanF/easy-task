@@ -2,15 +2,11 @@ package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
 
-import com.easytask.model.enums.State;
+import com.easytask.model.enums.ProjectState;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-
 
 /**
  * Created by Bojan on 6/7/2017.
@@ -33,10 +29,10 @@ public class Project {
 
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime startedOn;
+    private DateTime createdOn;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime finishedOn;
+    private DateTime completedOn;
 
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -44,10 +40,10 @@ public class Project {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private State projectState;
+    private ProjectState state;
 
     @ManyToOne
-    private Team projectTeam;
+    private Team team;
 
 
     //getters
@@ -55,28 +51,28 @@ public class Project {
         return id;
     }
 
-    public Team getProjectTeam() {
-        return projectTeam;
+    public Team getTeam() {
+        return team;
     }
 
     public String getName() {
         return name;
     }
 
-    public DateTime getStartedOn() {
-        return startedOn;
+    public DateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public DateTime getFinishedOn() {
-        return finishedOn;
+    public DateTime getCompletedOn() {
+        return completedOn;
     }
 
     public DateTime getDeadline() {
         return deadline;
     }
 
-    public State getProjectState() {
-        return projectState;
+    public ProjectState getState() {
+        return state;
     }
 
     public String getDescription() {
@@ -89,35 +85,52 @@ public class Project {
         this.id = id;
     }
 
-    public void setProjectTeam(Team team) {
-        this.projectTeam = team;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setStartedOn(DateTime startedOn) {
-        this.startedOn = startedOn;
+    public void setCreatedOn(DateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
-    public void setFinishedOn(DateTime finishedOn) {
-        this.finishedOn = finishedOn;
+    public void setCompletedOn(DateTime completedOn) {
+        this.completedOn = completedOn;
     }
 
     public void setDeadline(DateTime deadline) {
         this.deadline = deadline;
     }
 
-    public void setProjectState(State projectState) {
-        this.projectState = projectState;
+    public void setState(ProjectState state) {
+        this.state = state;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+
+    //fields
     public static class FIELDS {
-        public static String TEAM = "projectTeam";
+
+        public static String ID = "id";
+
+        public static String TEAM = "team";
+
+        public static String NAME = "name";
+
+        public static String STARTED = "createdOn";
+
+        public static String COMPLETED = "completedOn";
+
+        public static String DEADLINE = "deadline";
+
+        public static String STATE = "state";
+
+        public static String DESCRIPTION = "description";
     }
 }

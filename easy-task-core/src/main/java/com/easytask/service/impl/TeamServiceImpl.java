@@ -2,7 +2,7 @@ package com.easytask.service.impl;
 
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
+import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITeamRepository;
 import com.easytask.service.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +36,7 @@ public class TeamServiceImpl implements ITeamService {
         if(old != null){
             team = teamRepository.update(team);
         }
-
         return team;
-
     }
 
     public void deleteById(Long id) {
@@ -48,16 +46,16 @@ public class TeamServiceImpl implements ITeamService {
         }
     }
 
-    public Team insertTeamWorker(Team team, Worker worker) {
-        return teamRepository.insertTeamWorker(team, worker);
+    public Team insertTeamUser(Team team, User user) {
+        return teamRepository.insertTeamUser(team, user);
     }
 
-    public Team removeTeamWorker(Team team, Worker worker) {
-        return teamRepository.removeTeamWorker(team, worker);
+    public Team removeTeamUser(Team team, User user) {
+        return teamRepository.removeTeamUser(team, user);
     }
 
-    public Team removeAllTeamWorkers(Long teamId) {
-        return teamRepository.removeAllTeamWorkers(teamId);
+    public Team removeAllTeamUsers(Long teamId) {
+        return teamRepository.removeAllTeamUsers(teamId);
     }
 
     public List<Project> getAllProjectsByTeam(Long teamId) {

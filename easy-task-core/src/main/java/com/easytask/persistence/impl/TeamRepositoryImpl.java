@@ -2,13 +2,11 @@ package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
+import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITeamRepository;
-
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,6 +18,7 @@ import java.util.Set;
 /**
  * Created by Bojan on 6/24/2017.
  */
+
 @Primary
 @Repository
 public class TeamRepositoryImpl implements ITeamRepository {
@@ -63,23 +62,23 @@ public class TeamRepositoryImpl implements ITeamRepository {
     }
 
     @Transactional
-    public Team insertTeamWorker(Team team, Worker worker) {
-        team.addWorker(worker);
+    public Team insertTeamUser(Team team, User user) {
+        team.addUser(user);
         return update(team);
     }
 
     @Transactional
-    public Team removeTeamWorker(Team team, Worker worker) {
-        team.removeWorker(worker);
+    public Team removeTeamUser(Team team, User user) {
+        team.removeUser(user);
         return update(team);
     }
 
     @Transactional
-    public Team removeAllTeamWorkers(Long teamId) {
+    public Team removeAllTeamUsers(Long teamId) {
         Team team = entityManager.find(Team.class, teamId);
-        Set<Worker> workers = team.getWorkers();
-        workers.clear();
-        team.setWorkers(workers);
+        Set<User> users = team.getUsers();
+        users.clear();
+        team.setUsers(users);
         return update(team);
     }
 
@@ -90,12 +89,10 @@ public class TeamRepositoryImpl implements ITeamRepository {
         Root<Project> from= cq.from(Project.class);
         cq.where(
                 cb.equal(
-                        from.get(Project.FIELDS.TEAM).get("id"),
+                        from.get(Project.FIELDS.TEAM).get(Team.FIELDS.ID),
                         teamId
                 )
         );
-
         return entityManager.createQuery(cq).getResultList();
-
     }
 }

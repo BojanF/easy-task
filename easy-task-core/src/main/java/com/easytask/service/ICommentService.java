@@ -1,12 +1,12 @@
 package com.easytask.service;
 
 import com.easytask.model.jpa.Comment;
-
 import java.util.List;
 
 /**
  * Created by Bojan on 6/28/2017.
  */
+
 public interface ICommentService {
 
     Comment insert(Comment comment);

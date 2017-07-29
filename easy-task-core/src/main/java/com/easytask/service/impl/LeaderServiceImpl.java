@@ -5,12 +5,12 @@ import com.easytask.persistence.ILeaderRepository;
 import com.easytask.service.ILeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
  * Created by Bojan on 6/22/2017.
  */
+
 @Service
 public class LeaderServiceImpl implements ILeaderService {
 

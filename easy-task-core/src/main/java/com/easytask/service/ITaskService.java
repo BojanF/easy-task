@@ -1,14 +1,13 @@
 package com.easytask.service;
 
 import com.easytask.model.jpa.Task;
-import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
-
+import com.easytask.model.jpa.User;
 import java.util.List;
 
 /**
  * Created by marijo on 05/07/17.
  */
+
 public interface ITaskService {
 
     Task insert(Task task);
@@ -21,5 +20,7 @@ public interface ITaskService {
 
     List<Task> findAll();
 
-    Task insertTaskWorker(Task task, Worker worker);
+    Task addUserToTask(Task task, User user);
+
+    Task removeUserFromTask(Task task, User user);
 }

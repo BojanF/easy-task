@@ -1,14 +1,13 @@
 package com.easytask.web;
 
-import com.easytask.model.jpa.Worker;
-import com.easytask.service.IWorkerService;
+import com.easytask.model.jpa.User;
+import com.easytask.service.IUserService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -16,39 +15,39 @@ import java.util.List;
  * Created by Marijo on 21-Jun-17.
  */
 @RestController
-@RequestMapping(value = "/api/workers", produces = "application/json")
-public class WorkerController implements ApplicationContextAware {
+@RequestMapping(value = "/api/users", produces = "application/json")
+public class UserController implements ApplicationContextAware {
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        IWorkerService bean = applicationContext.getBean(IWorkerService.class);
+        IUserService bean = applicationContext.getBean(IUserService.class);
         System.out.println(bean);
     }
 
-    private IWorkerService service;
+    private IUserService service;
 
     @Autowired
-    public WorkerController(IWorkerService service) {
+    public UserController(IUserService service) {
         this.service = service;
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Worker insertWorker(@Valid @RequestBody Worker worker) {
-        return service.insert(worker);
+    public User insertUser(@Valid @RequestBody User user) {
+        return service.insert(user);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateWorker(@PathVariable Long id, @RequestBody Worker worker) {
-        service.update(worker);
+    public void updateUser(@PathVariable Long id, @RequestBody User user) {
+        service.update(user);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Worker> getAll() {
+    public List<User> getAll() {
         return service.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Worker getById(@PathVariable Long id) {
+    public User getById(@PathVariable Long id) {
         return service.findById(id);
     }
 

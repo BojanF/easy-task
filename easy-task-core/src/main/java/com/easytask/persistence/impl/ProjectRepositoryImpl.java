@@ -8,7 +8,6 @@ import com.easytask.persistence.IProjectRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -70,11 +69,10 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         Root<Task> from= cq.from(Task.class);
         cq.where(
                 cb.equal(
-                        from.get(Task.FIELDS.PROJECT).get("id"),
+                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
                         projectId
                 )
         );
-
         return entityManager.createQuery(cq).getResultList();
     }
 
@@ -85,11 +83,10 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         Root<Document> from= cq.from(Document.class);
         cq.where(
                 cb.equal(
-                        from.get(Document.FIELDS.PROJECT).get("id"),
+                        from.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),
                         projectId
                 )
         );
-
         return entityManager.createQuery(cq).getResultList();
     }
 
@@ -100,11 +97,10 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         Root<Comment> from= cq.from(Comment.class);
         cq.where(
                 cb.equal(
-                        from.get(Comment.FIELDS.PROJECT).get("id"),
+                        from.get(Comment.FIELDS.PROJECT).get(Project.FIELDS.ID),
                         projectId
                 )
         );
-
         return entityManager.createQuery(cq).getResultList();
     }
 

@@ -1,16 +1,13 @@
 package com.easytask.persistence.impl;
 
-import com.easytask.model.enums.State;
 import com.easytask.model.jpa.*;
-import com.easytask.persistence.IWorkerRepository;
+import com.easytask.persistence.IUserRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,42 +15,42 @@ import java.util.Set;
 /**
  * Created by Marijo on 21-Jun-17.
  */
+
 @Primary
 @Repository
-public class WorkerRepositoryImpl implements IWorkerRepository {
+public class UserRepositoryImpl implements IUserRepository {
 
     @PersistenceContext(name = "easy_task_DB")
     EntityManager entityManager;
 
-    public List<Worker> findAll() {
+    public List<User> findAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Worker> cq = cb.createQuery(Worker.class);
-        Root<Worker> from = cq.from(Worker.class);
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> from = cq.from(User.class);
         return entityManager.createQuery(cq).getResultList();
-
     }
 
     @Transactional
-    public Worker findById(Long id) {
-        Worker worker = entityManager.find(Worker.class, id);
-        if (worker != null) {
-            entityManager.refresh(worker);
+    public User findById(Long id) {
+        User user = entityManager.find(User.class, id);
+        if (user != null) {
+            entityManager.refresh(user);
         }
-        return worker;
+        return user;
     }
 
     @Transactional
-    public Worker insert(Worker worker) {
-        entityManager.persist(worker);
+    public User insert(User user) {
+        entityManager.persist(user);
         entityManager.flush();
-        return worker;
+        return user;
     }
 
     @Transactional
-    public Worker update(Worker worker) {
-        worker = entityManager.merge(worker);
+    public User update(User user) {
+        user = entityManager.merge(user);
         entityManager.flush();
-        return worker;
+        return user;
     }
 
     @Transactional
@@ -62,37 +59,37 @@ public class WorkerRepositoryImpl implements IWorkerRepository {
     }
 
     @Transactional
-    public List<Document> getDocumentsByWorker(Long workerId) {
+    public List<Document> getDocumentsByUser(Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Document> cq = cb.createQuery(Document.class);
         Root<Document> from= cq.from(Document.class);
         cq.where(
                 cb.equal(
-                        from.get(Document.FIELDS.WORKER),
-                        workerId
+                        from.get(Document.FIELDS.USER),
+                        userId
                 )
         );
         return entityManager.createQuery(cq).getResultList();
     }
 
     @Transactional
-    public List<Comment> getCommentsByWorker(Long workerId) {
+    public List<Comment> getCommentsByUser(Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Comment> cq = cb.createQuery(Comment.class);
         Root<Comment> from= cq.from(Comment.class);
         cq.where(
                 cb.equal(
-                        from.get(Comment.FIELDS.WORKER),
-                        workerId
+                        from.get(Comment.FIELDS.USER),
+                        userId
                 )
         );
         return entityManager.createQuery(cq).getResultList();
     }
 
     @Transactional
-    public List<Project> getProjectsByWorker(Long workerId) {
+    public List<Project> getProjectsByUser(Long userId) {
         Set<Team> teams = new HashSet<Team>();
-        for (Team t: findById(workerId).getTeams()) {
+        for (Team t: findById(userId).getTeams()) {
             teams.add(t);
         }
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -101,14 +98,14 @@ public class WorkerRepositoryImpl implements IWorkerRepository {
 
         cq.where(
                 from.get(Project.FIELDS.TEAM).in(
-                        findById(workerId).getTeams()
+                        findById(userId).getTeams()
                 )
         );
         return entityManager.createQuery(cq).getResultList();
     }
 
 
-    public List<Project> getProjectsLeadByWorker(Long workerId) {
+    public List<Project> getProjectsLeadByUser(Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Project> cq = cb.createQuery(Project.class);
         Root<Project> from= cq.from(Project.class);
@@ -116,8 +113,8 @@ public class WorkerRepositoryImpl implements IWorkerRepository {
         Join<Team,Leader> leader = team.join(Team.FIELDS.LEADER,JoinType.LEFT);
         cq.where(
                 cb.equal(
-                        leader.get(Leader.FIELDS.WORKER).get("id"),
-                        workerId
+                        leader.get(Leader.FIELDS.USER).get(User.FIELDS.ID),
+                        userId
                 )
         );
         return entityManager.createQuery(cq).getResultList();

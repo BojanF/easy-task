@@ -5,61 +5,61 @@ import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
 import com.easytask.persistence.IProjectRepository;
-import com.easytask.persistence.IWorkerRepository;
+import com.easytask.persistence.IUserRepository;
 import com.easytask.service.IProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Bojan on 6/28/2017.
  */
+
 @Service
 public class ProjectServiceImpl implements IProjectService {
 
     @Autowired
-    IProjectRepository projectCrudRepository;
+    IProjectRepository projectRepository;
 
     @Autowired
-    IWorkerRepository workerRepository;
+    IUserRepository userRepository;
 
     public Project insert(Project project) {
-        return projectCrudRepository.insert(project);
+        return projectRepository.insert(project);
     }
 
     public Project findById(Long id) {
-        return projectCrudRepository.findById(id);
+        return projectRepository.findById(id);
     }
 
     public Project update(Project project) {
-        return projectCrudRepository.update(project);
+        return projectRepository.update(project);
     }
 
     public void deleteById(Long id) {
-        projectCrudRepository.deleteById(id);
+        projectRepository.deleteById(id);
     }
 
     public List<Project> findAll() {
-        return projectCrudRepository.findAll();
+        return projectRepository.findAll();
     }
 
     public List<Task> getAllTasksForProject(Long projectId) {
-        return projectCrudRepository.getAllTasksForProject(projectId);
+        return projectRepository.getAllTasksForProject(projectId);
     }
 
     public List<Document> getAllDocumentsForProject(Long projectId) {
-        return projectCrudRepository.getAllDocumentsForProject(projectId);
+        return projectRepository.getAllDocumentsForProject(projectId);
     }
 
     public List<Comment> getAllCommentsForProject(Long projectId) {
-        return projectCrudRepository.getAllCommentsForProject(projectId);
+        return projectRepository.getAllCommentsForProject(projectId);
     }
 
-    public List<Task> getAllTasksForWorkerOnProject(Long projectId, Long workerId) {
+    public List<Task> getAllTasksForUserOnProject(Long projectId, Long userId) {
         List<Task> tasks = new ArrayList<Task>();
-        for(Task t : workerRepository.findById(workerId).getTasks()){
+        for(Task t : userRepository.findById(userId).getTasks()){
             if (t.getProject().getId() == projectId)
                 tasks.add(t);
         }

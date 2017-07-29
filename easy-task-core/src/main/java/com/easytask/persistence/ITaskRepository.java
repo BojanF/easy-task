@@ -1,14 +1,13 @@
 package com.easytask.persistence;
 
-import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Task;
-import com.easytask.model.jpa.Worker;
-
+import com.easytask.model.jpa.User;
 import java.util.List;
 
 /**
  * Created by marijo on 05/07/17.
  */
+
 public interface ITaskRepository {
 
     List<Task> findAll();
@@ -21,5 +20,7 @@ public interface ITaskRepository {
 
     void deleteById(Long id);
 
-    Task insertTaskWorker(Task task, Worker worker);
+    Task addUserOnTask(Task task, User user);
+
+    Task removeUserFromTask(Task task,User user);
 }

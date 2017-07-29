@@ -1,13 +1,10 @@
 package com.easytask.model.jpa;
+
 import javax.persistence.Entity;
-
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Length;
 import org.joda.time.DateTime;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 
 /**
  * Created by Bojan on 6/7/2017.
@@ -30,10 +27,10 @@ public class Comment {
     private DateTime date;
 
     @ManyToOne
-    private Worker commentOwner;
+    private User user;
 
     @ManyToOne
-    private Project onProject;
+    private Project project;
 
 
     //getters
@@ -41,12 +38,12 @@ public class Comment {
         return id;
     }
 
-    public Worker getCommentOwner() {
-        return commentOwner;
+    public User getUser() {
+        return user;
     }
 
-    public Project getOnProject() {
-        return onProject;
+    public Project getProject() {
+        return project;
     }
 
     public String getText() {
@@ -71,16 +68,27 @@ public class Comment {
         this.date = date;
     }
 
-    public void setCommentOwner(Worker commentOwner) {
-        this.commentOwner = commentOwner;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setOnProject(Project onProject) {
-        this.onProject = onProject;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
+
+    //fields
     public static class FIELDS {
-        public static String WORKER = "commentOwner";
-        public static String PROJECT = "onProject";
+
+        public static String ID = "id";
+
+        public static String TEXT = "text";
+
+        public static String DATE = "date";
+
+        public static String USER = "user";
+
+        public static String PROJECT = "project";
+
     }
 }

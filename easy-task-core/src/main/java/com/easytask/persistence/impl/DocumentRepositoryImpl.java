@@ -1,12 +1,10 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Document;
-import com.easytask.model.jpa.Worker;
 import com.easytask.persistence.IDocumentRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;

@@ -1,7 +1,6 @@
 package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -10,6 +9,7 @@ import java.util.Set;
 /**
  * Created by Bojan on 6/7/2017.
  */
+
 @Entity
 @Table(name = "teams")
 public class Team {
@@ -26,11 +26,11 @@ public class Team {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "worker_team",
+            name = "user_team",
             joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "worker_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<Worker> workers = new HashSet<Worker>();
+    private Set<User> users = new HashSet<User>();
 
 
     //getters
@@ -42,13 +42,14 @@ public class Team {
         return leader;
     }
 
-    public Set<Worker> getWorkers() {
-        return workers;
+    public Set<User> getUsers() {
+        return users;
     }
 
     public String getName() {
         return name;
     }
+
 
     //setters
     public void setId(Long id) {
@@ -63,28 +64,28 @@ public class Team {
         this.leader = leader;
     }
 
-    public void setWorkers(Set<Worker> workers) {
-        this.workers = workers;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
-    public void addWorker(Worker worker){
-        this.workers.add(worker);
+    public void addUser(User user){
+        this.users.add(user);
     }
 
-    public void removeWorker(Worker worker){
-
-        Set<Worker> workers =  getWorkers();
-        for(Worker w : workers){
-            if(w.getId().equals(worker.getId())) {
-                this.workers.remove(w);
-                break;
-            }
-        }
+    public void removeUser(User user){
+        this.users.remove(user);
     }
 
+
+    //fields
     public static class FIELDS {
+
+        public static String ID = "id";
+
+        public static String NAME = "name";
+
         public static String LEADER = "leader";
+
+        public static String USERS = "users";
     }
-
-
 }

@@ -4,12 +4,12 @@ import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
-
 import java.util.List;
 
 /**
  * Created by Bojan on 6/28/2017.
  */
+
 public interface IProjectService {
 
     Project insert(Project project);
@@ -28,6 +28,6 @@ public interface IProjectService {
 
     List<Comment> getAllCommentsForProject(Long projectId);
 
-    List<Task> getAllTasksForWorkerOnProject(Long projectId,Long workerId);
+    List<Task> getAllTasksForUserOnProject(Long projectId,Long userId);
 
 }

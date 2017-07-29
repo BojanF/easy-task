@@ -1,10 +1,8 @@
 package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
-
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -22,61 +20,73 @@ public class Document {
 
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime postedOn;
+    private DateTime date;
 
     @NotNull
     private String url;
 
     @ManyToOne
-    private Project forProject;
+    private Project project;
 
     @ManyToOne
-    private Worker fromWorker;
+    private User user;
+
 
     //getters
     public Long getId() {
         return id;
     }
 
-    public Project getProject() {
-        return forProject;
-    }
-
-    public DateTime getPostedOn() {
-        return postedOn;
-    }
-
-    public Worker getWorker() {
-        return fromWorker;
+    public DateTime getDate() {
+        return date;
     }
 
     public String getUrl() {
         return url;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+
     //setters
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setProject(Project project) {
-        this.forProject = project;
-    }
-
-    public void setPostedOn(DateTime postedOn) {
-        this.postedOn = postedOn;
-    }
-
-    public void setWorker(Worker worker) {
-        this.fromWorker = worker;
+    public void setDate(DateTime date){
+        this.date = date;
     }
 
     public void setUrl(String url) {
         this.url = url;
     }
 
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
+    //fields
     public static class FIELDS {
-        public static String WORKER = "fromWorker";
-        public static String PROJECT = "forProject";
+
+        public static String ID = "id";
+
+        public static String DATE = "date";
+
+        public static String URL = "url";
+
+        public static String PROJECT = "project";
+
+        public static String USER = "user";
     }
 }

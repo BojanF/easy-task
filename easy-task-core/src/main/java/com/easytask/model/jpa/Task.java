@@ -1,11 +1,9 @@
 package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
-
-import com.easytask.model.enums.State;
+import com.easytask.model.enums.TaskState;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -14,6 +12,7 @@ import java.util.Set;
 /**
  * Created by Bojan on 6/7/2017.
  */
+
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -30,10 +29,10 @@ public class Task {
 
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime startedOn;
+    private DateTime createdOn;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime finishedOn;
+    private DateTime completedOn;
 
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -41,63 +40,64 @@ public class Task {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private State taskState;
+    private TaskState state;
 
     @ManyToOne
-    private Leader givenByLeader;
+    private Leader leader;
 
     @ManyToOne
-    private  Project onProject;
+    private  Project project;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "task_worker",
+            name = "task_user",
             joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "worker_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    private Set<User> users = new HashSet<User>();
+
 
     //getters
-    private Set<Worker> workers = new HashSet<Worker>();
-
     public Long getId() {
         return id;
     }
 
     public Leader getLeader() {
-        return givenByLeader;
+        return leader;
     }
 
     public Project getProject() {
-        return onProject;
+        return project;
     }
 
     public String getName() {
         return name;
     }
 
-    public DateTime getStartedOn() {
-        return startedOn;
+    public DateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public DateTime getFinishedOn() {
-        return finishedOn;
+    public DateTime getCompletedOn() {
+        return completedOn;
     }
 
     public DateTime getDeadline() {
         return deadline;
     }
 
-    public Set<Worker> getWorkers() {
-        return workers;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public State getTaskState() {
-        return taskState;
+    public TaskState getState() {
+        return state;
     }
 
     public String getDescription() {
         return description;
     }
+
 
     //setters
     public void setId(Long id) {
@@ -105,56 +105,71 @@ public class Task {
     }
 
     public void setLeader(Leader leader) {
-        this.givenByLeader = leader;
+        this.leader = leader;
     }
 
     public void setProject(Project project) {
-        this.onProject = project;
+        this.project = project;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setStartedOn(DateTime startedOn) {
-        this.startedOn = startedOn;
+    public void setCreatedOn(DateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
-    public void setFinishedOn(DateTime finishedOn) {
-        this.finishedOn = finishedOn;
+    public void setCompletedOn(DateTime completedOn) {
+        this.completedOn = completedOn;
     }
 
     public void setDeadline(DateTime deadline) {
         this.deadline = deadline;
     }
 
-    public void setTaskState(State taskState) {
-        this.taskState = taskState;
+    public void setState(TaskState state) {
+        this.state = state;
     }
 
-    public void setWorkers(Set<Worker> workers) {
-        this.workers = workers;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void addWorker(Worker worker){
-        this.workers.add(worker);
+    public void addUser(User user){
+        this.users.add(user);
     }
 
-    public void removeWorker(Worker worker){
-        Set<Worker> workers = getWorkers();
-        for(Worker w : workers){
-            if(w.getId().equals(worker.getId())){
-                this.workers.remove(w);
-                break;
-            }
-        }
+    public void removeUser(User user){
+        this.users.remove(user);
     }
 
+
+    //fields
     public static class FIELDS {
-        public static String PROJECT = "onProject";
+
+        public static String ID = "id";
+
+        public static String NAME = "name";
+
+        public static String CREATED = "createdOn";
+
+        public static String COMPLETED = "completedOn";
+
+        public static String DEADLINE = "deadline";
+
+        public static String STATE = "state";
+
+        public static String USERS = "users";
+
+        public static String DESCRIPTION = "description";
+
+        public static String LEADER = "leader";
+
+        public static String PROJECT = "project";
     }
 }

@@ -1,7 +1,7 @@
 package com.easytask.service.impl;
 
 import com.easytask.model.jpa.Task;
-import com.easytask.model.jpa.Worker;
+import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITaskRepository;
 import com.easytask.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,36 +16,40 @@ import java.util.List;
 public class TaskServiceImpl implements ITaskService {
 
     @Autowired
-    ITaskRepository repository;
+    ITaskRepository taskRepository;
 
     public List<Task> findAll() {
-        return repository.findAll();
+        return taskRepository.findAll();
     }
 
     public Task findById(Long id) {
-        return repository.findById(id);
+        return taskRepository.findById(id);
     }
 
     public Task insert(Task task) {
-        return repository.insert(task);
+        return taskRepository.insert(task);
     }
 
     public Task update(Task task) {
-        Task old = repository.findById(task.getId());
+        Task old = taskRepository.findById(task.getId());
         if (old != null) {
-            task = repository.update(task);
+            task = taskRepository.update(task);
         }
         return task;
     }
 
     public void deleteById(Long id) {
-        Task task = repository.findById(id);
+        Task task = taskRepository.findById(id);
         if (task != null) {
-            repository.deleteById(id);
+            taskRepository.deleteById(id);
         }
     }
 
-    public Task insertTaskWorker(Task task, Worker worker) {
-        return repository.insertTaskWorker(task, worker);
+    public Task addUserToTask(Task task, User user) {
+        return taskRepository.addUserOnTask(task, user);
+    }
+
+    public Task removeUserFromTask(Task task, User user) {
+       return taskRepository.removeUserFromTask(task,user);
     }
 }

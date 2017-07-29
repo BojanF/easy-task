@@ -1,12 +1,12 @@
 package com.easytask.model.jpa;
 
 import javax.persistence.Entity;
-
 import javax.persistence.*;
 
 /**
  * Created by Bojan on 6/7/2017.
  */
+
 @Entity
 @Table(name = "leaders")
 public class Leader {
@@ -16,7 +16,7 @@ public class Leader {
     private Long id;
 
     @ManyToOne
-    private Worker worker;
+    private User user;
 
 
     //getters
@@ -24,8 +24,8 @@ public class Leader {
         return id;
     }
 
-    public Worker getWorker() {
-        return worker;
+    public User getUser() {
+        return user;
     }
 
 
@@ -34,11 +34,16 @@ public class Leader {
         this.id = id;
     }
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
+    public void setUser(User user) {
+        this.user = user;
     }
 
+
+    //fields
     public static class FIELDS {
-        public static String WORKER = "worker";
+
+        public static String ID = "id";
+
+        public static String USER = "user";
     }
 }

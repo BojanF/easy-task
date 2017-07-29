@@ -2,13 +2,13 @@ package com.easytask.persistence;
 
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
-
+import com.easytask.model.jpa.User;
 import java.util.List;
 
 /**
  * Created by Bojan on 6/24/2017.
  */
+
 public interface ITeamRepository {
 
     Team insert(Team team);
@@ -21,11 +21,11 @@ public interface ITeamRepository {
 
     void deleteById(Long id);
 
-    Team insertTeamWorker(Team team, Worker worker);
+    Team insertTeamUser(Team team, User user);
 
-    Team removeTeamWorker(Team team, Worker worker);
+    Team removeTeamUser(Team team, User user);
 
-    Team removeAllTeamWorkers(Long teamId);
+    Team removeAllTeamUsers(Long teamId);
 
     List<Project> getAllProjectsByTeam(Long teamId);
 }

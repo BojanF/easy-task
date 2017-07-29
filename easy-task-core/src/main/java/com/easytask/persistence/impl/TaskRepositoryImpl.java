@@ -1,12 +1,10 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Task;
-import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.Worker;
+import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITaskRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,6 +16,7 @@ import java.util.List;
 /**
  * Created by marijo on 05/07/17.
  */
+
 @Primary
 @Repository
 public class TaskRepositoryImpl implements ITaskRepository {
@@ -62,8 +61,13 @@ public class TaskRepositoryImpl implements ITaskRepository {
     }
 
     @Transactional
-    public Task insertTaskWorker(Task task, Worker worker) {
-        task.addWorker(worker);
+    public Task addUserOnTask(Task task, User user) {
+        task.addUser(user);
+        return update(task);
+    }
+
+    public Task removeUserFromTask(Task task, User user) {
+        task.removeUser(user);
         return update(task);
     }
 }
