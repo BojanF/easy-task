@@ -2,6 +2,7 @@ import com.easytask.model.enums.ProjectState;
 import com.easytask.model.jpa.*;
 import com.easytask.service.*;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,6 @@ public class DocumentServiceTest {
     @Autowired
     IDocumentService documentService;
 
-    private static boolean setupFinished = false;
     private static User user1 , user2, user3, user4;
     private static Leader leader1, leader2 ;
     private static Team team1,team2;
@@ -41,14 +41,11 @@ public class DocumentServiceTest {
     @Before
     public void createObjects(){
 
-        if(setupFinished)
-            return;
-
         user1 = new User();
         user1.setEmail("dummy@mail.com");
         user1.setName("Filip");
         user1.setPassword("pw");
-        user1.setSurename("Filipovski");
+        user1.setSurname("Filipovski");
         user1.setUsername("bf");
         user1 = userService.insert(user1);
 
@@ -56,7 +53,7 @@ public class DocumentServiceTest {
         user2.setEmail("dummyDummy@mail.com");
         user2.setName("Lorem");
         user2.setPassword("loip");
-        user2.setSurename("Ipsum");
+        user2.setSurname("Ipsum");
         user2.setUsername("LorI");
         user2 = userService.insert(user2);
 
@@ -64,7 +61,7 @@ public class DocumentServiceTest {
         user3.setEmail("mail@mail.com");
         user3.setName("John");
         user3.setPassword("joed");
-        user3.setSurename("Doe");
+        user3.setSurname("Doe");
         user3.setUsername("JD");
         user3 = userService.insert(user3);
 
@@ -72,7 +69,7 @@ public class DocumentServiceTest {
         user4.setEmail("savicaf@mail.com");
         user4.setName("Savica");
         user4.setPassword("pw3");
-        user4.setSurename("Filipovska");
+        user4.setSurname("Filipovska");
         user4.setUsername("SF");
         user4 = userService.insert(user4);
 
@@ -110,8 +107,6 @@ public class DocumentServiceTest {
         project.setTeam(team2);
         project = projectService.insert(project);
 
-
-        setupFinished = true;
     }
 
     @Test
@@ -174,6 +169,19 @@ public class DocumentServiceTest {
         Assert.assertEquals(null, documentService.findById(document1.getId()));
         documentService.deleteById(document2.getId());
         Assert.assertEquals(null, documentService.findById(document2.getId()));
+    }
+
+    @After
+    public void deleteObjects(){
+        projectService.deleteById(project.getId());
+        teamService.deleteById(team2.getId());
+        teamService.deleteById(team1.getId());
+        leaderService.deleteById(leader1.getId());
+        leaderService.deleteById(leader2.getId());
+        userService.deleteById(user1.getId());
+        userService.deleteById(user2.getId());
+        userService.deleteById(user3.getId());
+        userService.deleteById(user4.getId());
     }
 
 

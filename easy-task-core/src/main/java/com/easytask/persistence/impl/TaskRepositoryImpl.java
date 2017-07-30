@@ -66,6 +66,7 @@ public class TaskRepositoryImpl implements ITaskRepository {
         return update(task);
     }
 
+    @Transactional
     public Task removeUserFromTask(Task task, User user) {
         task.removeUser(user);
         return update(task);

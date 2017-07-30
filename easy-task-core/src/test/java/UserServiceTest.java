@@ -41,7 +41,7 @@ public class UserServiceTest {
         user.setEmail("dummy@mail.com");
         user.setName("Filip");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("ff");
         user = userService.insert(user);
         
@@ -59,7 +59,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Filip");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("bf");
         user = userService.insert(user);
 
@@ -76,7 +76,7 @@ public class UserServiceTest {
 
         user.setEmail("novaMail@mail.com");
         user.setName("Bojan");
-        user.setSurename("Prezime");
+        user.setSurname("Prezime");
         user.setPassword("superStrenght");
         user.setUsername("BojFil");
         
@@ -106,7 +106,7 @@ public class UserServiceTest {
         user1.setEmail("boko@mail.com");
         user1.setName("Bojan");
         user1.setPassword("pw");
-        user1.setSurename("Filipovski");
+        user1.setSurname("Filipovski");
         user1.setUsername("BF");
         user1 = userService.insert(user1);
 
@@ -114,7 +114,7 @@ public class UserServiceTest {
         user2.setEmail("ivanaf@mail.com");
         user2.setName("Ivana");
         user2.setPassword("pw2");
-        user2.setSurename("Filipovska");
+        user2.setSurname("Filipovska");
         user2.setUsername("IF");
         user2 = userService.insert(user2);
 
@@ -122,7 +122,7 @@ public class UserServiceTest {
         user3.setEmail("savicaf@mail.com");
         user3.setName("Savica");
         user3.setPassword("pw3");
-        user3.setSurename("Filipovska");
+        user3.setSurname("Filipovska");
         user3.setUsername("SF");
         user3 = userService.insert(user3);
 
@@ -145,7 +145,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Bojan");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("BF");
         user = userService.insert(user);
 
@@ -207,7 +207,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Bojan");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("BF");
         user = userService.insert(user);
 
@@ -277,7 +277,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Bojan");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("BF");
         user = userService.insert(user);
 
@@ -331,7 +331,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Bojan");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("BF");
         user = userService.insert(user);
 
@@ -410,7 +410,7 @@ public class UserServiceTest {
         user.setEmail("boko@mail.com");
         user.setName("Bojan");
         user.setPassword("pw");
-        user.setSurename("Filipovski");
+        user.setSurname("Filipovski");
         user.setUsername("BF");
         user = userService.insert(user);
 
@@ -457,7 +457,7 @@ public class UserServiceTest {
         user1.setEmail("boko@mail.com");
         user1.setName("Bojan");
         user1.setPassword("pw");
-        user1.setSurename("Filipovski");
+        user1.setSurname("Filipovski");
         user1.setUsername("BF");
         user1 = userService.insert(user1);
 
@@ -465,7 +465,7 @@ public class UserServiceTest {
         user2.setEmail("ivanaf@mail.com");
         user2.setName("Ivana");
         user2.setPassword("pw2");
-        user2.setSurename("Filipovska");
+        user2.setSurname("Filipovska");
         user2.setUsername("IF");
         user2 = userService.insert(user2);
 

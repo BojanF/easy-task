@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -30,7 +32,7 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> users = new HashSet<User>();
+    private Set<User> users = new LinkedHashSet<User>();
 
 
     //getters
@@ -73,7 +75,13 @@ public class Team {
     }
 
     public void removeUser(User user){
-        this.users.remove(user);
+        Iterator<User> it = users.iterator();
+        while(it.hasNext()){
+           if (it.next().getId().equals(user.getId())){
+               it.remove();
+               break;
+           }
+        }
     }
 
 

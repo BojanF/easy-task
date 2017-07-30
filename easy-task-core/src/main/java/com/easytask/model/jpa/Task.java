@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -145,7 +146,13 @@ public class Task {
     }
 
     public void removeUser(User user){
-        this.users.remove(user);
+        Iterator<User> it = users.iterator();
+        while(it.hasNext()){
+            if (it.next().getId().equals(user.getId())){
+                it.remove();
+                break;
+            }
+        }
     }
 
 

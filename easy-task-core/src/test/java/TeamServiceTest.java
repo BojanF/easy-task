@@ -9,6 +9,7 @@ import com.easytask.service.IProjectService;
 import com.easytask.service.ITeamService;
 import com.easytask.service.IUserService;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,63 +38,57 @@ public class TeamServiceTest {
     @Autowired
     private IProjectService projectService;
 
-    private static boolean setupFinished = false;
     private static User user1,user2,user3,user4;
     private static Leader leader1,leader2,leader3;
 
     @Before
     public void createObjects(){
         
-        if(setupFinished)
-            return;
-        
-        User user1 = new User();
+        user1 = new User();
         user1.setEmail("dummy@mail.com");
         user1.setName("Filip");
         user1.setPassword("pw");
-        user1.setSurename("Filipovski");
+        user1.setSurname("Filipovski");
         user1.setUsername("bf");
         user1 = userService.insert(user1);
 
-        User user2 = new User();
+        user2 = new User();
         user2.setEmail("dummyDummy@mail.com");
         user2.setName("Lorem");
         user2.setPassword("loip");
-        user2.setSurename("Ipsum");
+        user2.setSurname("Ipsum");
         user2.setUsername("LorI");
         user2 = userService.insert(user2);
 
-        User user3 = new User();
+        user3 = new User();
         user3.setEmail("mail@mail.com");
         user3.setName("John");
         user3.setPassword("joed");
-        user3.setSurename("Doe");
+        user3.setSurname("Doe");
         user3.setUsername("JD");
         user3 = userService.insert(user3);
 
-        User user4 = new User();
+        user4 = new User();
         user4.setEmail("savicaf@mail.com");
         user4.setName("Savica");
         user4.setPassword("pw3");
-        user4.setSurename("Filipovska");
+        user4.setSurname("Filipovska");
         user4.setUsername("SF");
         user4 = userService.insert(user4);
         
 
-        Leader leader1 = new Leader();
+        leader1 = new Leader();
         leader1.setUser(user1);
         leader1 = leaderService.insert(leader1);
 
-        Leader leader2 = new Leader();
+        leader2 = new Leader();
         leader2.setUser(user2);
         leader2 = leaderService.insert(leader2);
 
-        Leader leader3 = new Leader();
+        leader3 = new Leader();
         leader3.setUser(user3);
         leader3 = leaderService.insert(leader3);
-        
 
-        setupFinished = true;
     }
 
 
@@ -159,29 +154,13 @@ public class TeamServiceTest {
 
         team = teamService.removeTeamUser(team,user3);
 
-        Assert.assertEquals(2, team.getUsers().size());
+        Assert.assertEquals(2, teamService.findById(team.getId()).getUsers().size());
 
         team = teamService.removeAllTeamUsers(team.getId());
 
         Assert.assertEquals(0, team.getUsers().size());
 
         teamService.deleteById(team.getId());
-    }
-    
-    //TODO check this
-    public void deleteObjects(){
-        //deleting @Before objects
-        //deleting leaders and users
-        leaderService.deleteById(leader1.getId());
-        leaderService.deleteById(leader2.getId());
-        leaderService.deleteById(leader3.getId());
-     
-
-        userService.deleteById(user1.getId());
-        userService.deleteById(user2.getId());
-        userService.deleteById(user3.getId());
-        userService.deleteById(user4.getId());
-   
     }
 
     @Test
@@ -249,13 +228,16 @@ public class TeamServiceTest {
             teamService.deleteById(t.getId());
         }
 
-        for(Leader l : leaderService.findAll()){
-            leaderService.deleteById(l.getId());
-        }
-
-        for(User u : userService.findAll()){
-            userService.deleteById(u.getId());
-        }
     }
 
+    @After
+    public void deleteObjects(){
+        leaderService.deleteById(leader1.getId());
+        leaderService.deleteById(leader2.getId());
+        leaderService.deleteById(leader3.getId());
+        userService.deleteById(user1.getId());
+        userService.deleteById(user2.getId());
+        userService.deleteById(user3.getId());
+        userService.deleteById(user4.getId());
+    }
 }

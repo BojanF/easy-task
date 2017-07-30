@@ -16,6 +16,7 @@
     <import resource="classpath:spring/persistence-config.xml"/>
 
     <bean class="com.easytask.service.impl.LeaderServiceImpl"/>
+    <bean class="com.easytask.service.impl.CoworkersServiceImpl"/>
     <bean class="com.easytask.service.impl.DocumentServiceImpl"/>
     <bean class="com.easytask.service.impl.TaskServiceImpl"/>
     <bean class="com.easytask.service.impl.CommentServiceImpl"/>

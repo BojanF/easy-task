@@ -22,20 +22,16 @@ public class LeaderServiceTest {
     @Autowired
     private IUserService userService;
 
-    private static boolean setupFinished = false;
-    private static User user1,user2;
+    private User user1,user2;
 
     @Before
     public void createObjects(){
-
-        if(setupFinished)
-            return;
 
         user1 = new User();
         user1.setEmail("dummy@mail.com");
         user1.setName("Filip");
         user1.setPassword("pw");
-        user1.setSurename("Filipovski");
+        user1.setSurname("Filipovski");
         user1.setUsername("bf_leader");
         user1 = userService.insert(user1);
 
@@ -43,11 +39,9 @@ public class LeaderServiceTest {
         user2.setEmail("dummyDummy@mail.com");
         user2.setName("Lorem");
         user2.setPassword("loip");
-        user2.setSurename("Ipsum");
+        user2.setSurname("Ipsum");
         user2.setUsername("LorI_leader");
         user2 = userService.insert(user2);
-
-        setupFinished = true;
 
     }
 
@@ -65,13 +59,6 @@ public class LeaderServiceTest {
 
         Assert.assertEquals(null, leaderService.findById(leader.getId()));
 
-        //TODO delete objects
-        //deleting @Before objects
-        userService.deleteById(user1.getId());
-        Assert.assertEquals(null, userService.findById(user1.getId()));
-        userService.deleteById(user2.getId());
-        Assert.assertEquals(null, userService.findById(user2.getId()));
-
     }
 
     @Test
@@ -86,8 +73,8 @@ public class LeaderServiceTest {
         leader.setUser(user2);
         leader = leaderService.update(leader);
 
-        Assert.assertNotEquals(user1, leaderService.findById(leader.getId()).getUser().getId());
-        Assert.assertEquals(user2, leaderService.findById(leader.getId()).getUser().getId());
+        Assert.assertNotEquals(user1.getId(), leaderService.findById(leader.getId()).getUser().getId());
+        Assert.assertEquals(user2.getId(), leaderService.findById(leader.getId()).getUser().getId());
 
         leaderService.deleteById(leader.getId());
 
@@ -118,6 +105,12 @@ public class LeaderServiceTest {
         Assert.assertEquals(null, leaderService.findById(leader2.getId()));
         Assert.assertEquals(leaderService.findAll().size(), 0);
 
+    }
+
+    @After
+    public void deleteObjects(){
+        userService.deleteById(user1.getId());
+        userService.deleteById(user2.getId());
     }
 
 }

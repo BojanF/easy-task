@@ -11,8 +11,7 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name =  "users",uniqueConstraints = {@UniqueConstraint(columnNames = {"username","email"})}
-)
+@Table(name =  "users",uniqueConstraints = {@UniqueConstraint(columnNames = {"username","email"})})
 public class User {
 
     @Id
@@ -40,6 +39,12 @@ public class User {
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Task> tasks = new HashSet<Task>();
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Coworkers> coworkers = new HashSet<Coworkers>();
+
+    @OneToMany(mappedBy = "coworker", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Coworkers> coworkersOf = new HashSet<Coworkers>();
 
     //getters
     public Long getId() {
@@ -74,6 +79,14 @@ public class User {
         return tasks;
     }
 
+    public Set<Coworkers> getCoworkers() {
+        return coworkers;
+    }
+
+    public Set<Coworkers> getCoworkersOf() {
+        return coworkersOf;
+    }
+
 
     //setters
     public void setId(Long id) {
@@ -84,7 +97,7 @@ public class User {
         this.name = name;
     }
 
-    public void setSurename(String surname) {
+    public void setSurname(String surname) {
         this.surname = surname;
     }
 
@@ -108,6 +121,14 @@ public class User {
         this.tasks = tasks;
     }
 
+    public void setCoworkers(Set<Coworkers> coworkers) {
+        this.coworkers = coworkers;
+    }
+
+    public void setCoworkersOf(Set<Coworkers> coworkersOf) {
+        this.coworkersOf = coworkersOf;
+    }
+
 
     //fields
     public static class FIELDS {
@@ -127,5 +148,9 @@ public class User {
         public static String TEAMS = "teams";
 
         public static String TASKS = "tasks";
+
+        public static String COWORKERS = "coworkers";
+
+        public static String COWORKERS_OF = "coworkersOf";
     }
 }
