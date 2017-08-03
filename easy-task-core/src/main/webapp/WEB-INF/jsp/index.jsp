@@ -11,7 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-<form id="form" action="/api/workers/" method="post">
+<form id="form" action="/api/users/" method="post">
     Email:<br>
     <input type="text" name="email" id="email">
     <br>
@@ -38,7 +38,7 @@
             alert();
             // send ajax
             $.ajax({
-                url: '/api/workers/', // url where to submit the request
+                url: '/api/users/', // url where to submit the request
                 type : "POST", // type of action POST || GET
                 dataType : 'json', // data type
                 contentType:"application/json",

@@ -22,7 +22,7 @@ public class LeaderServiceTest {
     @Autowired
     private IUserService userService;
 
-    private User user1,user2;
+    private User user1, user2;
 
     @Before
     public void createObjects(){

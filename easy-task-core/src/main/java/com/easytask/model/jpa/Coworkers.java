@@ -1,6 +1,8 @@
 package com.easytask.model.jpa;
 
 import com.easytask.model.enums.CoworkerState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,26 +16,33 @@ import java.io.Serializable;
 @Table(name =  "coworkers")
 public class Coworkers implements Serializable{
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @EmbeddedId
+    private CoworkerId id;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "coworker_id")
-    private User coworker;
+    @MapsId("userA")
+    private User userA; //user that sends request
+
+    @ManyToOne
+    @MapsId("userB")
+    private User userB;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private CoworkerState state;
 
+
     //getters
-    public User getUser() {
-        return user;
+    public CoworkerId getId() {
+        return id;
     }
 
-    public User getCoworker() {
-        return coworker;
+    public User getUserA() {
+        return userA;
+    }
+
+    public User getUserB() {
+        return userB;
     }
 
     public CoworkerState getState() {
@@ -42,12 +51,16 @@ public class Coworkers implements Serializable{
 
 
     //setters
-    public void setUser(User user) {
-        this.user = user;
+    public void setId(CoworkerId id) {
+        this.id = id;
     }
 
-    public void setCoworker(User coworker) {
-        this.coworker = coworker;
+    public void setUserA(User userA) {
+        this.userA = userA;
+    }
+
+    public void setUserB(User userB) {
+        this.userB = userB;
     }
 
     public void setState(CoworkerState state) {
@@ -58,9 +71,9 @@ public class Coworkers implements Serializable{
     //fields
     public static class FIELDS {
 
-        public static String USER = "user";
+        public static String USER_A = "userA";
 
-        public static String COWORKER = "coworker";
+        public static String USER_B = "userB";
 
         public static String STATE = "state";
         

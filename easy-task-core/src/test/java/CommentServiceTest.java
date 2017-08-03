@@ -33,7 +33,7 @@ public class CommentServiceTest {
     @Autowired
     ICommentService commentService;
 
-    private static User user1 , user2, user3, user4;
+    private static User user1, user2, user3, user4;
     private static Leader leader1, leader2 ;
     private static Team team1,team2;
     private static Project project;
@@ -138,7 +138,9 @@ public class CommentServiceTest {
         comment.setProject(project);
         comment.setText("text");
         comment = commentService.insert(comment);
-        
+
+        Assert.assertEquals(commentService.findById(comment.getId()).getText(),"text");
+
         comment.setText("Edited text");
         comment = commentService.update(comment);
 

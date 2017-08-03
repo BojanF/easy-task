@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.HashSet;
 import java.util.List;
@@ -32,11 +33,25 @@ public class UserRepositoryImpl implements IUserRepository {
 
     @Transactional
     public User findById(Long id) {
+
+//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery q = cb.createQuery(User.class);
+//        Root o = q.from(User.class);
+//        o.fetch(User.FIELDS.COWORKERS, JoinType.INNER);
+//        o.fetch("coworkerOf", JoinType.INNER);
+//        q.select(o).where(cb.equal(o.get(User.FIELDS.ID), id));
+//        q.where(cb.equal(o.get(User.FIELDS.ID), id));
+//
+//        User user = (User)this.entityManager.createQuery(q).getSingleResult();
+//
+//        TypedQuery<User> query = entityManager.createQuery(q);
+//        return query.getSingleResult();
+
         User user = entityManager.find(User.class, id);
         if (user != null) {
             entityManager.refresh(user);
         }
-        return user;
+         return user;
     }
 
     @Transactional

@@ -41,7 +41,7 @@ public class ProjectServiceTest {
     @Autowired
     ITaskService taskService;
 
-    private static User user1 , user2, user3, user4;
+    private static User user1, user2, user3, user4;
     private static Leader leader1, leader2 ;
     private static Team team1,team2;
 
@@ -298,9 +298,9 @@ public class ProjectServiceTest {
         Assert.assertEquals(projectService.getAllDocumentsForProject(project.getId()).size(),2);
         Assert.assertEquals(projectService.getAllCommentsForProject(project.getId()).size(),3);
         Assert.assertEquals(projectService.getAllTasksForProject(project.getId()).size(),3);
-        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(),user1.getId()).size(),3);
-        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(),user2.getId()).size(),2);
-        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(),user3.getId()).size(),1);
+        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(), user1.getId()).size(),3);
+        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(), user2.getId()).size(),2);
+        Assert.assertEquals(projectService.getAllTasksForUserOnProject(project.getId(), user3.getId()).size(),1);
 
 
         for(Task t : taskService.findAll()){

@@ -33,7 +33,7 @@ public class DocumentServiceTest {
     @Autowired
     IDocumentService documentService;
 
-    private static User user1 , user2, user3, user4;
+    private static User user1, user2, user3, user4;
     private static Leader leader1, leader2 ;
     private static Team team1,team2;
     private static Project project;

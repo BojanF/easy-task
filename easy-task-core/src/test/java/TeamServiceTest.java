@@ -38,7 +38,7 @@ public class TeamServiceTest {
     @Autowired
     private IProjectService projectService;
 
-    private static User user1,user2,user3,user4;
+    private static User user1, user2, user3, user4;
     private static Leader leader1,leader2,leader3;
 
     @Before
@@ -147,12 +147,12 @@ public class TeamServiceTest {
 
         Assert.assertEquals(team.getId(), teamService.findById(team.getId()).getId());
 
-        team = teamService.insertTeamUser(team,user3);
-        team = teamService.insertTeamUser(team,user4);
+        team = teamService.insertTeamUser(team, user3);
+        team = teamService.insertTeamUser(team, user4);
 
         Assert.assertEquals(3, team.getUsers().size());
 
-        team = teamService.removeTeamUser(team,user3);
+        team = teamService.removeTeamUser(team, user3);
 
         Assert.assertEquals(2, teamService.findById(team.getId()).getUsers().size());
 

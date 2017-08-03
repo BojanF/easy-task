@@ -68,7 +68,7 @@ public class UserServiceTest {
 
         user.setUsername("BojanF");
         
-        user= userService.update(user);
+        user = userService.update(user);
 
         Assert.assertNotEquals("bf", user.getUsername());
         Assert.assertEquals("BojanF", user.getUsername());
@@ -77,7 +77,7 @@ public class UserServiceTest {
         user.setEmail("novaMail@mail.com");
         user.setName("Bojan");
         user.setSurname("Prezime");
-        user.setPassword("superStrenght");
+        user.setPassword("superStrength");
         user.setUsername("BojFil");
         
         user = userService.update(user);
@@ -91,7 +91,7 @@ public class UserServiceTest {
         Assert.assertNotEquals("Filipovski", user.getSurname());
         Assert.assertEquals("Prezime", user.getSurname());
         Assert.assertNotEquals("pw", user.getPassword());
-        Assert.assertEquals("superStrenght", user.getPassword());
+        Assert.assertEquals("superStrength", user.getPassword());
 
         userService.deleteById(user.getId());
         

@@ -50,6 +50,6 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     public Task removeUserFromTask(Task task, User user) {
-       return taskRepository.removeUserFromTask(task,user);
+       return taskRepository.removeUserFromTask(task, user);
     }
 }

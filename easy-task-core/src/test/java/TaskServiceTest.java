@@ -35,7 +35,7 @@ public class TaskServiceTest {
     @Autowired
     ITaskService taskService;
 
-    private static User user1 , user2, user3, user4;
+    private static User user1, user2, user3, user4;
     private static Leader leader1, leader2 ;
     private static Team team1,team2;
     private static Project project;
@@ -206,12 +206,12 @@ public class TaskServiceTest {
 
         Assert.assertEquals(task.getId(), taskService.findById(task.getId()).getId());
 
-        task = taskService.addUserToTask(task,user3);
-        task = taskService.addUserToTask(task,user4);
+        task = taskService.addUserToTask(task, user3);
+        task = taskService.addUserToTask(task, user4);
 
         Assert.assertEquals(3, task.getUsers().size());
 
-        task = taskService.removeUserFromTask(task,user3);
+        task = taskService.removeUserFromTask(task, user3);
 
         Assert.assertEquals(2, task.getUsers().size());
 
