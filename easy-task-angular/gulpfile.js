@@ -17,10 +17,74 @@ var connect = require('gulp-connect');
 var fs = require("fs");
 
 var JS_APP = [
-  'app/app.js'
+  'app/app.js',
+
+  //home-page
+  'app/views/home-page/home-page.state.js',
+  'app/views/home-page/home-page.controller.js',
+  'app/views/home-page/home-page.service.js',
+
+  //stats-charts
+  'app/views/stats-charts/stats-charts.state.js',
+  'app/views/stats-charts/stats-charts.controller.js',
+
+  //project-details
+  'app/views/project-details/project-details.state.js',
+  'app/views/project-details/project-details.controller.js',
+  'app/views/project-details/project-details.service.js',
+
+  //administrating-projects
+  'app/views/administrating-projects/administrating-projects.state.js',
+  'app/views/administrating-projects/administrating-projects.controller.js',
+  'app/views/administrating-projects/administrating-projects.service.js',
+
+  //your-projects
+  'app/views/your-projects/your-projects.state.js',
+  'app/views/your-projects/your-projects.controller.js',
+  'app/views/your-projects/your-projects.service.js',
+
+  //new-project
+  'app/views/new-project/new-project.state.js',
+  'app/views/new-project/new-project.controller.js',
+
+  //team-leader
+  'app/views/team-leader/team-leader.state.js',
+  'app/views/team-leader/team-leader.controller.js',
+
+  //teams-working-on
+  'app/views/teams-working-on/teams-working-on.state.js',
+  'app/views/teams-working-on/teams-working-on.controller.js',
+
+  //coworkers
+  'app/views/coworkers/coworkers.state.js',
+  'app/views/coworkers/coworkers.controller.js',
+
+  //new-team
+  'app/views/new-team/new-team.state.js',
+  'app/views/new-team/new-team.controller.js',
+
+  //tasks-by-state
+  'app/views/tasks-by-state/tasks-by-state.state.js',
+  'app/views/tasks-by-state/tasks-by-state.controller.js',
+  'app/views/tasks-by-state/tasks-by-state.service.js',
+
+  //components
+  'app/components/group-select/group-select-component.component.js'
 ];
 
-var TEMPLATES_SRC = [];
+var TEMPLATES_SRC = [
+  'app/views/home-page/home-page.view.html',
+  'app/views/stats-charts/stats-charts.view.html',
+  'app/views/project-details/project-details.view.html',
+  'app/views/administrating-projects/administrating-projects.view.html',
+  'app/views/your-projects/your-projects.view.html',
+  'app/views/new-project/new-project.view.html',
+  'app/views/team-leader/team-leader.view.html',
+  'app/views/teams-working-on/teams-working-on.view.html',
+  'app/views/coworkers/coworkers.view.html',
+  'app/views/new-team/new-team.view.html',
+  'app/views/tasks-by-state/tasks-by-state.view.html'
+];
 
 var CSS_APP = [
   'css/main.css'
@@ -46,7 +110,11 @@ var JS_LIB = [
   'bower_components/angular-ui-router/release/angular-ui-router.js',
   'bower_components/angular-ui-select/dist/select.js',
   'bower-components/angular-smart-table/dist/smart-table.js',
-  'bower_components/angular-resource/angular-resource.js'
+  'bower_components/angular-resource/angular-resource.js',
+
+  'bower_components/d3/d3.min.js',
+  'bower_components/c3/c3.min.js',
+  'bower_components/c3-angular/c3-angular.min.js'
 ];
 
 
@@ -126,7 +194,7 @@ gulp.task('templates', function () {
     .pipe(
       templateCache('templates.js', { // compile them as angular templates
         module: MODULE_NAME,        // from module MODULE_NAME
-        root: 'app'                 // of the app
+        root: 'app/views'                // of the app
       }))
     .pipe(gulp.dest(DESTINATION));
 });

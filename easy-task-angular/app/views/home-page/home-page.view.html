@@ -1,0 +1,226 @@
+
+
+
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        {{vm.title}} <small>dashboard</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li class="active">
+          <i class="fa fa-dashboard"></i> Dashboard
+        </li>
+      </ol>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <div class="row">
+    <div class="col-lg-3 col-md-6">
+      <div class="panel panel-sky-blue">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-times-circle fa-5x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{vm.tasksStates.notStarted}}</div>
+              <div>Not started</div>
+            </div>
+          </div>
+        </div>
+        <a href="#/tasks-by-state?state=1">
+          <div class="panel-footer">
+            <span class="pull-left">View tasks</span>
+            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="clearfix"></div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="panel panel-yellow">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-minus-circle fa-5x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{vm.tasksStates.inProgress}}</div>
+              <div>In progress</div>
+            </div>
+          </div>
+        </div>
+        <a href="#/tasks-by-state?state=2">
+          <div class="panel-footer">
+            <span class="pull-left">View tasks</span>
+            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="clearfix"></div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-check-circle fa-5x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{vm.tasksStates.finished}}</div>
+              <div>Finished</div>
+            </div>
+          </div>
+        </div>
+        <a href="#/tasks-by-state?state=3">
+          <div class="panel-footer">
+            <span class="pull-left">View tasks</span>
+            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="clearfix"></div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="panel panel-red">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-3">
+              <i class="fa fa-exclamation-circle fa-5x"></i>
+            </div>
+            <div class="col-xs-9 text-right">
+              <div class="huge">{{vm.tasksStates.breach}}</div>
+              <div>Breach of deadline</div>
+            </div>
+          </div>
+        </div>
+        <a href="#/tasks-by-state?state=4">
+          <div class="panel-footer">
+            <span class="pull-left">View tasks</span>
+            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+            <div class="clearfix"></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Your active tasks</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.activeTasks.loadGif">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="activeTasks" st-safe-src="vm.activeTasks" ng-show="vm.uiState.activeTasks.showTasks" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Deadline</th>
+              <th>Project</th>
+              <th>Leader</th>
+              <th>State</th>
+            </tr>
+            <tr>
+              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="t in activeTasks | orderBy:['name'] | filter:searchProfName">
+              <td><a href="#">{{t.name}}</a></td>
+              <td>{{t.createdOnString}}</td>
+              <td>{{t.deadlineString}}</td>
+              <td><a href="#/project-details?id={{t.project.id}}">{{t.project.name}}</a></td>
+              <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
+              <td><span ng-class="t.cssClass">{{t.state}}</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="6" class="text-center">
+                <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+          <div class="panel panel-warning text-danger" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
+            You don`t have any active tasks!
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-flask fa-fw"></i> Urgent projects that you are working on</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.urgentProjects.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="urgentProjects" st-safe-src="vm.urgentProjects" ng-show="vm.uiState.urgentProjects.showUrgentProjects" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Deadline</th>
+              <th>Team</th>
+              <th>State</th>
+            </tr>
+            <tr>
+              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="up in urgentProjects | orderBy:['name'] | filter:searchProfName">
+              <td><a href="#">{{up.name}}</a></td>
+              <td>{{up.createdOnString}}</td>
+              <td>{{up.deadlineString}}</td>
+              <td><a href="#">{{up.team.name}}</a></td>
+
+              <!--<td><span ng-class="{{t.cssClass}}">{{t.state}}</span></td>-->
+              <td><span> <!--ng-class="t.cssClass"-->{{up.state}}</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="6" class="text-center">
+                <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+          <div class="panel panel-warning text-danger" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
+            You don`t have any urgent projects!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+
+
+
+</div>
+<!-- /.container-fluid -->
+
+
+
+
+
+
+
+
+

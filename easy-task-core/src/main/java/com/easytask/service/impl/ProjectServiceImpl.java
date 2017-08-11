@@ -58,11 +58,13 @@ public class ProjectServiceImpl implements IProjectService {
     }
 
     public List<Task> getAllTasksForUserOnProject(Long projectId, Long userId) {
+
         List<Task> tasks = new ArrayList<Task>();
-        for(Task t : userRepository.findById(userId).getTasks()){
+        for(Task t : userRepository.getTasksForUser(userId)){
             if (t.getProject().getId() == projectId)
                 tasks.add(t);
         }
         return tasks;
+
     }
 }

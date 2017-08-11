@@ -1,14 +1,19 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.enums.ProjectState;
+import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import com.easytask.persistence.IUserRepository;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Table;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -104,7 +109,8 @@ public class UserRepositoryImpl implements IUserRepository {
     @Transactional
     public List<Project> getProjectsByUser(Long userId) {
         Set<Team> teams = new HashSet<Team>();
-        for (Team t: findById(userId).getTeams()) {
+        List<Team> teamsList = getTeamsForUser(userId);
+        for (Team t: teamsList) {
             teams.add(t);
         }
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -113,12 +119,11 @@ public class UserRepositoryImpl implements IUserRepository {
 
         cq.where(
                 from.get(Project.FIELDS.TEAM).in(
-                        findById(userId).getTeams()
+                        teamsList
                 )
         );
         return entityManager.createQuery(cq).getResultList();
     }
-
 
     public List<Project> getProjectsLeadByUser(Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -134,5 +139,82 @@ public class UserRepositoryImpl implements IUserRepository {
         );
         return entityManager.createQuery(cq).getResultList();
     }
+
+    public List<Team> getTeamsForUser(Long userId){
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Team> cq = cb.createQuery(Team.class);
+        Root<Team> from = cq.from(Team.class);
+        Join<Team, User> join = from.join(Team.FIELDS.USERS,JoinType.LEFT);
+        cq.where(
+                cb.equal(
+                        join.get(User.FIELDS.ID),
+                        userId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    public List<Task> getTasksForUser(Long userId){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> from = cq.from(Task.class);
+        Join<Task, User> join = from.join(Task.FIELDS.USERS,JoinType.LEFT);
+        cq.where(
+                cb.equal(
+                        join.get(User.FIELDS.ID),
+                        userId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    public List<Task> getTasksForUserByState(Long userId, TaskState state){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> from = cq.from(Task.class);
+        Join<Task, User> join = from.join(Task.FIELDS.USERS,JoinType.LEFT);
+        cq.where(
+                cb.equal(
+                        join.get(User.FIELDS.ID),
+                        userId
+                ),
+                cb.equal(from.get(Task.FIELDS.STATE),
+                        state
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+
+    }
+
+    public List<Project> getUrgentProjectsForUser(Long userId){
+        List<Team> teamsList = getTeamsForUser(userId);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> cq = cb.createQuery(Project.class);
+        Root<Project> from= cq.from(Project.class);
+        DateTime today = DateTime.now();
+
+        cq.where(
+                from.get(Project.FIELDS.TEAM).in(
+                        teamsList
+                ),cb.or(
+                        cb.equal(from.get(Project.FIELDS.STATE),
+                                ProjectState.NOT_STARTED
+                        ),
+                        cb.equal(from.get(Project.FIELDS.STATE),
+                                ProjectState.IN_PROGRESS
+                        ),
+                        cb.equal(from.get(Project.FIELDS.STATE),
+                                ProjectState.BREACH_OF_DEADLINE
+                        )
+                )
+        ).orderBy(cb.asc(from.get(Project.FIELDS.DEADLINE)));
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+
 }
 

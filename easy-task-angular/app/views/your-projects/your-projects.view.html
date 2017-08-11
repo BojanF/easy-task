@@ -1,0 +1,77 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        Projects tdat you are working on
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          <i class="fa fa-dashboard"></i>  <a href="#/home-page">Dashboard</a>
+        </li>
+        <li>
+          <i class="fa fa-flask"></i> Projects
+        </li>
+        <li class="active">
+          <i class="fa fa-briefcase"></i> Administrating
+        </li>
+      </ol>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <div class="row">
+
+
+  </div>
+  <!-- /.row -->
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><i class="fa fa-flask fa-fw"></i> Projects</h3>
+    </div>
+    <div class="panel-body">
+      <div ng-show="vm.uiState.loadGif">
+        <img src="pictures//loading.gif" style="width:20px; height:20px;">
+      </div>
+      <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <!--<th st-sort="name">Name</th>-->
+          <!--<th st-sort="shortName">Short name</th>-->
+          <th>Name</th>
+          <th>Created on</th>
+          <th>Deadline</th>
+          <th>Team</th>
+          <th>State</th>
+        </tr>
+        <tr>
+          <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="p in projects | orderBy:['name'] | filter:searchProfName">
+          <td><a href="#/project-details?id={{p.id}}">{{p.name}}</a></td>
+          <td>{{p.createdOnString}}</td>
+          <td>{{p.deadlineString}}</td>
+          <td><a href="#">{{p.team.name}}</a></td>
+          <td><span ng-class="p.cssClass"> {{p.state}}</span></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="6" class="text-center">
+            <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+      <div class="panel panel-warning text-danger" ng-show="vm.uiState.showNoProjectsPanel">
+        You don`t participate in any project!
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->

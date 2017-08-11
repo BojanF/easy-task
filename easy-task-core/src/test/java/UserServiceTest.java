@@ -389,9 +389,9 @@ public class UserServiceTest {
         task3 = taskService.insert(task3);
 
 
-        Assert.assertEquals(userService.getTasksByUser(user.getId(),TaskState.NOT_STARTED).size(),1);
-        Assert.assertEquals(userService.getTasksByUser(user.getId(),TaskState.IN_PROGRESS).size(),2);
-        Assert.assertEquals(userService.getTasksByUser(user.getId(),TaskState.FINISHED).size(),0);
+        Assert.assertEquals(userService.getTasksForUserByState(user.getId(),TaskState.NOT_STARTED).size(),1);
+        Assert.assertEquals(userService.getTasksForUserByState(user.getId(),TaskState.IN_PROGRESS).size(),2);
+        Assert.assertEquals(userService.getTasksForUserByState(user.getId(),TaskState.FINISHED).size(),0);
 
         for (Task t : taskService.findAll()){
             taskService.deleteById(t.getId());

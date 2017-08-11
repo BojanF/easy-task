@@ -6,7 +6,8 @@
       'ui.router',
       'ui.select',
       'smart-table',
-      'ngResource'
+      'ngResource',
+      'gridshore.c3js.chart'
     ]);
 
 })(angular);

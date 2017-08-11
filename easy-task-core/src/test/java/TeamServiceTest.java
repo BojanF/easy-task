@@ -107,7 +107,7 @@ public class TeamServiceTest {
         Assert.assertEquals("Team 1", team.getName());
         Assert.assertEquals(3, team.getUsers().size());
 
-        Assert.assertEquals(1, userService.findById(user2.getId()).getTeams().size());
+        Assert.assertEquals(1, userService.getTeamsForUser(user2.getId()).size());
 
         teamService.deleteById(team.getId());
 

@@ -58,20 +58,21 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getProjectsByUser(userId);
     }
 
-    public List<Task> getTasksByUser(Long userId, TaskState state) {
-        List<Task> tasks = new ArrayList<Task>();
-        for (Task t:
-                findById(userId).getTasks()) {
-                    if(t.getState() == state)
-                        tasks.add(t);
-        }
-        return tasks;
+    public List<Task> getTasksForUserByState(Long userId, TaskState state) {
+//        List<Task> tasks = new ArrayList<Task>();
+//        for (Task t : getTasksForUser(userId)) {
+//            if(t.getState() == state)
+//                tasks.add(t);
+//        }
+//        return tasks;
+        return userRepository.getTasksForUserByState(userId, state);
     }
 
     public List<Team> getTeamsLeadByUser(Long userId) {
+
         List<Team> teams = new ArrayList<Team>();
-        for (Team t : findById(userId).getTeams()) {
-            if(t.getLeader().getUser().getId() == userId)
+        for (Team t : getTeamsForUser(userId)) {
+            if(t.getLeader().getUser().getId().equals(userId))
                 teams.add(t);
         }
         return teams;
@@ -81,4 +82,15 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getProjectsLeadByUser(userId);
     }
 
+    public List<Team> getTeamsForUser(Long userId) {
+        return userRepository.getTeamsForUser(userId);
+    }
+
+    public List<Task> getTasksForUser(Long userId){
+        return userRepository.getTasksForUser(userId);
+    }
+
+    public List<Project> getUrgentProjectsForUser(Long userId){
+        return userRepository.getUrgentProjectsForUser(userId);
+    }
 }

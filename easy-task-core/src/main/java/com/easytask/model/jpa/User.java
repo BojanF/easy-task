@@ -1,5 +1,7 @@
 package com.easytask.model.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -33,12 +35,6 @@ public class User {
     @NotNull
     private String email;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<Team> teams = new HashSet<Team>();
-
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    private Set<Task> tasks = new HashSet<Task>();
-
 
     //getters
     public Long getId() {
@@ -63,14 +59,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public Set<Team> getTeams() {
-        return teams;
-    }
-
-    public Set<Task> getTasks() {
-        return tasks;
     }
 
 
@@ -99,14 +87,6 @@ public class User {
         this.email = email;
     }
 
-    public void setTeams(Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
-
 
     //fields
     public static class FIELDS {
@@ -122,10 +102,6 @@ public class User {
         public static String PASSWORD = "password";
 
         public static String EMAIL = "email";
-
-        public static String TEAMS = "teams";
-
-        public static String TASKS = "tasks";
 
     }
 }

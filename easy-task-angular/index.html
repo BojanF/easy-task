@@ -10,14 +10,14 @@
     <link rel="icon" href="/images/favicon.ico" sizes="16x16 32x32 48x48 64x64"
           type="image/vnd.microsoft.icon">
 
-    <title>WP Angular Starter</title>
+    <title>easy-task</title>
 
     <!-- Concatenated CSS -->
 
-    <link href="/dest/lib.css?rev=40c8a4aaf2878194b5427372047084c9" rel="stylesheet">
+    <link href="/dest/lib.css?rev=9af53d940a5b1d09430b1ca37e90074d" rel="stylesheet">
     <link href="/dest/app.css?rev=30ca0b95beb15e987ff30865f5d97b3b" rel="stylesheet">
 
-    <link href="/dest/lib.css?rev=40c8a4aaf2878194b5427372047084c9" rel="stylesheet">
+    <link href="/dest/lib.css?rev=9af53d940a5b1d09430b1ca37e90074d" rel="stylesheet">
     <link href="/dest/app.css?rev=30ca0b95beb15e987ff30865f5d97b3b" rel="stylesheet">
 
 
@@ -30,25 +30,56 @@
 
   <body ng-app="easy-task-angular" ng-cloak class="ng-cloak">
 
-    <!--<div ng-include="'app/nav/nav.html'"></div>
-    <div ui-view class="main-page container"></div>-->
+    <div id="wrapper">
+        <div ng-include="'app/nav/nav.html'"></div>
+        <div ui-view id="page-wrapper"> </div>
+        <!-- /#page-wrapper -->
+        <!--class="main-page container"-->
+          <!--<c3chart bindto-id="gauge-plot1-chart">-->
+            <!--<chart-column column-id="Data 1"-->
+                          <!--column-values="50"-->
+                          <!--column-type="gauge"/>-->
+            <!--<chart-gauge min="0"-->
+                         <!--max="120"-->
+                         <!--units=" PMs"-->
+                         <!--width="39"/>-->
+          <!--</c3chart>-->
+
+        <!--</div>-->
+    </div>
 
 
-    <!-- Concatenated libraries -->
-    <script src="/dest/lib.js?rev=454eda815ab9afb18406e7701b1eda4e"></script>
-    <!-- Concatenated application -->
 
-    <script src="/dest/src.js?rev=96bb34b8fb36fe2d52a8e93ea455984b"></script>
-    <!-- All html templates -->
-    <script src="/dest/templates.js?rev=04fe070abc12e37d772af6e4146aada4"></script>
-
-    <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
-
-    <script src="/dest/src.js?rev=96bb34b8fb36fe2d52a8e93ea455984b"></script>
-    <!-- All html templates -->
-    <script src="/dest/templates.js?rev=04fe070abc12e37d772af6e4146aada4"></script>
-
-    <h1> TEST PAGE </h1>
 
   </body>
+
+  <!-- Concatenated libraries -->
+  <script src="/dest/lib.js?rev=34d5366734d4b87a613766b94ff06b51"></script>
+  <!-- Concatenated application -->
+
+  <script src="/dest/src.js?rev=fa1af8f1cc5766d1ce07e02c076c23f1"></script>
+  <!-- All html templates -->
+  <script src="/dest/templates.js?rev=f703f214d17fa913d6273b30927da658"></script>
+
+  <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
+
+  <script src="/dest/src.js?rev=fa1af8f1cc5766d1ce07e02c076c23f1"></script>
+  <!-- All html templates -->
+  <script src="/dest/templates.js?rev=f703f214d17fa913d6273b30927da658"></script>
+
+  <!--c3-components-->
+  <link href="bower_components/c3/c3.min.css"rel="stylesheet" type="text/css">
+  <script src="bower_components/d3/d3.min.js"></script>
+  <script src="bower_components/c3/c3.min.js"></script>
+  <script src="bower_components/c3-angular/c3-angular.min.js"></script>
+  <!-- c3-components-end -->
+
+  <!-- nav CSS -->
+  <link href="css/nav.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <!-- font-awesome -->
+  <!--<link href="bower_components/components-font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
+
+
 </html>

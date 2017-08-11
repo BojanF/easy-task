@@ -26,10 +26,17 @@ public interface IUserService {
 
     List<Project> getProjectsByUser(Long userId);
 
-    List<Task> getTasksByUser(Long userId, TaskState state);
-
     List<Team> getTeamsLeadByUser(Long userId);
 
     List<Project> getProjectsLeadByUser(Long userId);
+
+    List<Team> getTeamsForUser(Long userId);
+
+    List<Task> getTasksForUser(Long userId);
+
+    //dopolnitelno dodadeni, bez unit testovi
+    List<Task> getTasksForUserByState(Long userId, TaskState state);
+
+    List<Project> getUrgentProjectsForUser(Long userId);
 
 }

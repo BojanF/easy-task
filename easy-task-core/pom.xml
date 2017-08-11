@@ -192,12 +192,12 @@
             <version>${jodatime-jsptags.version}</version>
         </dependency>
 
-        <!-- Databases - Uses HSQL by default
+        <!-- Databases - Uses HSQL by default-->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <scope>runtime</scope>
-        </dependency>-->
+        </dependency>
 
         <!-- For MySql only -->
         <dependency>

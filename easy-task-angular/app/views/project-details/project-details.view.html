@@ -1,0 +1,280 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        {{vm.project.name}}
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          <i class="fa fa-dashboard"></i>  <a href="#/home-page">Dashboard</a>
+        </li>
+        <li>
+          <i class="fa fa-flask"></i> Projects
+        </li>
+        <li class="active">
+          Project name
+        </li>
+      </ol>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <ul  class="nav nav-tabs">
+    <li class="active">
+      <a href="#1a" data-toggle="tab"><i class="fa fa-fw fa-hourglass-half"></i>Tasks</a>
+    </li>
+    <li>
+      <a href="#2a" ng-click="vm.getDocuments()" data-toggle="tab"><i class="fa fa-fw fa-file"></i>Documents</a>
+    </li>
+    <li>
+      <a href="#3a" ng-click="vm.getComments()" data-toggle="tab"><i class="fa fa-fw fa-commenting"></i>Comments</a>
+    </li>
+    <li>
+      <a href="#4a" data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Information</a>
+    </li>
+    <li>
+      <a href="#5a" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
+    </li>
+  </ul>
+
+  <div class="tab-content clearfix">
+    <div class="tab-pane active" id="1a">
+
+      <br>
+      <!-- Button trigger modal -->
+      <button ng-show="vm.uiState.addNewTaskButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
+        <i class="fa fa-fw fa-plus-square"> </i>
+        Add new task
+      </button>
+      <br><br>
+      <!-- Modal -->
+      <div class="modal fade" id="modalTask" tabindex="-1" role="dialog" aria-labelledby="myModalLabelTask">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabelTask">Add new task</h4>
+            </div>
+            <div class="modal-body">
+              <h4> New task form </h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">
+                <i class="fa fa-fw fa-save"></i> Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Tasks for this project</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.tasks.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="tasks" st-safe-src="vm.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Deadline</th>
+              <th>Leader</th>
+              <th>State</th>
+            </tr>
+            <tr>
+              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
+              <td><a href="#">{{t.name}}</a></td>
+              <td>{{t.id}}</td>
+              <td>{{t.deadlineString}}</td>
+              <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
+              <td><span ng-class="t.cssClass">{{t.state}}</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+          <div class="panel panel-warning text-danger" ng-show="vm.uiState.tasks.showNoTasksPanel">
+            This project doesn`t have any tasks!
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="2a">
+      <!--<h3>Documents</h3>-->
+      <br>
+      <!-- Button trigger modal -->
+      <div ng-show="vm.uiState.addNewTaskButton">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
+          <i class="fa fa-fw fa-plus-square"> </i>
+          Add new document
+        </button>
+      </div>
+      <br><br>
+      <!-- Modal -->
+      <div class="modal fade" id="modalDoc" tabindex="-1" role="dialog" aria-labelledby="myModalLabelDoc">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabelDoc">Add new document</h4>
+            </div>
+            <div class="modal-body">
+              <h4> New document form </h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">
+                <i class="fa fa-fw fa-save"></i> Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-file fa-fw"></i> Documents for project</h3>
+        </div>
+        <div class="panel-body">
+
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th> Name </th>
+              <th> Posted from </th>
+              <th> Posted on </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 1 </a> </td>
+              <td> User 1 </td>
+              <td> 22.07.2017 17:25 </td>
+            </tr>
+            <tr>
+              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 2 </a> </td>
+              <td> User 1 </td>
+              <td> 22.07.2017 17:29 </td>
+            </tr>
+            <tr>
+              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 3 </a> </td>
+              <td> User 2 </td>
+              <td> 23.07.2017 20:23 </td>
+            </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="3a">
+      <!--<h3>Comments</h3>-->
+      <br><br>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-commenting"></i>Comments</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table">
+            <tbody>
+            <tr>
+              <td class="commets-et">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <img class="media-object" src="64x64.svg" alt="...">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">User 1 </h4>
+                    <small> 22.06.2017 16:53</small>
+                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="commets-et">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <img class="media-object" src="64x64.svg" alt="..." class="img-thumbnail">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">User 2 </h4>
+                    <small> 22.06.2017 16:53</small>
+                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="panel-footer text-right">
+
+          <form>
+            <textarea class="form-control" placeholder="Your comment" rows="3"></textarea> <br>
+            <button class="btn btn-success" type="submit">	<i class="fa fa-fw fa-paper-plane"></i>	Comment </button>
+          </form>
+
+        </div>
+      </div>
+
+
+    </div>
+    <div class="tab-pane" id="4a">
+      <h3>Information</h3>
+    </div>
+    <div class="tab-pane" id="5a">
+      <!--<h3>Stats</h3>-->
+      <br> <br>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
+        </div>
+        <div class="panel-body">
+          <c3chart ng-show="vm.uiState.showStats"
+                   bindto-id="tasks-chart"
+                   chart-data="vm.c3DataTest.donuts.points.tasks"
+                   chart-columns="vm.c3DataTest.donuts.columns.tasks">
+            <chart-legend show-legend="true" legend-position="right"/>
+            <chart-donut title="Tasks stage percentages" width="60"/>
+          </c3chart>
+          <div class="panel panel-warning text-danger" ng-hide="vm.uiState.showStats">
+            This project does not contains any tasks!
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+<!-- /.container-fluid -->
