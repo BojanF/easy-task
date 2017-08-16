@@ -3,9 +3,7 @@ package com.easytask.model.jpa;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Bojan on 6/7/2017.
@@ -31,7 +29,7 @@ public class Team {
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> users = new LinkedHashSet<User>();
+    private List<User> users = new ArrayList<User>();
 
 
     //getters
@@ -43,7 +41,7 @@ public class Team {
         return leader;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -65,7 +63,7 @@ public class Team {
         this.leader = leader;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

@@ -6,10 +6,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Bojan on 8/9/2017.
@@ -29,6 +27,13 @@ public class TeamController implements ApplicationContextAware {
     @Autowired
     TeamController(ITeamService teamService){
         this.teamService = teamService;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Team insertTeam(@RequestBody Team team){
+        int x = 0;
+        return teamService.insert(team);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

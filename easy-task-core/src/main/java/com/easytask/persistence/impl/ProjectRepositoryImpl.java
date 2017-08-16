@@ -1,5 +1,6 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
@@ -98,6 +99,20 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         cq.where(
                 cb.equal(
                         from.get(Comment.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        ).orderBy(cb.desc(from.get(Comment.FIELDS.DATE)));
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Transactional
+    public List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TaskState> cq = cb.createQuery(TaskState.class);
+        Root<Task> from= cq.from(Task.class);
+        cq.select(from.get(Task.FIELDS.STATE).as(TaskState.class)).where(
+                cb.equal(
+                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
                         projectId
                 )
         );

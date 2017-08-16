@@ -104,6 +104,7 @@ public class CoworkersServiceTest {
         //test deleteById function
         coworkersService.deleteById(coworkers1.getId());
         Assert.assertEquals(null, coworkersService.findById(coworkers1.getId()));
+        //Assert.assertEquals(null, coworkersService.findById(new CoworkerId(user3.getId(), user1.getId())));
 
     }
 

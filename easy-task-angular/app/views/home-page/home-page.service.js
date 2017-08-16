@@ -25,10 +25,6 @@
       getTasksStates: getTasksStatesFn,
       getActiveTasks: getActiveTasksFn,
       getUrgentProjects: getUrgentProjectsFn
-      // update: updateFn,
-      // getById: getByIdFn,
-
-      // remove: removeFn
     };
     return service;
 
@@ -49,38 +45,7 @@
       return urgentProjectsResource.query({id:userId}).$promise;
     }
 
-    // function saveFn(courseEntity) {
-    //   if(courseEntity.id === undefined) {
-    //     return resource.save(courseEntity, function(data){
-    //       courseEntity.id=data.id;
-    //     }).$promise;
-    //   }
-    //   return updateFn(courseEntity);
-    //
-    //
-    // }
-    //
-    // function updateFn(courseEntity) {
-    //   if (courseEntity.id === undefined) {
-    //     $log.debug("IFFFF");
-    //     return saveFn(courseEntity).$promise;
-    //   }
-    //   $log.debug("UPDATE");
-    //   return resource.update(/*{id: courseEntity.id},*/ courseEntity).$promise;
-    //
-    // }
-    //
-    // function getByIdFn(courseId) {
-    //   return resource.get({id:courseId}).$promise;
-    //
-    // }
-    //
 
-    //
-    // function removeFn(courseEntity) {
-    //   $log.debug("DELETE");
-    //   return resource.delete({id:courseEntity.id}).$promise;
-    // }
   }
 
 })(angular);

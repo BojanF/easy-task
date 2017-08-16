@@ -15,12 +15,13 @@
   function AdministratingProjectsController($log, AdministratingProjectsService) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 3;
+    vm.USER_ID = 110;
     vm.projects = [];
     vm.uiState = {
       loadGif: true,
       showProjects: false,
-      showNoProjectsPanel: false
+      showNoProjectsPanel: false,
+      showErrorPanel: false
     }
 
     //functions declaration
@@ -32,11 +33,14 @@
     //functions implementation
     function getAdministratingProjectsFn(){
 
-      AdministratingProjectsService.getAdministratingProjects(vm.USER_ID).then(function (data) {
+      AdministratingProjectsService.getAdministratingProjects(vm.USER_ID).then(successCalback, errorCallback);
+
+      function successCalback(data) {
 
         vm.projects = data;
 
         vm.uiState.loadGif = false;
+        vm.uiState.showErrorPanel= false;
         if(vm.projects.length > 0){
           vm.uiState.showProjects = true;
           vm.uiState.showNoProjectsPanel = false;
@@ -47,7 +51,14 @@
           vm.uiState.showNoProjectsPanel = true;
         }
 
-      })
+      }
+
+      function errorCallback(){
+        vm.uiState.loadGif = false;
+        vm.uiState.showProjects = false;
+        vm.uiState.showNoProjectsPanel = false;
+        vm.uiState.showErrorPanel= true;
+      }
     }
 
     //helper functions
@@ -58,8 +69,8 @@
       for(var i=0 ; i<size ; i++){
         var currProject = projects[i];
 
-        currProject.createdOnString = dateTimeToString(currProject.createdOn);
-        currProject.deadlineString = dateTimeToString(currProject.deadline);
+        currProject.createdOn = dateMillisecondsToDate(currProject.createdOn);
+        currProject.deadline = dateMillisecondsToDate(currProject.deadline);
 
         if(currProject.state == 'CREATED'){
           currProject.cssClass = 'label label-default';
@@ -90,13 +101,20 @@
 
     }
 
-    function dateTimeToString(dateTime){
 
-      return dateTime.dayOfMonth + "." +
-        dateTime.monthOfYear + "." +
-        dateTime.year + " " +
-        dateTime.hourOfDay + ":" +
-        dateTime.minuteOfHour;
+
+    function dateMillisecondsToDate(milliseconds){
+      var d = new Date(milliseconds);
+      var month = parseInt(d.getMonth()) + 1;
+      var minutes = d.getMinutes();
+      if(minutes.toString().length == 1){
+        minutes = '0' + minutes;
+      }
+      return d.getDate() + "." +
+        month + "." +
+        d.getFullYear() + " " +
+        d.getHours() + ":" +
+        minutes;
 
     }
   }

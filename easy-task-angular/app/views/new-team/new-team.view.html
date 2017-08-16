@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">
-        {{vm.title}}
+        Create new team
       </h1>
       <ol class="breadcrumb">
         <li>
@@ -21,25 +21,56 @@
   </div>
   <!-- /.row -->
 
-  <div class="row">
 
-
-  </div>
-  <!-- /.row -->
 
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title"><i class="fa fa-users fa-fw"></i> Add new team</h3>
     </div>
     <div class="panel-body">
-      <h4> New team form </h4>
-    </div>
-    <div class="panel-footer text-right">
+      <!--<h4> New team form </h4>-->
+      <form  id="newTeam" name="newTeamForm" ng-submit="vm.saveTeam()">
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <input-component placeholder="name for team"
+                             label="Team name"
+                             type="text"
+                             model="vm.newTeam.name"
+                             required="true"
+                             focus="true">
+            </input-component>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-offset-2 col-md-8">
+            <label>Select workers for your project</label>
+            <div ng-show="vm.uiState.loadGif">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+            </div>
+            <multiple-select users="vm.fetchedData.coworkers"
+                             model="vm.newTeam.users"
+                             info="{{vm.uiState.fetchingCoworkersMessage}}">
+            </multiple-select>
 
-      <button class="btn btn-default" type="reset">
+          </div>
+        </div>
+      </form>
+      <br>
+      <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.successNewTeam">
+        {{vm.uiState.successNewTeam}}
+      </div>
+      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.errorNewTeam">
+        {{vm.uiState.errorNewTeam}}
+      </div>
+
+
+    </div>
+    <div ng-show="vm.uiState.canSubmit" class="panel-footer text-right">
+
+      <button class="btn btn-default" ng-click="vm.clearNewTeam()" type="reset">
         <i class="fa fa-fw fa-refresh"></i>	Clear
       </button>
-      <button class="btn btn-primary" type="submit">
+      <button class="btn btn-primary" form="newTeam" ng-disabled="newTeamForm.$invalid" type="submit">
         <i class="fa fa-fw fa-save"></i>
         Save
       </button>

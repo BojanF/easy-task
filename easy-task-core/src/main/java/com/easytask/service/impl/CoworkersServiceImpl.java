@@ -56,5 +56,17 @@ public class CoworkersServiceImpl implements ICoworkersService {
         return coworkerRepository.getNonEngagedUsersForUser(userId);
     }
 
+    public Coworkers insertPair(Coworkers coworkers){
+        return coworkerRepository.insertPair(coworkers);
+    };
+
+    public Coworkers updatePair(Coworkers coworkers){
+        return coworkerRepository.updatePair(coworkers);
+    };
+
+    public void deletePairById(CoworkerId id){
+        coworkerRepository.deletePairById(id);
+    };
+
 
 }

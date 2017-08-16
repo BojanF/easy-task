@@ -1,4 +1,11 @@
-<div class="container-fluid">
+<div ng-hide="vm.uiState.showProject" class="container-fluid">
+  <div class="jumbotron">
+    <h1>Ooooops!</h1>
+    <p>We can`t find that project!</p>
+  </div>
+</div>
+
+<div ng-show="vm.uiState.showProject" class="container-fluid">
 
   <!-- Page Heading -->
   <div class="row">
@@ -14,7 +21,7 @@
           <i class="fa fa-flask"></i> Projects
         </li>
         <li class="active">
-          Project name
+          {{vm.project.name}}
         </li>
       </ol>
     </div>
@@ -43,26 +50,104 @@
     <div class="tab-pane active" id="1a">
 
       <br>
-      <!-- Button trigger modal -->
-      <button ng-show="vm.uiState.addNewTaskButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
-        <i class="fa fa-fw fa-plus-square"> </i>
-        Add new task
-      </button>
+      <div class="row">
+        <div class="col-md-3">
+          <!-- Button trigger modal -->
+          <button ng-show="vm.uiState.addNewButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
+            <i class="fa fa-fw fa-plus-square"> </i>
+            Add new task
+          </button>
+        </div>
+        <div class="col-md-9 panel panel-warning text-center text-success" ng-show="vm.uiState.addNewTask.successMsg">
+          {{vm.uiState.addNewTask.successMsg}}
+        </div>
+      </div>
       <br><br>
       <!-- Modal -->
       <div class="modal fade" id="modalTask" tabindex="-1" role="dialog" aria-labelledby="myModalLabelTask">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
               <h4 class="modal-title" id="myModalLabelTask">Add new task</h4>
             </div>
             <div class="modal-body">
-              <h4> New task form </h4>
+              <form id="newTask" name="newTaskForm" ng-submit="vm.saveNewTask()">
+                <div class="container-fluid">
+                  <div class="form-group">
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <input-component placeholder="name for task"
+                                         label="Task name"
+                                         type="text"
+                                         model="vm.newEntities.task.name"
+                                         required="true"
+                                         focus="true">
+                        </input-component>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label> Description for the project </label>
+                        <textarea ng-model="vm.newEntities.task.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label> Created at</label>
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                          <input class="form-control"
+                                 ng-required="true"
+                                 ng-model="vm.inputDates.createdOn"
+                                 locale="en-gb"
+                                 ng-model-options="{ updateOn: 'blur' }"
+                                 placeholder="Created on..."
+                                 moment-picker="vm.inputDates.createdOn">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <label> Deadline </label>
+                        <div class="input-group">
+                          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                          <input class="form-control"
+                                 ng-required="true"
+                                 ng-model="vm.inputDates.deadline"
+                                 locale="en-gb"
+                                 ng-model-options="{ updateOn: 'blur' }"
+                                 placeholder="Select deadline..."
+                                 moment-picker="vm.inputDates.deadline">
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <label> Select users </label>
+                        <multiple-select users="vm.project.team.users"
+                                         model="vm.newEntities.task.users"
+                                         required="false">
+                        </multiple-select>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+
+              </form>
+
+              <div class="col-md-9 panel panel-warning text-center text-danger" ng-show="vm.uiState.addNewTask.errorMsg">
+                {{vm.uiState.addNewTask.errorMsg}}
+              </div>
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">
+              <button type="button" ng-click="vm.clearNewTask()" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" form="newTask" ng-disabled="newTaskForm.$invalid" >
                 <i class="fa fa-fw fa-save"></i> Save
               </button>
             </div>
@@ -73,46 +158,57 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Tasks for this project</h3>
+
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Tasks for this project</span>
+          </span>
+          <span class="pull-right">
+            <button class="btn btn-xs btn-success" ng-click="vm.refreshTasks()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
+          </span>
         </div>
         <div class="panel-body">
           <div ng-show="vm.uiState.tasks.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="tasks" st-safe-src="vm.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
+          <table st-table="tasks" st-safe-src="vm.entitiesData.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
             <thead>
-            <tr>
-              <!--<th st-sort="name">Name</th>-->
-              <!--<th st-sort="shortName">Short name</th>-->
-              <th>Name</th>
-              <th>Created on</th>
-              <th>Deadline</th>
-              <th>Leader</th>
-              <th>State</th>
-            </tr>
-            <tr>
-              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
-            </tr>
+              <tr>
+                <!--<th st-sort="name">Name</th>-->
+                <!--<th st-sort="shortName">Short name</th>-->
+                <th>Name</th>
+                <th>Created on</th>
+                <th>Deadline</th>
+                <th>Leader</th>
+                <th>State</th>
+              </tr>
+              <tr>
+                <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+              </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
-              <td><a href="#">{{t.name}}</a></td>
-              <td>{{t.id}}</td>
-              <td>{{t.deadlineString}}</td>
-              <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
-              <td><span ng-class="t.cssClass">{{t.state}}</span></td>
-            </tr>
+              <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
+                <td><a href="#">{{t.name}}</a></td>
+                <!--<td>{{t.id}}</td>-->
+                <td>{{t.createdOn}}</td>
+                <td>{{t.deadline}}</td>
+                <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
+                <td><span ng-class="t.cssClass">{{t.state}}</span></td>
+              </tr>
             </tbody>
             <tfoot>
-            <tr>
-              <td colspan="5" class="text-center">
-                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
-              </td>
-            </tr>
+              <tr>
+                <td colspan="5" class="text-center">
+                  <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+                </td>
+              </tr>
             </tfoot>
           </table>
           <div class="panel panel-warning text-danger" ng-show="vm.uiState.tasks.showNoTasksPanel">
             This project doesn`t have any tasks!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.tasks.showErrorPanel">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
           </div>
         </div>
       </div>
@@ -121,7 +217,7 @@
       <!--<h3>Documents</h3>-->
       <br>
       <!-- Button trigger modal -->
-      <div ng-show="vm.uiState.addNewTaskButton">
+      <div ng-show="vm.uiState.addNewButton">
         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
           <i class="fa fa-fw fa-plus-square"> </i>
           Add new document
@@ -133,15 +229,17 @@
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
               <h4 class="modal-title" id="myModalLabelDoc">Add new document</h4>
             </div>
             <div class="modal-body">
-              <h4> New document form </h4>
+              <form id="newDocument" name="newDocumentFrom" ng-submit="">
+
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">
+              <button form="newDocument" type="submit" class="btn btn-primary" ng-disabled="newDocumentForm.$invalid">
                 <i class="fa fa-fw fa-save"></i> Save
               </button>
             </div>
@@ -191,56 +289,65 @@
       <br><br>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-fw fa-commenting"></i>Comments</h3>
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-fw fa-commenting"></i>Comments</span>
+          </span>
+          <span class="pull-right">
+            <button class="btn btn-xs btn-success" ng-click="vm.refreshComments()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
+          </span>
+          <!--<h3 class="panel-title"><i class="fa fa-fw fa-commenting"></i>Comments</h3>-->
         </div>
         <div class="panel-body">
-          <table class="table">
+          <div ng-show="vm.uiState.comments.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="comments" st-safe-src="vm.entitiesData.comments" ng-show="vm.uiState.comments.showComments" class="table">
             <tbody>
-            <tr>
-              <td class="commets-et">
-                <div class="media">
-                  <div class="media-left">
-                    <a href="#">
-                      <img class="media-object" src="64x64.svg" alt="...">
-                    </a>
+              <tr ng-repeat="c in comments">
+                <td class="commets-et">
+                  <div class="media">
+                    <div class="media-left">
+                      <a href="#">
+                        <img class="media-object" src="pictures/64x64.svg" alt="...">
+                      </a>
+                    </div>
+                    <div class="media-body">
+                      <h4 class="media-heading">{{c.user.name+" "+c.user.surname}} </h4>
+                      <small> {{c.date}} </small>
+                      <p> {{c.text}} </p>
+                    </div>
                   </div>
-                  <div class="media-body">
-                    <h4 class="media-heading">User 1 </h4>
-                    <small> 22.06.2017 16:53</small>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="commets-et">
-                <div class="media">
-                  <div class="media-left">
-                    <a href="#">
-                      <img class="media-object" src="64x64.svg" alt="..." class="img-thumbnail">
-                    </a>
-                  </div>
-                  <div class="media-body">
-                    <h4 class="media-heading">User 2 </h4>
-                    <small> 22.06.2017 16:53</small>
-                    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                      Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </p>
-                  </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
             </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="3" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
           </table>
+          <div class="panel panel-warning text-danger" ng-show="vm.uiState.comments.showNoCommentsPanel">
+            There are no comments for this project!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.comments.showErrorPanel">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
+          </div>
 
+          <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.comments.successMsg">
+            Successfully submitted comment!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.comments.errorMsg">
+            Try again to comment!
+          </div>
         </div>
-        <div class="panel-footer text-right">
+        <div class="panel-footer text-right" ng-show="vm.uiState.comments.canComment">
 
-          <form>
-            <textarea class="form-control" placeholder="Your comment" rows="3"></textarea> <br>
-            <button class="btn btn-success" type="submit">	<i class="fa fa-fw fa-paper-plane"></i>	Comment </button>
+          <form ng-submit="vm.saveNewComment()" name="newCommentForm">
+            <textarea class="form-control" ng-required="true" ng-model="vm.newEntities.comment.text" placeholder="Your comment" rows="3"></textarea> <br>
+            <button class="btn btn-success" type="submit" ng-disabled="newCommentForm.$invalid">	<i class="fa fa-fw fa-paper-plane"></i>	Comment </button>
           </form>
 
         </div>
@@ -269,6 +376,7 @@
           <div class="panel panel-warning text-danger" ng-hide="vm.uiState.showStats">
             This project does not contains any tasks!
           </div>
+
         </div>
       </div>
 

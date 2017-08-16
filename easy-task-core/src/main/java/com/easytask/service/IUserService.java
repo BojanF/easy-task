@@ -3,6 +3,7 @@ package com.easytask.service;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Marijo on 21-Jun-17.
@@ -38,5 +39,13 @@ public interface IUserService {
     List<Task> getTasksForUserByState(Long userId, TaskState state);
 
     List<Project> getUrgentProjectsForUser(Long userId);
+
+    Map<Long, Integer> mapTeamProjectCount(Long userId);
+
+    Map<Long, Integer> mapTasksByTeam(Long userId);
+
+    //List<Team> getTeamsLeadByUser(Long userId);
+    List<Integer> getTaskStatesForAllProjectsLedByUser(Long userId);
+
 
 }

@@ -1,5 +1,10 @@
 
-
+<!--<script>-->
+  <!--$(function () {-->
+    <!--$('#datetimepicker1').datetimepicker();-->
+  <!--});-->
+  <!--console.log("DateP");-->
+<!--</script>-->
 
 <div class="container-fluid">
 
@@ -118,8 +123,8 @@
         </div>
         <div class="panel-body">
           <div ng-show="vm.uiState.activeTasks.loadGif">
-              <img src="pictures//loading.gif" style="width:20px; height:20px;">
-          </div>
+          <img src="pictures//loading.gif" style="width:20px; height:20px;">
+        </div>
           <table st-table="activeTasks" st-safe-src="vm.activeTasks" ng-show="vm.uiState.activeTasks.showTasks" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -139,8 +144,8 @@
             <tbody>
             <tr ng-repeat="t in activeTasks | orderBy:['name'] | filter:searchProfName">
               <td><a href="#">{{t.name}}</a></td>
-              <td>{{t.createdOnString}}</td>
-              <td>{{t.deadlineString}}</td>
+              <td>{{t.createdOn}}</td>
+              <td>{{t.deadline}}</td>
               <td><a href="#/project-details?id={{t.project.id}}">{{t.project.name}}</a></td>
               <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
               <td><span ng-class="t.cssClass">{{t.state}}</span></td>
@@ -154,8 +159,12 @@
             </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-danger" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
             You don`t have any active tasks!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.activeTasks.showErrorPanel">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
           </div>
         </div>
       </div>
@@ -180,14 +189,14 @@
               <th>State</th>
             </tr>
             <tr>
-              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by project name..."> </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="up in urgentProjects | orderBy:['name'] | filter:searchProfName">
               <td><a href="#">{{up.name}}</a></td>
-              <td>{{up.createdOnString}}</td>
-              <td>{{up.deadlineString}}</td>
+              <td>{{up.createdOn}}</td>
+              <td>{{up.deadline}}</td>
               <td><a href="#">{{up.team.name}}</a></td>
 
               <!--<td><span ng-class="{{t.cssClass}}">{{t.state}}</span></td>-->
@@ -202,8 +211,12 @@
             </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-danger" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
             You don`t have any urgent projects!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.urgentProjects.showErrorPanel">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
           </div>
         </div>
       </div>

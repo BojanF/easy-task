@@ -1,0 +1,31 @@
+<!--<div class="form-group">-->
+  <!--<label>{{$ctrl.label}}</label>-->
+  <!--<input class="form-control"-->
+         <!--placeholder="{{$ctrl.placeholder}}"-->
+         <!--type="{{$ctrl.type}}"-->
+         <!--ng-model="$ctrl.model"-->
+         <!--ng-required="$ctrl.required"-->
+
+  <!--&gt;-->
+<!--</div>-->
+
+<ui-select ng-show="$ctrl.users.length>0" multiple
+           ng-required="$ctrl.required"
+           ng-model="$ctrl.model"
+           theme="bootstrap"
+           close-on-select="false">
+  <ui-select-match
+    placeholder="Select users...">
+    {{$item.name+" "+$item.surname}}
+  </ui-select-match>
+  <ui-select-choices
+    repeat="user in ($ctrl.users | filter:$select.search)"
+    position="auto">
+    {{user.name+" "+user.surname}}
+  </ui-select-choices>
+</ui-select>
+<div class="panel panel-danger text-center text-danger"
+     ng-hide="$ctrl.users.length>0">
+  <!--There are no users in this project!!-->
+  {{$ctrl.info}}
+</div>

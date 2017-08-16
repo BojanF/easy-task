@@ -53,8 +53,8 @@
         <tbody>
         <tr ng-repeat="p in projects | orderBy:['name'] | filter:searchProfName">
           <td><a href="#/project-details?id={{p.id}}">{{p.name}}</a></td>
-          <td>{{p.createdOnString}}</td>
-          <td>{{p.deadlineString}}</td>
+          <td>{{p.createdOn}}</td>
+          <td>{{p.deadline}}</td>
           <td><a href="#">{{p.team.name}}</a></td>
           <td><span ng-class="p.cssClass"> {{p.state}}</span></td>
         </tr>
@@ -62,13 +62,17 @@
         <tfoot>
         <tr>
           <td colspan="6" class="text-center">
-            <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+            <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
           </td>
         </tr>
         </tfoot>
       </table>
       <div class="panel panel-warning text-danger" ng-show="vm.uiState.showNoProjectsPanel">
         You don`t have projects for administrating!
+      </div>
+      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showErrorPanel">
+        <div> We run into an error!</div>
+        <div> Try again later!</div>
       </div>
     </div>
   </div>

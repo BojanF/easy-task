@@ -1,4 +1,11 @@
-<div class="container-fluid">
+<div ng-hide="vm.uiState.showPage" class="container-fluid">
+  <div class="jumbotron">
+    <h1>Ooooops!</h1>
+    <p>We can`t find that project!</p>
+  </div>
+</div>
+
+<div ng-show="vm.uiState.showPage" class="container-fluid">
 
   <!--<h1>{{vm.stateCode}}</h1>-->
 
@@ -49,8 +56,8 @@
             <tbody>
             <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
               <td><a href="#">{{t.name}}</a></td>
-              <td>{{t.createdOnString}}</td>
-              <td>{{t.deadlineString}}</td>
+              <td>{{t.createdOn}}</td>
+              <td>{{t.deadline}}</td>
               <td><a href="#/project-details">{{t.project.name}}</a></td>
               <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
               <!--<td><span ng-class="{{t.cssClass}}">{{t.state}}</span></td>-->
@@ -67,6 +74,10 @@
           </table>
           <div ng-class="vm.infoMessageCssClass" ng-show="vm.uiState.showNoTasksPanel">
             {{vm.infoMessage}}
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showError">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
           </div>
         </div>
       </div>

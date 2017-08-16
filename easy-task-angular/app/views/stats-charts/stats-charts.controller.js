@@ -9,12 +9,31 @@
     .module('easy-task-angular')
     .controller('StatsChartsController', StatsChartsController);
 
-  StatsChartsController.$inject = ['$log'];
+  StatsChartsController.$inject = ['$log', 'StatsChartsService'];
 
   /* @ngInject */
-  function StatsChartsController($log) {
+  function StatsChartsController($log, StatsChartsService) {
     var vm = this;
-    vm.title = 'stats-charts';
+
+    //variables declaration
+    vm.USER_ID = 110;
+
+    vm.uiState = {
+      donuts:{
+        tasks: {
+          loadGif: true,
+          showStats: false,
+          showNoStatsPanel: false,
+          showErrorPanel: false
+        },
+        projects: {
+          loadGif: true,
+          showStats: false,
+          showNoStatsPanel: false,
+          showErrorPanel: false
+        }
+      }
+    }
 
     vm.c3DataTest = {
       donuts: {
@@ -36,18 +55,18 @@
         },
         columns: {
           tasks:[
-            {"id": "Not started", "type": "donut"},
-            {"id": "In progress", "type": "donut"},
-            {"id": "Finish", "type": "donut"},
-            {"id": "Deadline braech", "type": "donut"}
+            {"id": "Not started", "type": "donut", "color": "#5bc0de"},
+            {"id": "In progress", "type": "donut", "color": "#f0ad4e"},
+            {"id": "Finish", "type": "donut", "color": "#5cb85c"},
+            {"id": "Deadline braech", "type": "donut", "color": "#d9534f"}
           ],
           projects:[
-            {"id": "Created", "type": "donut"},
-            {"id": "Not started", "type": "donut"},
-            {"id": "In progress", "type": "donut"},
-            {"id": "Up to date", "type": "donut"},
-            {"id": "Finished", "type": "donut"},
-            {"id": "Deadline braech", "type": "donut"}
+            {"id": "Created", "type": "donut", "color": "#777"},
+            {"id": "Not started", "type": "donut", "color": "#5bc0de"},
+            {"id": "In progress", "type": "donut", "color": "#f0ad4e"},
+            {"id": "Up to date", "type": "donut", "color": "#337ab7"},
+            {"id": "Finished", "type": "donut", "color": "#5cb85c"},
+            {"id": "Deadline braech", "type": "donut", "color": "#d9534f"}
           ]
         }
       },
@@ -63,12 +82,12 @@
         ],
         columns: [
            // {"id": "x", "type": ""},
-          {"id": "Created", "type": "spline"},
-          {"id": "Not started", "type": "spline"},
-          {"id": "In progress", "type": "spline"},
-          {"id": "Up to date", "type": "spline"},
-          {"id": "Finished", "type": "spline"},
-          {"id": "Deadline braech", "type": "spline"}
+          {"id": "Created", "type": "spline", "color": "#777"},
+          {"id": "Not started", "type": "spline", "color": "#5bc0de"},
+          {"id": "In progress", "type": "spline", "color": "#f0ad4e"},
+          {"id": "Up to date", "type": "spline", "color": "#337ab7"},
+          {"id": "Finished", "type": "spline", "color": "#5cb85c"},
+          {"id": "Deadline braech", "type": "spline", "color": "#d9534f"}
         ],
         tickValues: {"Created": "2017-01-01",
                       "Not started": "2017-01-02",
@@ -79,6 +98,143 @@
                       "2017-01-03", "2017-01-04", "2017-01-05",  "2017-01-06"],
         proba: {"id": "x", "name": "My Data points"}
       }
+    }
+
+    vm.entitiesData = {
+      administratingProjects: [],
+      tasksForAdminProjects: []
+    }
+    //functions declaration
+
+
+    //functions invocation
+    getAdministratingProjects();
+
+    //functions implementation
+    function getAdministratingProjects(){
+      console.log(vm.USER_ID);
+      StatsChartsService.getAdministratingProjects(vm.USER_ID).then(successCallbackProjects, errorCallbackProjects);
+
+      function successCallbackProjects(data){
+        console.log("Yes");
+        vm.entitiesData.administratingProjects = data;
+
+        vm.uiState.donuts.projects.loadGif = false;
+        vm.uiState.donuts.projects.showErrorPanel = false;
+        if(vm.entitiesData.administratingProjects.length > 0){
+          calculateStatsProjects(vm.entitiesData.administratingProjects);
+          vm.uiState.donuts.projects.showStats = true;
+          vm.uiState.donuts.projects.showNoStatsPanel = false;
+          console.log(vm.c3DataTest.donuts.points.projects);
+
+          getTaskStats();
+
+
+        }
+        else{
+          vm.uiState.donuts.projects.showStats = false;
+          vm.uiState.donuts.projects.showNoStatsPanel = true;
+          vm.uiState.donuts.tasks.showNoStatsPanel = true;
+          vm.uiState.donuts.tasks.loadGif = false;
+
+        }
+      }
+      function errorCallbackProjects(){
+        console.log("No");
+        vm.uiState.donuts.projects.loadGif = false;
+        vm.uiState.donuts.projects.showStats = false;
+        vm.uiState.donuts.projects.showNoStatsPanel = false;
+        vm.uiState.donuts.projects.showErrorPanel = true;
+
+        errorTasksPanel();
+      }
+    }
+
+    function getTaskStats(){
+
+      StatsChartsService.getTaskStatesForProjects(vm.USER_ID).then(successTasks, errorTasks);
+
+      function successTasks(data){
+
+        var states = data;
+
+        vm.uiState.donuts.tasks.loadGif = false;
+        vm.uiState.donuts.tasks.showStats = true;
+        vm.uiState.donuts.tasks.showNoStatsPanel = false;
+        vm.uiState.donuts.tasks.showErrorPanel = false;
+
+        vm.c3DataTest.donuts.points.tasks = [
+                {"Not started": states[0]},
+                {"In progress": states[1]},
+                {"Finish": states[2]},
+                {"Deadline braech": states[3]}
+              ];
+        console.log(vm.c3DataTest.donuts.points.tasks);
+      }
+
+      function errorTasks(){
+        errorTasksPanel();
+      }
+
+
+
+    }
+
+
+    function errorTasksPanel(){
+      vm.uiState.donuts.tasks.loadGif = false;
+      vm.uiState.donuts.tasks.showStats = false;
+      vm.uiState.donuts.tasks.showNoStatsPanel = false;
+      vm.uiState.donuts.tasks.showErrorPanel = true;
+    }
+
+    //helper functions
+
+    function calculateStatsProjects(projects){
+      //TODO da se presmetuva vo backend
+      var size = projects.length;
+      var created = 0;
+      var notStarted = 0;
+      var inProgress = 0;
+      var upToDate = 0;
+      var finished = 0;
+      var breach = 0;
+
+      for(var i=0 ; i<size ; i++){
+        var currProject = projects[i];
+
+
+
+        if(currProject.state == 'CREATED'){
+          created++;
+        }
+        else if(currProject.state == 'NOT_STARTED'){
+          notStarted++;
+        }
+        else if(currProject.state == 'IN_PROGRESS'){
+          inProgress++;
+        }
+        else if(currProject.state == 'UP_TO_DATE'){
+          upToDate++;
+        }
+        else if(currProject.state == 'FINISHED'){
+          finished++;
+
+        }
+        else{
+          breach++;
+        }
+
+        vm.c3DataTest.donuts.points.projects = [
+          {"Created": created},
+          {"Not started": notStarted},
+          {"In progress": inProgress},
+          {"Up to date": upToDate},
+          {"Finished": finished},
+          {"Deadline braech": breach}]
+      }
+
+
     }
   }
 

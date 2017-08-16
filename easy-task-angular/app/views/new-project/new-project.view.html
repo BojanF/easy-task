@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">
-        {{vm.title}}
+        Create new project
       </h1>
       <ol class="breadcrumb">
         <li>
@@ -32,14 +32,94 @@
       <h3 class="panel-title"><i class="fa fa-flask fa-fw"></i> Add new project</h3>
     </div>
     <div class="panel-body">
-      <h4> New project form </h4>
+      <!--<h4> New project form </h4>-->
+      <form id="newProject" name="newProjectForm" ng-submit="vm.saveNewProject()">
+        <div class="container-fluid">
+          <div class="form-group">
+
+            <div class="row">
+              <div class="col-md-6">
+                <input-component placeholder="name for project"
+                                 label="Project name"
+                                 type="text"
+                                 model="vm.newProject.name"
+                                 required="true"
+                                 focus="true">
+                </input-component>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label> Description for the projects </label>
+                <textarea ng-model="vm.newProject.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <label> Created at</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input class="form-control"
+                         ng-required="true"
+                         ng-model="vm.newProject.createdOn"
+                         locale="en-gb"
+                         ng-model-options="{ updateOn: 'blur' }"
+                         placeholder="Created on..."
+                         moment-picker="vm.newProject.createdOn">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label> Deadline </label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                  <input class="form-control"
+                         ng-required="true"
+                         ng-model="vm.newProject.deadline"
+                         locale="en-gb"
+                         ng-model-options="{ updateOn: 'blur' }"
+                         placeholder="Select deadline..."
+                         moment-picker="vm.newProject.deadline">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-8">
+                <label> Select team </label>
+                <div ng-show="vm.uiState.loadGif">
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                </div>
+                <single-select model="vm.newProject.team"
+                               entities="vm.teamsLedByUser"
+                               required="true"
+                               placeholder="Pick team"
+                               info="{{vm.uiState.fetchingTeamsMessage}}">
+
+                </single-select>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </form>
+      <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.successNewProject">
+        Project with name {{vm.uiState.successNewProject}} was successfully created!
+      </div>
+      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.errorNewProject">
+        {{vm.uiState.errorNewProject}}
+      </div>
+
     </div>
     <div class="panel-footer text-right">
 
-      <button class="btn btn-default" type="reset">
+      <button class="btn btn-default" type="reset" ng-click="vm.clearNewProject()">
         <i class="fa fa-fw fa-refresh"></i>	Clear
       </button>
-      <button class="btn btn-primary" type="submit">
+      <button class="btn btn-primary" type="submit" form="newProject" ng-disabled="newProjectForm.$invalid">
         <i class="fa fa-fw fa-save"></i>
         Save
       </button>

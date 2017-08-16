@@ -1,5 +1,6 @@
 package com.easytask.web;
 
+import com.easytask.model.enums.ProjectState;
 import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
@@ -9,11 +10,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -33,6 +33,15 @@ public class ProjectController implements ApplicationContextAware {
     @Autowired
     ProjectController(IProjectService projectService){
         this.projectService  = projectService;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Project insertProject(@Valid @RequestBody Project project) {
+        int x = 3;
+        project.setState(ProjectState.CREATED);
+        x = 4;
+        return projectService.insert(project);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

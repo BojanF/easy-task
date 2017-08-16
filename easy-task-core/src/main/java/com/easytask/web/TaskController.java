@@ -1,15 +1,17 @@
 package com.easytask.web;
 
+import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.Task;
 import com.easytask.service.ITaskService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Created by Bojan on 8/9/2017.
@@ -33,6 +35,14 @@ public class TaskController implements ApplicationContextAware {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Task getById(@PathVariable Long id) {
         return taskService.findById(id);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, headers="Accept=application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Task save(@Valid @RequestBody Task task) {
+        int x =0;
+        task.setState(TaskState.NOT_STARTED);
+        return taskService.insert(task);
     }
 
 }

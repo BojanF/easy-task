@@ -3,6 +3,7 @@ package com.easytask.model.jpa;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import javax.persistence.*;
@@ -75,6 +76,7 @@ public class Comment {
         this.user = user;
     }
 
+    @JsonProperty
     public void setProject(Project project) {
         this.project = project;
     }

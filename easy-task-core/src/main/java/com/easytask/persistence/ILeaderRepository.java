@@ -1,6 +1,8 @@
 package com.easytask.persistence;
 
 import com.easytask.model.jpa.Leader;
+import com.easytask.model.jpa.User;
+
 import java.util.List;
 
 /**
@@ -18,5 +20,9 @@ public interface ILeaderRepository {
     void deleteById(Long id);
 
     Leader findById(Long id);
+
+    //novi ne se testirani
+
+    Leader getLeaderForUserId(Long userId);
 
 }

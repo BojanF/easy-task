@@ -42,4 +42,12 @@ public class CoworkerId implements Serializable {
         this.userB = userB;
     }
 
+
+    public Long getUserA() {
+        return userA;
+    }
+
+    public Long getUserB() {
+        return userB;
+    }
 }

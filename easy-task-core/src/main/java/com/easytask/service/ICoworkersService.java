@@ -29,4 +29,10 @@ public interface ICoworkersService {
     List<User> getCoworkerRequestsReceived(Long userId);
 
     List<User> getNonEngagedUsersForUser(Long userId);
+
+    Coworkers insertPair(Coworkers coworkers);
+
+    Coworkers updatePair(Coworkers coworkers);
+
+    void deletePairById(CoworkerId id);
 }

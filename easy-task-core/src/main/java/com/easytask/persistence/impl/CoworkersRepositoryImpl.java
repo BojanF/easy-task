@@ -48,6 +48,18 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
     }
 
     @Transactional
+    public Coworkers insertPair(Coworkers coworkers){
+        Coworkers otherWay = new Coworkers();
+        otherWay.setId(new CoworkerId(coworkers.getUserB().getId(), coworkers.getUserA().getId()));
+        otherWay.setUserA(coworkers.getUserB());
+        otherWay.setUserB(coworkers.getUserA());
+        otherWay.setState(coworkers.getState());
+        otherWay = insert(otherWay);
+
+        return insert(coworkers);
+    }
+
+    @Transactional
     public Coworkers insert(Coworkers coworkers) {
         entityManager.merge(coworkers);
         entityManager.flush();
@@ -55,10 +67,28 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
     }
 
     @Transactional
+    public Coworkers updatePair(Coworkers coworkers){
+        CoworkerId otherWayId = new CoworkerId(coworkers.getUserB().getId(), coworkers.getUserA().getId());
+        Coworkers otherWay = findById(otherWayId);
+        otherWay = update(otherWay);
+
+        return update(coworkers);
+
+    }
+
+    @Transactional
     public Coworkers update(Coworkers coworkers) {
         coworkers = entityManager.merge(coworkers);
         entityManager.flush();
         return coworkers;
+    }
+
+    @Transactional
+    public void deletePairById(CoworkerId id){
+        CoworkerId otherWay = new CoworkerId(id.getUserB(), id.getUserA());
+
+        deleteById(otherWay);
+        deleteById(id);
     }
 
     @Transactional
@@ -106,10 +136,10 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
         Root<Coworkers> fromFirstHalf = cqFirstHalf.from(Coworkers.class);
 
         cqFirstHalf.select(fromFirstHalf.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID).as(Long.class)).where(
-                cb.or(
-                        cb.equal(fromFirstHalf.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
-                                userId)
-                ),
+
+                cb.equal(fromFirstHalf.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
+                        userId),
+
                 cb.equal(fromFirstHalf.get(Coworkers.FIELDS.STATE),
                         CoworkerState.ACCEPTED)
         );
@@ -119,10 +149,10 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
         CriteriaQuery<Long> cqSecondHalf = cb.createQuery(Long.class);
         Root<Coworkers> fromSecondHalf = cqSecondHalf.from(Coworkers.class);
         cqSecondHalf.select(fromSecondHalf.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID).as(Long.class)).where(
-                cb.or(
-                        cb.equal(fromSecondHalf.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID),
-                                userId)
-                ),
+
+                cb.equal(fromSecondHalf.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID),
+                        userId),
+
                 cb.equal(fromSecondHalf.get(Coworkers.FIELDS.STATE),
                         CoworkerState.ACCEPTED)
         );

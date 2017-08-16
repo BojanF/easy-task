@@ -1,7 +1,10 @@
 package com.easytask.service.impl;
 
+import com.easytask.model.enums.ProjectState;
+import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
 import com.easytask.model.jpa.User;
+import com.easytask.persistence.IProjectRepository;
 import com.easytask.persistence.ITaskRepository;
 import com.easytask.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,9 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     ITaskRepository taskRepository;
 
+    @Autowired
+    IProjectRepository projectRepository;
+
     public List<Task> findAll() {
         return taskRepository.findAll();
     }
@@ -27,6 +33,12 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     public Task insert(Task task) {
+        Project p = task.getProject();
+        if(p.getState() == ProjectState.CREATED){
+            p.setState(ProjectState.NOT_STARTED);
+            projectRepository.update(p);
+
+        }
         return taskRepository.insert(task);
     }
 

@@ -18,7 +18,7 @@
     var administratingProjectsResource = $resource('http://localhost:8000/api/user/administrating-projects/:id', {}, {});
 
     var service = {
-      getAdministratingProjects: getAdministratingProjectsFn,
+      getAdministratingProjects: getAdministratingProjectsFn
     };
     return service;
 

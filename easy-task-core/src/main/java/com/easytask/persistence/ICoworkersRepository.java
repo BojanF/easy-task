@@ -13,11 +13,17 @@ public interface ICoworkersRepository {
 
     List<Coworkers> findAll();
 
+    Coworkers insertPair(Coworkers coworkers);
+
     Coworkers insert(Coworkers coworkers);
 
     Coworkers findById(CoworkerId id);
 
+    Coworkers updatePair(Coworkers coworkers);
+
     Coworkers update(Coworkers coworkers);
+
+    void deletePairById(CoworkerId id);
 
     void deleteById(CoworkerId id);
 

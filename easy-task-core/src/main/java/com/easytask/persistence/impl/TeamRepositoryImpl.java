@@ -78,7 +78,7 @@ public class TeamRepositoryImpl implements ITeamRepository {
     @Transactional
     public Team removeAllTeamUsers(Long teamId) {
         Team team = entityManager.find(Team.class, teamId);
-        Set<User> users = team.getUsers();
+        List<User> users = team.getUsers();
         users.clear();
         team.setUsers(users);
         return update(team);

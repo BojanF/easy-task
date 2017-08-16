@@ -1,0 +1,19 @@
+<!--<label>Select laboratory group</label>-->
+<!--title="Lab group"-->
+<ui-select ng-model="$ctrl.model"
+           ng-required="$ctrl.required"
+
+           ng-show="$ctrl.entities.length>0">
+  <ui-select-match
+    placeholder="{{$ctrl.placeholder}}">
+    <span>{{$select.selected.name}}</span>
+  </ui-select-match>
+  <ui-select-choices
+    repeat="entity in ($ctrl.entities | filter:$select.search)"
+    position="auto">
+    {{entity.name}}
+  </ui-select-choices>
+</ui-select>
+<div class="panel panel-danger text-center text-danger" ng-hide="$ctrl.entities.length>0">
+  {{$ctrl.info}}
+</div>

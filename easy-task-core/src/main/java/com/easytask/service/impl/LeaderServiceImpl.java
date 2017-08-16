@@ -1,6 +1,7 @@
 package com.easytask.service.impl;
 
 import com.easytask.model.jpa.Leader;
+import com.easytask.model.jpa.User;
 import com.easytask.persistence.ILeaderRepository;
 import com.easytask.service.ILeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,9 @@ public class LeaderServiceImpl implements ILeaderService {
 
     public Leader findById(Long id) {
         return leaderRepository.findById(id);
+    }
+
+    public Leader getLeaderForUserId(Long userId){
+        return leaderRepository.getLeaderForUserId(userId);
     }
 }

@@ -15,12 +15,13 @@
   function YourProjectsController($log, YourProjectsService) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 3;
+    vm.USER_ID = 110;
     vm.projects = [];
     vm.uiState = {
       loadGif: true,
       showProjects: false,
-      showNoProjectsPanel: false
+      showNoProjectsPanel: false,
+      showError: false
     }
 
     //functions declaration
@@ -32,11 +33,14 @@
     //functions implementation
     function getProjectThatUserWorksOnFn(){
 
-      YourProjectsService.getProjectThatUserWorksOn(vm.USER_ID).then(function (data) {
+      YourProjectsService.getProjectThatUserWorksOn(vm.USER_ID).then(successCallback, errorCallback);
+
+      function successCallback(data) {
 
         vm.projects = data;
 
         vm.uiState.loadGif = false;
+        vm.uiState.showError = false;
         if(vm.projects.length > 0){
           vm.uiState.showProjects = true;
           vm.uiState.showNoProjectsPanel = false;
@@ -47,7 +51,14 @@
           vm.uiState.showNoProjectsPanel = true;
         }
 
-      })
+      }
+
+      function errorCallback(){
+        vm.uiState.loadGif = false;
+        vm.uiState.showProjects = false;
+        vm.uiState.showNoProjectsPanel = false;
+        vm.uiState.showError = true;
+      }
     }
 
     //helper functions
@@ -55,18 +66,21 @@
 
       var size = projects.length;
 
+
       for(var i=0 ; i<size ; i++){
         var currProject = projects[i];
 
-        currProject.createdOnString = dateTimeToString(currProject.createdOn);
-        currProject.deadlineString = dateTimeToString(currProject.deadline);
+        currProject.createdOn = dateMillisecondsToDate(currProject.createdOn);
+        currProject.deadline = dateMillisecondsToDate(currProject.deadline);
 
         if(currProject.state == 'CREATED'){
           currProject.cssClass = 'label label-default';
+
         }
         else if(currProject.state == 'NOT_STARTED'){
           currProject.cssClass = 'label label-info';
           currProject.state = 'NOT STARTED';
+
         }
         else if(currProject.state == 'IN_PROGRESS'){
           currProject.cssClass = 'label label-warning';
@@ -78,7 +92,6 @@
         }
         else if(currProject.state == 'FINISHED'){
           currProject.cssClass = 'label label-success';
-
         }
         else{
           currProject.cssClass == 'label label-danger';
@@ -88,15 +101,23 @@
         projects[i] = currProject;
       }
 
+
+
     }
 
-    function dateTimeToString(dateTime){
 
-      return dateTime.dayOfMonth + "." +
-        dateTime.monthOfYear + "." +
-        dateTime.year + " " +
-        dateTime.hourOfDay + ":" +
-        dateTime.minuteOfHour;
+    function dateMillisecondsToDate(milliseconds){
+      var d = new Date(milliseconds);
+      var month = parseInt(d.getMonth()) + 1;
+      var minutes = d.getMinutes();
+      if(minutes.toString().length == 1){
+        minutes = '0' + minutes;
+      }
+      return d.getDate() + "." +
+        month + "." +
+        d.getFullYear() + " " +
+        d.getHours() + ":" +
+        minutes;
 
     }
 

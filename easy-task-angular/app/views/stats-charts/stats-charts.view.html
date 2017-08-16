@@ -83,13 +83,24 @@
           <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
         </div>
         <div class="panel-body">
+          <div ng-show="vm.uiState.donuts.tasks.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
           <c3chart bindto-id="tasks-chart"
                    chart-data="vm.c3DataTest.donuts.points.tasks"
-                   chart-columns="vm.c3DataTest.donuts.columns.tasks">
+                   chart-columns="vm.c3DataTest.donuts.columns.tasks"
+                   ng-show="vm.uiState.donuts.tasks.showStats">
             <chart-legend show-legend="true" legend-position="right"/>
             <chart-size chart-height="350" chart-width="450"/>
             <chart-donut title="Tasks stage percentages" width="60"/>
           </c3chart>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.tasks.showNoStatsPanel">
+            Your projects don`t have any tasks!
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.tasks.showErrorPanel">
+            <div> We run into an error!</div>
+            <div> Try again later!</div>
+          </div>
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">
@@ -104,13 +115,24 @@
           <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Projects state </h3>
         </div>
         <div class="panel-body">
+          <div ng-show="vm.uiState.donuts.projects.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
           <c3chart bindto-id="project-chart"
                    chart-data="vm.c3DataTest.donuts.points.projects"
-                   chart-columns="vm.c3DataTest.donuts.columns.projects">
+                   chart-columns="vm.c3DataTest.donuts.columns.projects"
+                   ng-show="vm.uiState.donuts.projects.showStats">
             <chart-legend show-legend="true" legend-position="right"/>
             <chart-size chart-height="350" chart-width="450"/>
             <chart-donut title="Projects state percentages" width="60"/>
           </c3chart>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.projects.showNoStatsPanel">
+            Don`t have !
+          </div>
+          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.projects.showErrorPanel">
+            <div> We run into error!</div>
+            <div> Try again later!</div>
+          </div>
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">

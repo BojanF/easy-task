@@ -9,13 +9,97 @@
     .module('easy-task-angular')
     .controller('TeamLeaderController', TeamLeaderController);
 
-  TeamLeaderController.$inject = ['$log'];
+  TeamLeaderController.$inject = ['$log', 'TeamLeaderService'];
 
   /* @ngInject */
-  function TeamLeaderController($log) {
+  function TeamLeaderController($log, TeamLeaderService) {
     var vm = this;
-    vm.title = 'Teams that you are leading';
+    //variables declaration
+    vm.USER_ID = 110;
+    vm.teams = [];
+    vm.map = {};
+    vm.uiState={
+      loadGif: true,
+      showTeams: false,
+      showNoTeamsPanel: false,
+      showErrorPanel: false
+    }
+    //functions declaration
 
+
+    //functions invocation
+    getTeams();
+
+    //functions implementation
+
+    function getProjectsByTeam(teams){
+      TeamLeaderService.getProjectsByTeams(vm.USER_ID).then(successCallbackMap, errorCallbackMap);
+
+      function successCallbackMap(data){
+        vm.map = data;
+        console.log(vm.map);
+        console.log(teams);
+        joinTeamsProjects(teams, vm.map);
+      }
+
+      function errorCallbackMap() {
+        console.log("JOK");
+      }
+    }
+
+    function getTeams(){
+        TeamLeaderService.getTeamsLedByUser(vm.USER_ID).then(successCallback, errorCallback);
+
+      function successCallback(data){
+        vm.teams = data;
+
+        vm.uiState.loadGif = false;
+        vm.uiState.showErrorPanel = false;
+        if(vm.teams.length > 0){
+          countUsersOnTeam(vm.teams);
+          getProjectsByTeam(vm.teams);
+          vm.uiState.showTeams = true;
+          vm.uiState.showNoTeamsPanel = false;
+
+        }
+        else{
+          vm.uiState.showTeams = false;
+          vm.uiState.showNoTeamsPanel = true;
+        }
+      }
+
+      function errorCallback(){
+        vm.uiState.loadGif = false;
+        vm.uiState.showTeams = false;
+        vm.uiState.showNoTeamsPanel = false;
+        vm.uiState.showErrorPanel = true;
+      }
+    }
+
+    //helper functions
+    function countUsersOnTeam(teams){
+      var size = teams.length;
+
+      for(var i=0 ; i<size ; i++){
+        teams[i].usersCount = teams[i].users.length;
+      }
+
+    }
+
+
+    function joinTeamsProjects(teams, map){
+
+      var size = teams.length;
+
+      for(var i=0 ; i<size ; i++){
+         var id = teams[i].id;
+         teams[i].projectsNumber = map[id];
+         console.log(map[id]);
+      }
+
+      //return teams;
+
+    }
   }
 
 })(angular);

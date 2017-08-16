@@ -36,5 +36,7 @@ public interface IUserRepository {
     List<Task> getTasksForUserByState(Long userId, TaskState state);
 
     List<Project> getUrgentProjectsForUser(Long userId);
+
+    List<Team> getTeamsLeadByUser(Long userId);
     //TODO Da go vrakja passwordot za username i mail
 }

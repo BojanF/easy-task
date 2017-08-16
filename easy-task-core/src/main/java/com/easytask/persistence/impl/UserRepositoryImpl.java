@@ -200,7 +200,10 @@ public class UserRepositoryImpl implements IUserRepository {
         cq.where(
                 from.get(Project.FIELDS.TEAM).in(
                         teamsList
-                ),cb.or(
+                ),
+                //TODO razlika megju denesen datum i deadlin ako e <7 da e urgent project
+//                TODO
+                cb.or(
                         cb.equal(from.get(Project.FIELDS.STATE),
                                 ProjectState.NOT_STARTED
                         ),
@@ -215,6 +218,21 @@ public class UserRepositoryImpl implements IUserRepository {
         return entityManager.createQuery(cq).getResultList();
     }
 
+    public List<Team> getTeamsLeadByUser(Long userId){
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Team> cq = cb.createQuery(Team.class);
+        Root<Team> from = cq.from(Team.class);
+        Join<Team, Leader> join = from.join(Team.FIELDS.LEADER,JoinType.LEFT);
+        cq.where(
+                cb.equal(
+                        join.get(Leader.FIELDS.USER).get(User.FIELDS.ID),
+                        userId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    };
 
 }
 

@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">
-        {{vm.title}}
+        Teams that you are leading
       </h1>
       <ol class="breadcrumb">
         <li>
@@ -32,33 +32,47 @@
       <h3 class="panel-title"><i class="fa fa-cogs fa-fw"></i> Your teams</h3>
     </div>
     <div class="panel-body">
-      <table class="table table-bordered table-hover table-striped">
+      <div ng-show="vm.uiState.loadGif">
+        <img src="pictures//loading.gif" style="width:20px; height:20px;">
+      </div>
+      <table st-table="teams" st-safe-src="vm.teams" ng-show="vm.uiState.showTeams" class="table table-bordered table-striped">
         <thead>
         <tr>
+          <!--<th st-sort="name">Name</th>-->
+          <!--<th st-sort="shortName">Short name</th>-->
           <th>Name</th>
           <th>Projects number</th>
           <th>Tasks number</th>
           <th>Workers</th>
         </tr>
+        <tr>
+          <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+        </tr>
         </thead>
         <tbody>
-        <tr>
-          <td><a href="#">Team X</a></td>
-          <td>3</td>
-          <td>33</td>
-          <td>7</td>
+        <tr ng-repeat="t in teams | orderBy:['name'] | filter:searchProfName">
+          <td><a href="#">{{t.name}}</a></td>
+          <td>{{t.projectsNumber}}</td>
+          <td>NaN</td>
+          <td>{{t.usersCount}}</td>
         </tr>
-        <tr>
-          <td><a href="#">Team Y</a></td>
-          <td>4</td>
-          <td>45</td>
-          <td>8</td>
-        </tr>
-
-
         </tbody>
-        <!--<tfoot></tfoot>-->
+        <tfoot>
+        <tr>
+          <td colspan="6" class="text-center">
+            <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+          </td>
+        </tr>
+        </tfoot>
       </table>
+      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showNoTeamsPanel">
+        You don`t have any urgent projects!
+      </div>
+      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showErrorPanel">
+        <div> We run into an error!</div>
+        <div> Try again later!</div>
+      </div>
+
     </div>
 
   </div>

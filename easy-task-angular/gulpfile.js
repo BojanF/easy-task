@@ -27,6 +27,7 @@ var JS_APP = [
   //stats-charts
   'app/views/stats-charts/stats-charts.state.js',
   'app/views/stats-charts/stats-charts.controller.js',
+  'app/views/stats-charts/stats-charts.service.js',
 
   //project-details
   'app/views/project-details/project-details.state.js',
@@ -46,10 +47,12 @@ var JS_APP = [
   //new-project
   'app/views/new-project/new-project.state.js',
   'app/views/new-project/new-project.controller.js',
+  'app/views/new-project/new-project.service.js',
 
   //team-leader
   'app/views/team-leader/team-leader.state.js',
   'app/views/team-leader/team-leader.controller.js',
+  'app/views/team-leader/team-leader.service.js',
 
   //teams-working-on
   'app/views/teams-working-on/teams-working-on.state.js',
@@ -62,6 +65,7 @@ var JS_APP = [
   //new-team
   'app/views/new-team/new-team.state.js',
   'app/views/new-team/new-team.controller.js',
+  'app/views/new-team/new-team.service.js',
 
   //tasks-by-state
   'app/views/tasks-by-state/tasks-by-state.state.js',
@@ -69,7 +73,9 @@ var JS_APP = [
   'app/views/tasks-by-state/tasks-by-state.service.js',
 
   //components
-  'app/components/group-select/group-select-component.component.js'
+  'app/components/single-select/single-select-component.component.js',
+  'app/components/input-component/input-component.component.js',
+  'app/components/multiple-select/multiple-select-component.component.js'
 ];
 
 var TEMPLATES_SRC = [

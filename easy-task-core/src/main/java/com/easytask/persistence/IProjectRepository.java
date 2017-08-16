@@ -1,5 +1,6 @@
 package com.easytask.persistence;
 
+import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
@@ -27,5 +28,8 @@ public interface IProjectRepository {
     List<Document> getAllDocumentsForProject(Long projectId);
 
     List<Comment> getAllCommentsForProject(Long projectId);
+
+    //novi bez test
+    List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId);
 
 }

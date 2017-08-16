@@ -7,7 +7,8 @@
       'ui.select',
       'smart-table',
       'ngResource',
-      'gridshore.c3js.chart'
+      'gridshore.c3js.chart',
+      'moment-picker'
     ]);
 
 })(angular);
