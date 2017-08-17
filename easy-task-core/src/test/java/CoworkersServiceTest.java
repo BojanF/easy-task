@@ -87,50 +87,35 @@ public class CoworkersServiceTest {
 
     @Test
     public void createDeleteCoworkers(){
-
-        Coworkers coworkers1 = new Coworkers();
-        coworkers1.setId(new CoworkerId(user1.getId(), user3.getId()));
-        coworkers1.setUserA(user1);
-        coworkers1.setUserB(user3);
-        coworkers1.setState(CoworkerState.ACCEPTED);
-        coworkers1 = coworkersService.insert(coworkers1);
+        int x = 0;
+        Coworkers coworkers1Request = new Coworkers();
+        coworkers1Request.setId(new CoworkerId(user1.getId(), user3.getId()));
+        coworkers1Request.setUserA(user1);
+        coworkers1Request.setUserB(user3);
+        coworkers1Request.setState(CoworkerState.PENDING);
+        coworkers1Request = coworkersService.insert(coworkers1Request);
 
         //test that coworker is is persisted in db
         //test for findById and insert function
-        Coworkers getByIdCoworkers = coworkersService.findById(coworkers1.getId());
-        Assert.assertEquals(coworkers1.getId(), getByIdCoworkers.getId());
+        Coworkers getByIdCoworkersR = coworkersService.findById(coworkers1Request.getId());
+        Assert.assertEquals(coworkers1Request.getId(), getByIdCoworkersR.getId());
 
-        //deleting coworker
-        //test deleteById function
-        coworkersService.deleteById(coworkers1.getId());
-        Assert.assertEquals(null, coworkersService.findById(coworkers1.getId()));
-        //Assert.assertEquals(null, coworkersService.findById(new CoworkerId(user3.getId(), user1.getId())));
+        Coworkers coworkers1Accepted = new Coworkers();
+        coworkers1Accepted.setId(new CoworkerId(user3.getId(), user1.getId()));
+        coworkers1Accepted.setUserA(user3);
+        coworkers1Accepted.setUserB(user1);
+        coworkers1Accepted.setState(CoworkerState.ACCEPTED);
+        coworkers1Accepted = coworkersService.acceptRequest(coworkers1Accepted);
 
-    }
+        //test that coworker is is persisted in db
+        //test for findById and insert function
+        Coworkers getByIdCoworkersA = coworkersService.findById(coworkers1Accepted.getId());
+        Assert.assertEquals(coworkers1Accepted.getId(), getByIdCoworkersA.getId());
 
-    @Test
-    public void updateCoworkers(){
-        Coworkers coworkers2 = new Coworkers();
-        coworkers2.setId(new CoworkerId(user5.getId(), user6.getId()));
-        coworkers2.setUserA(user5);
-        coworkers2.setUserB(user6);
-        coworkers2.setState(CoworkerState.PENDING);
-        coworkers2 = coworkersService.insert(coworkers2);
-
-        //test that coworker request has state PENDING
-        Assert.assertEquals(CoworkerState.PENDING, coworkersService.findById(coworkers2.getId()).getState());
-
-        //updating state to ACCEPTED
-        coworkers2.setState(CoworkerState.ACCEPTED);
-        coworkers2 = coworkersService.update(coworkers2);
-
-        //test that coworker request has state ACCEPTED
-        Assert.assertEquals(CoworkerState.ACCEPTED, coworkersService.findById(coworkers2.getId()).getState());
-
-        //deleting coworker
-        //test deleteById function
-        coworkersService.deleteById(coworkers2.getId());
-        Assert.assertEquals(null, coworkersService.findById(coworkers2.getId()));
+        //remove as coworkers
+        coworkersService.removeAsCoworker(coworkers1Accepted.getId());
+        Assert.assertEquals(null, coworkersService.findById(coworkers1Request.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers1Accepted.getId()));
 
 
     }
@@ -139,26 +124,40 @@ public class CoworkersServiceTest {
     public void testCoworkersForUser(){
 
         //creating coworkers for user1
-        Coworkers coworkers1 = new Coworkers();
-        coworkers1.setId(new CoworkerId(user1.getId(), user3.getId()));
-        coworkers1.setUserA(user1);
-        coworkers1.setUserB(user3);
-        coworkers1.setState(CoworkerState.ACCEPTED);
-        coworkers1 = coworkersService.insert(coworkers1);
+        Coworkers coworkers1R = new Coworkers();
+        coworkers1R.setId(new CoworkerId(user1.getId(), user3.getId()));
+        coworkers1R.setUserA(user1);
+        coworkers1R.setUserB(user3);
+        coworkers1R.setState(CoworkerState.PENDING);
+        coworkers1R = coworkersService.insert(coworkers1R);
 
-        Coworkers coworkers2 = new Coworkers();
-        coworkers2.setId(new CoworkerId(user1.getId(), user2.getId()));
-        coworkers2.setUserA(user1);
-        coworkers2.setUserB(user2);
-        coworkers2.setState(CoworkerState.PENDING);
-        coworkers2 = coworkersService.insert(coworkers2);
+        Coworkers coworkers1A = new Coworkers();
+        coworkers1A.setId(new CoworkerId(user3.getId(), user1.getId()));
+        coworkers1A.setUserA(user3);
+        coworkers1A.setUserB(user1);
+        coworkers1A.setState(CoworkerState.ACCEPTED);
+        coworkers1A = coworkersService.acceptRequest(coworkers1A);
 
-        Coworkers coworkers3 = new Coworkers();
-        coworkers3.setId(new CoworkerId(user1.getId(), user4.getId()));
-        coworkers3.setUserA(user1);
-        coworkers3.setUserB(user4);
-        coworkers3.setState(CoworkerState.ACCEPTED);
-        coworkers3 = coworkersService.insert(coworkers3);
+        Coworkers coworkers2R = new Coworkers();
+        coworkers2R.setId(new CoworkerId(user1.getId(), user2.getId()));
+        coworkers2R.setUserA(user1);
+        coworkers2R.setUserB(user2);
+        coworkers2R.setState(CoworkerState.PENDING);
+        coworkers2R = coworkersService.insert(coworkers2R);
+
+        Coworkers coworkers3R = new Coworkers();
+        coworkers3R.setId(new CoworkerId(user1.getId(), user4.getId()));
+        coworkers3R.setUserA(user1);
+        coworkers3R.setUserB(user4);
+        coworkers3R.setState(CoworkerState.PENDING);
+        coworkers3R = coworkersService.insert(coworkers3R);
+
+        Coworkers coworkers3A = new Coworkers();
+        coworkers3A.setId(new CoworkerId(user4.getId(), user1.getId()));
+        coworkers3A.setUserA(user4);
+        coworkers3A.setUserB(user1);
+        coworkers3A.setState(CoworkerState.ACCEPTED);
+        coworkers3A = coworkersService.acceptRequest(coworkers3A);
 
         //fetching coworkers for user1
         //test for getCoworkersForUser function
@@ -202,14 +201,20 @@ public class CoworkersServiceTest {
             Assert.assertEquals(true, identifiersNonEngagedUsersForUser1.contains(u.getId()));
 
 
-
         //creating coworkers for user4
-        Coworkers coworkers4 = new Coworkers();
-        coworkers4.setId(new CoworkerId(user4.getId(), user3.getId()));
-        coworkers4.setUserA(user4);
-        coworkers4.setUserB(user3);
-        coworkers4.setState(CoworkerState.ACCEPTED);
-        coworkers4 = coworkersService.insert(coworkers4);
+        Coworkers coworkers4R = new Coworkers();
+        coworkers4R.setId(new CoworkerId(user4.getId(), user3.getId()));
+        coworkers4R.setUserA(user4);
+        coworkers4R.setUserB(user3);
+        coworkers4R.setState(CoworkerState.PENDING);
+        coworkers4R = coworkersService.insert(coworkers4R);
+
+        Coworkers coworkers4A = new Coworkers();
+        coworkers4A.setId(new CoworkerId(user3.getId(), user4.getId()));
+        coworkers4A.setUserA(user3);
+        coworkers4A.setUserB(user4);
+        coworkers4A.setState(CoworkerState.ACCEPTED);
+        coworkers4A = coworkersService.acceptRequest(coworkers4A);
 
         //fetching coworkers for user3
         List<User> coworkersForUser3 = coworkersService.getCoworkersForUser(user3.getId());
@@ -246,20 +251,25 @@ public class CoworkersServiceTest {
 
         //findAll function test
         List<Coworkers> allCoworkersRecords = coworkersService.findAll();
-        Assert.assertEquals(4, allCoworkersRecords.size());
+        Assert.assertEquals(7, allCoworkersRecords.size());
 
         //deleting coworkers for user1
         //test for deleteById & findById
-        coworkersService.deleteById(coworkers1.getId());
-        coworkersService.deleteById(coworkers2.getId());
-        coworkersService.deleteById(coworkers3.getId());
-        Assert.assertEquals(null, coworkersService.findById(coworkers1.getId()));
-        Assert.assertEquals(null, coworkersService.findById(coworkers2.getId()));
-        Assert.assertEquals(null, coworkersService.findById(coworkers3.getId()));
+
+
+        coworkersService.removeAsCoworker(coworkers1A.getId());
+        coworkersService.refuseRequest(coworkers2R.getId());
+        coworkersService.removeAsCoworker(coworkers3A.getId());
+        Assert.assertEquals(null, coworkersService.findById(coworkers1R.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers3R.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers1A.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers3A.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers3R.getId()));
         //deleting coworkers for user4
         //test for deleteById & findById
-        coworkersService.deleteById(coworkers4.getId());
-        Assert.assertEquals(null, coworkersService.findById(coworkers4.getId()));
+        coworkersService.removeAsCoworker(coworkers4R.getId());
+        Assert.assertEquals(null, coworkersService.findById(coworkers4R.getId()));
+        Assert.assertEquals(null, coworkersService.findById(coworkers4A.getId()));
     }
 
     @After

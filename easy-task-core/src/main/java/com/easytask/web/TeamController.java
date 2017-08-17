@@ -32,7 +32,6 @@ public class TeamController implements ApplicationContextAware {
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Team insertTeam(@RequestBody Team team){
-        int x = 0;
         return teamService.insert(team);
     }
 

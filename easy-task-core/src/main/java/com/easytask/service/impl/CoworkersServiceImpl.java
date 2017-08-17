@@ -1,5 +1,6 @@
 package com.easytask.service.impl;
 
+import com.easytask.model.enums.CoworkerState;
 import com.easytask.model.jpa.Coworkers;
 import com.easytask.model.jpa.CoworkerId;
 import com.easytask.model.jpa.User;
@@ -56,17 +57,25 @@ public class CoworkersServiceImpl implements ICoworkersService {
         return coworkerRepository.getNonEngagedUsersForUser(userId);
     }
 
-    public Coworkers insertPair(Coworkers coworkers){
-        return coworkerRepository.insertPair(coworkers);
+    public Coworkers acceptRequest(Coworkers coworkers){
+        CoworkerId existingEntry = new CoworkerId(coworkers.getId().getUserB(), coworkers.getId().getUserA());
+        Coworkers request = findById(existingEntry);
+        request.setState(CoworkerState.ACCEPTED);
+        update(request);
+        return insert(coworkers);
+    }
+
+    public void removeAsCoworker(CoworkerId id){
+        // first entry
+        deleteById(id);
+        //second entry
+        CoworkerId second = new CoworkerId(id.getUserB(), id.getUserA());
+        deleteById(second);
+
     };
 
-    public Coworkers updatePair(Coworkers coworkers){
-        return coworkerRepository.updatePair(coworkers);
-    };
-
-    public void deletePairById(CoworkerId id){
-        coworkerRepository.deletePairById(id);
-    };
-
+    public void refuseRequest(CoworkerId id){
+        deleteById(id);;
+    }
 
 }

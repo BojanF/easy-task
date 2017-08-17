@@ -30,9 +30,9 @@ public interface ICoworkersService {
 
     List<User> getNonEngagedUsersForUser(Long userId);
 
-    Coworkers insertPair(Coworkers coworkers);
+    Coworkers acceptRequest(Coworkers coworkers);
 
-    Coworkers updatePair(Coworkers coworkers);
+    void removeAsCoworker(CoworkerId id);
 
-    void deletePairById(CoworkerId id);
+    void refuseRequest(CoworkerId id);
 }

@@ -48,33 +48,13 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
     }
 
     @Transactional
-    public Coworkers insertPair(Coworkers coworkers){
-        Coworkers otherWay = new Coworkers();
-        otherWay.setId(new CoworkerId(coworkers.getUserB().getId(), coworkers.getUserA().getId()));
-        otherWay.setUserA(coworkers.getUserB());
-        otherWay.setUserB(coworkers.getUserA());
-        otherWay.setState(coworkers.getState());
-        otherWay = insert(otherWay);
-
-        return insert(coworkers);
-    }
-
-    @Transactional
     public Coworkers insert(Coworkers coworkers) {
         entityManager.merge(coworkers);
         entityManager.flush();
         return coworkers;
     }
 
-    @Transactional
-    public Coworkers updatePair(Coworkers coworkers){
-        CoworkerId otherWayId = new CoworkerId(coworkers.getUserB().getId(), coworkers.getUserA().getId());
-        Coworkers otherWay = findById(otherWayId);
-        otherWay = update(otherWay);
 
-        return update(coworkers);
-
-    }
 
     @Transactional
     public Coworkers update(Coworkers coworkers) {
@@ -84,105 +64,62 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
     }
 
     @Transactional
-    public void deletePairById(CoworkerId id){
-        CoworkerId otherWay = new CoworkerId(id.getUserB(), id.getUserA());
-
-        deleteById(otherWay);
-        deleteById(id);
-    }
-
-    @Transactional
     public void deleteById(CoworkerId id){
         entityManager.remove(findById(id));
     }
 
     public List<User> getCoworkersForUser(Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Coworkers> cq = cb.createQuery(Coworkers.class);
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<Coworkers> from = cq.from(Coworkers.class);
 
-        cq.select(from).where(
-                cb.or(
-                    cb.equal(from.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
-                            userId),
-                    cb.equal(from.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID),
-                            userId)
-                ),
+        cq.select(from.get(Coworkers.FIELDS.USER_B).as(User.class)).where(
+
+                cb.equal(from.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
+                        userId),
                 cb.equal(from.get(Coworkers.FIELDS.STATE),
                         CoworkerState.ACCEPTED)
         );
-        List<Coworkers> acceptedRequestCoworkersList = entityManager.createQuery(cq).getResultList();
 
-        List<User> resultList = new ArrayList<User>();
-        for(Coworkers cw : acceptedRequestCoworkersList){
-            if(cw.getUserA().getId().equals(userId))
-                resultList.add(cw.getUserB());
-            else{
-                resultList.add(cw.getUserA());
-            }
-        }
-
-        return resultList;
+        return entityManager.createQuery(cq).getResultList();
     }
 
     //TODO da se smisli podeskriptivno ime za funcijava
     public List<Long> getCoworkersForUserIdentifiers(Long userId) {
         //fetches only identifiers fo users that are coworkers for given user(userId)
-        List<Long> resultListIdentifiers = new ArrayList<Long>();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Long> cqFirstHalf = cb.createQuery(Long.class);
-        Root<Coworkers> fromFirstHalf = cqFirstHalf.from(Coworkers.class);
+        Root<Coworkers> from = cqFirstHalf.from(Coworkers.class);
 
-        cqFirstHalf.select(fromFirstHalf.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID).as(Long.class)).where(
+        cqFirstHalf.select(from.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID).as(Long.class)).where(
 
-                cb.equal(fromFirstHalf.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
+                cb.equal(from.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
                         userId),
 
-                cb.equal(fromFirstHalf.get(Coworkers.FIELDS.STATE),
+                cb.equal(from.get(Coworkers.FIELDS.STATE),
                         CoworkerState.ACCEPTED)
         );
-        resultListIdentifiers.addAll(entityManager.createQuery(cqFirstHalf).getResultList());
+        return entityManager.createQuery(cqFirstHalf).getResultList();
 
-
-        CriteriaQuery<Long> cqSecondHalf = cb.createQuery(Long.class);
-        Root<Coworkers> fromSecondHalf = cqSecondHalf.from(Coworkers.class);
-        cqSecondHalf.select(fromSecondHalf.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID).as(Long.class)).where(
-
-                cb.equal(fromSecondHalf.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID),
-                        userId),
-
-                cb.equal(fromSecondHalf.get(Coworkers.FIELDS.STATE),
-                        CoworkerState.ACCEPTED)
-        );
-        resultListIdentifiers.addAll(entityManager.createQuery(cqSecondHalf).getResultList());
-
-
-        return resultListIdentifiers;
     }
 
     //TODO da se smisli podeskriptivno ime za funcijava
     public List<User> getCoworkerRequestsSent(Long userId) {
         //fetches requests that user sent
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Coworkers> cq = cb.createQuery(Coworkers.class);
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<Coworkers> from = cq.from(Coworkers.class);
 
-        cq.select(from).where(
+        cq.select(from.get(Coworkers.FIELDS.USER_B).as(User.class)).where(
                 cb.equal(from.get(Coworkers.FIELDS.USER_A).get(User.FIELDS.ID),
                         userId),
                 cb.equal(from.get(Coworkers.FIELDS.STATE),
                         CoworkerState.PENDING)
         );
-        List<Coworkers> pendingRequestCoworkersList = entityManager.createQuery(cq).getResultList();
+        return entityManager.createQuery(cq).getResultList();
 
-        List<User> resultList = new ArrayList<User>();
-        for(Coworkers cw : pendingRequestCoworkersList){
-            resultList.add(cw.getUserB());
-        }
-
-        return resultList;
     }
 
     //TODO da se smisli podeskriptivno ime za funcijava
@@ -206,24 +143,21 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
     //TODO da se smisli podeskriptivno ime za funcijava
     public List<User> getCoworkerRequestsReceived(Long userId) {
         //fetches requests that user received
+
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Coworkers> cq = cb.createQuery(Coworkers.class);
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<Coworkers> from = cq.from(Coworkers.class);
 
-        cq.select(from).where(
+        cq.select(from.get(Coworkers.FIELDS.USER_A).as(User.class)).where(
                 cb.equal(from.get(Coworkers.FIELDS.USER_B).get(User.FIELDS.ID),
                         userId),
                 cb.equal(from.get(Coworkers.FIELDS.STATE),
                         CoworkerState.PENDING)
         );
-        List<Coworkers> pendingRequestCoworkersList = entityManager.createQuery(cq).getResultList();
 
-        List<User> resultList = new ArrayList<User>();
-        for(Coworkers cw : pendingRequestCoworkersList){
-            resultList.add(cw.getUserA());
-        }
+        List<User> result = entityManager.createQuery(cq).getResultList();
+        return result;
 
-        return resultList;
     }
 
     //TODO da se smisli podeskriptivno ime za funcijava
