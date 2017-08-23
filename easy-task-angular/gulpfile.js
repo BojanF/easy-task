@@ -117,7 +117,6 @@ var JS_LIB = [
   'bower_components/angular-ui-select/dist/select.js',
   'bower-components/angular-smart-table/dist/smart-table.js',
   'bower_components/angular-resource/angular-resource.js',
-
   'bower_components/d3/d3.min.js',
   'bower_components/c3/c3.min.js',
   'bower_components/c3-angular/c3-angular.min.js'

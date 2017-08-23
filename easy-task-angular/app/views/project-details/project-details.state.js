@@ -15,11 +15,12 @@
   function registerState($stateProvider) {
 
     $stateProvider.state('project-details', {
-      url: '/project-details',
+      url: '/project-details/:projectID',
       templateUrl: 'app/views/project-details/project-details.view.html',
       controller: 'ProjectDetailsController',
       controllerAs: 'vm'
     });
+
   }
 
 })(angular);

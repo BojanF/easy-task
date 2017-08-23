@@ -16,7 +16,7 @@
     //variables declaration
 
     var vm = this;
-    vm.USER_ID = 110;
+    vm.USER_ID = 1;
 
     vm.fetchedData = {
       leader: {},

@@ -13,6 +13,7 @@
                 </bean>
                 <!-- used for 'xml' and 'atom' views -->
                 <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+
             </list>
         </property>
 

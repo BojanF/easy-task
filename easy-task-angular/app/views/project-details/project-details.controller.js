@@ -9,17 +9,21 @@
     .module('easy-task-angular')
     .controller('ProjectDetailsController', ProjectDetailsController);
 
-  ProjectDetailsController.$inject = ['$log', '$location', 'ProjectDetailsService'];
+  ProjectDetailsController.$inject = ['$log', '$location', 'ProjectDetailsService','$scope','$stateParams'];
 
   /* @ngInject */
-  function ProjectDetailsController($log, $location, ProjectDetailsService) {
+  function ProjectDetailsController($log, $location, ProjectDetailsService,$scope,$stateParams) {
     var vm = this;
-
+    var imageFormats=["png","jpg","jpeg"];
+    var textFormats=["txt","c","java"];
+    var zipFormats=["zip","rar","7z"];
     //variables declaration
     vm.title = 'project-details';
     vm.PROJECT_ID = 0;
-    vm.USER_ID = 110; //jas go stavam fiksno
+    vm.path="";
+    vm.USER_ID = 1; //jas go stavam fiksno
     vm.user = {};
+    vm.file={};
     vm.project = {};
     vm.c3DataTest = {
       donuts: {
@@ -43,7 +47,8 @@
     }
     vm.newEntities = {
       task:{},
-      comment:{}
+      comment:{},
+      document:{}
     }
 
     vm.entitiesData = {
@@ -60,6 +65,10 @@
         users: false,
         successMsg: null,
         errorMsg: null
+      },
+      addNewDocument:{
+        successMsg:null,
+        errorMsg:null
       },
       addNewDocumentButton: false,
       tasks:{
@@ -98,10 +107,12 @@
     vm.saveNewTask = saveNewTaskFn;
     vm.clearNewTask = clearNewTaskFn;
     vm.saveNewComment = saveNewCommentFn;
-
+    vm.saveNewDocument = saveNewDocumentFn;
+    vm.clearNewDocument = clearNewDocumentFn;
     //refresh functions
     vm.refreshComments = refreshCommentsFn;
     vm.refreshTasks = refreshTasksFn;
+    vm.refreshDocuments = refreshDocumentsFn;
 
 
     //functions invocation
@@ -111,8 +122,8 @@
     //functions implementation
 
     function getProjectIdFn(){
-      var searchObject = $location.search();
-      vm.PROJECT_ID = searchObject.id;
+      vm.PROJECT_ID = $stateParams.projectID;
+      vm.path=$location.absUrl();
       if (!/^\d+$/.test(vm.PROJECT_ID) || vm.PROJECT_ID.toString()=='0') {
         vm.uiState.showProject = false;
         console.log("OOOPS msg");
@@ -129,6 +140,7 @@
 
     function getProjectFn(){
       // getProjectIdFn();
+      console.log("asd");
       ProjectDetailsService.getProject(vm.PROJECT_ID).then(function (data) {
 
         vm.project = data;
@@ -162,7 +174,6 @@
     }
 
     function getTasksFn(){
-
       vm.uiState.addNewTask.successMsg = null;
       vm.uiState.addNewTask.errorMsg = null;
 
@@ -207,11 +218,53 @@
     }
 
     function getDocumentsFn(){
-      console.log("docs");
+
+      if(!vm.uiState.documents.loaded){
+        vm.uiState.documents.loaded = true;
+        vm.uiState.documents.loadGif = true;
+        console.log("fetch documents");
+
+        ProjectDetailsService.getDocuments(vm.PROJECT_ID).then(function (data) {
+
+          var format = vm.entitiesData.documents = data;
+          for(var i=0; i < format.length; i++){
+            if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),imageFormats)>-1){
+              vm.entitiesData.documents[i].icon="-image-o";
+            }
+            else if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),textFormats)>-1){
+              vm.entitiesData.documents[i].icon="-text-o";
+            }
+            else if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),zipFormats)>-1){
+              vm.entitiesData.documents[i].icon="-zip-o";
+            }
+            else if(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase()==("pdf")){
+              vm.entitiesData.documents[i].icon="-pdf-o";
+            }
+          }
+
+          vm.uiState.documents.loadGif = false;
+          vm.uiState.documents.showErrorPanel = false;
+          if(vm.entitiesData.documents.length > 0){
+            vm.uiState.documents.showDocuments = true;
+            vm.uiState.documents.showNoDocumentsPanel = false;
+            setDates(vm.entitiesData.documents);
+          }
+          else{
+            vm.uiState.documents.showDocuments = false;
+            vm.uiState.documents.showNoDocumentsPanel = true;
+          }
+
+
+        }, function(){
+          vm.uiState.documents.loadGif = false;
+          vm.uiState.documents.showDocuments = false;
+          vm.uiState.documents.showNoDocumentsPanel = false;
+          vm.uiState.documents.showErrorPanel = true;
+        })
+      }
     }
 
     function getCommentsFn(){
-
       if(!vm.uiState.comments.loaded){
         vm.uiState.comments.loaded = true;
         vm.uiState.comments.loadGif = true;
@@ -274,10 +327,37 @@
       }
     }
 
+    function saveNewDocumentFn(){
+      vm.file = $scope.myFile;
+      ProjectDetailsService.fileUpload(vm.file, vm.project.id,vm.USER_ID).then(successCallbackNewTask, errorCallbackNewTask);;
+
+      function successCallbackNewTask(data) {
+         console.log("SAVEEEEE");
+         $("#modalDoc").modal('hide');
+         $("#fileUploading").hide();
+         clearNewDocumentFn();
+         refreshDocumentsFn();
+        $('#documentFormCancel').prop('disabled',false);
+         vm.uiState.addNewDocument.successMsg = "Successfully uploaded \"" + vm.file.name + "\""
+      }
+
+      function errorCallbackNewTask() {
+        $("#fileUploading").hide();
+         vm.uiState.addNewDocument.errorMsg = "Cannot upload, please try again.";
+      }
+    }
+
     function clearNewTaskFn(){
       vm.newEntities.task = null;
       vm.inputDates = null;
       vm.uiState.addNewTask.errorMsg = null;
+    }
+
+    function clearNewDocumentFn(){
+      vm.newEntities.document = null;
+      vm.uiState.addNewDocument.errorMsg = null;
+
+
     }
 
     function saveNewCommentFn(){
@@ -322,6 +402,12 @@
       console.log("refresh tasks");
       vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false};
       getTasksFn();
+    }
+
+    function refreshDocumentsFn(){
+      console.log("refresh documents");
+      vm.uiState.documents = {loadGif:true, showDocuments:false, showNoDocumentsPanel:false, showErrorPanel: false};
+      getDocumentsFn();
     }
 
     //helper functions
@@ -400,6 +486,8 @@
     }
 
 
+
   }
+
 
 })(angular);

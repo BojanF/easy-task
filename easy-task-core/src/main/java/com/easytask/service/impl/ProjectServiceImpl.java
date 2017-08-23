@@ -5,6 +5,7 @@ import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
+import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.persistence.IProjectRepository;
 import com.easytask.persistence.IUserRepository;
 import com.easytask.service.IProjectService;
@@ -52,6 +53,10 @@ public class ProjectServiceImpl implements IProjectService {
 
     public List<Document> getAllDocumentsForProject(Long projectId) {
         return projectRepository.getAllDocumentsForProject(projectId);
+    }
+
+    public List<DocumentResponse> getAllDocumentsForProjectWithoutData(Long projectId){
+        return projectRepository.getAllDocumentsForProjectWithoutData(projectId);
     }
 
     public List<Comment> getAllCommentsForProject(Long projectId) {

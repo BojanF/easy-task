@@ -5,6 +5,7 @@ import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
+import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.persistence.IProjectRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -85,6 +86,21 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         cq.where(
                 cb.equal(
                         from.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Transactional
+    public List<DocumentResponse> getAllDocumentsForProjectWithoutData(Long projectId){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<DocumentResponse> cq = cb.createQuery(DocumentResponse.class);
+        Root<Document> root = cq.from(Document.class);
+        cq.multiselect(root.get(Document.FIELDS.ID), root.get(Document.FIELDS.NAME),root.get(Document.FIELDS.DATE),root.get(Document.FIELDS.USER))
+        .where(
+                cb.equal(
+                        root.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),
                         projectId
                 )
         );

@@ -15,7 +15,7 @@
   function registerState($stateProvider) {
 
     $stateProvider.state('home-page', {
-      url: '/home-page',
+      url: '',
       templateUrl: 'app/views/home-page/home-page.view.html',
       controller: 'HomePageController',
       controllerAs: 'vm'

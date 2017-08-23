@@ -52,7 +52,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="p in projects | orderBy:['name'] | filter:searchProfName">
-          <td><a href="#/project-details?id={{p.id}}">{{p.name}}</a></td>
+          <td><a href="#/project-details/{{p.id}}">{{p.name}}</a></td>
           <td>{{p.createdOn}}</td>
           <td>{{p.deadline}}</td>
           <td><a href="#">{{p.team.name}}</a></td>

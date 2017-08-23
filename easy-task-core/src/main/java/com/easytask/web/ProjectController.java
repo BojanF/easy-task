@@ -5,6 +5,7 @@ import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
+import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.service.IProjectService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class ProjectController implements ApplicationContextAware {
     }
 
     @RequestMapping(value = "/documents/{id}", method = RequestMethod.GET)
-    public List<Document> getDocumentsForProject(@PathVariable Long id){
-        return projectService.getAllDocumentsForProject(id);
+    public List<DocumentResponse> getDocumentsForProject(@PathVariable Long id){
+        return projectService.getAllDocumentsForProjectWithoutData(id);
     }
 }

@@ -17,7 +17,7 @@
     //variables declaration
     var vm = this;
     vm.title = 'easy-task';
-    vm.USER_ID = 110;
+    vm.USER_ID = 1;
 
     vm.tasks = [];
     vm.cssClassState = "";

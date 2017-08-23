@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Blob;
 
 /**
  * Created by Bojan on 6/7/2017.
@@ -22,11 +23,15 @@ public class Document {
     private Long id;
 
     @NotNull
+    private String name;
+
+    @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime date;
 
     @NotNull
-    private String url;
+    @JsonIgnore
+    private Blob data;
 
     @ManyToOne
     @JsonIgnore
@@ -45,8 +50,12 @@ public class Document {
         return date;
     }
 
-    public String getUrl() {
-        return url;
+    public String getName() {
+        return name;
+    }
+
+    public Blob getData() {
+        return data;
     }
 
     public Project getProject() {
@@ -67,9 +76,14 @@ public class Document {
         this.date = date;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+         this.name = name;
     }
+
+    public void setData(Blob data) {
+        this.data=data;
+    }
+
 
     @JsonProperty
     public void setProject(Project project) {
@@ -88,7 +102,7 @@ public class Document {
 
         public static String DATE = "date";
 
-        public static String URL = "url";
+        public static String NAME = "name";
 
         public static String PROJECT = "project";
 

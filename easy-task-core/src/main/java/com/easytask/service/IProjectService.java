@@ -5,6 +5,8 @@ import com.easytask.model.jpa.Comment;
 import com.easytask.model.jpa.Document;
 import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Task;
+import com.easytask.model.pojos.DocumentResponse;
+
 import java.util.List;
 
 /**
@@ -30,6 +32,8 @@ public interface IProjectService {
     List<Comment> getAllCommentsForProject(Long projectId);
 
     List<Task> getAllTasksForUserOnProject(Long projectId,Long userId);
+
+    List<DocumentResponse> getAllDocumentsForProjectWithoutData(Long projectId);
 
     //novi bez test
     List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId);

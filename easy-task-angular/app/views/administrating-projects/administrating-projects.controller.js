@@ -15,7 +15,7 @@
   function AdministratingProjectsController($log, AdministratingProjectsService) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 110;
+    vm.USER_ID = 1;
     vm.projects = [];
     vm.uiState = {
       loadGif: true,

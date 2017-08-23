@@ -41,6 +41,7 @@ public class DocumentRepositoryImpl implements IDocumentRepository {
 
     @Transactional
     public Document insert(Document document) {
+
         entityManager.persist(document);
         entityManager.flush();
         return document;

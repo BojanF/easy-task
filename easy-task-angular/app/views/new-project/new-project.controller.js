@@ -15,7 +15,7 @@
   function NewProjectsController($log, NewProjectService) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 110;
+    vm.USER_ID = 1;
     vm.user = {};
     vm.newProject = {};
     // vm.test = [];

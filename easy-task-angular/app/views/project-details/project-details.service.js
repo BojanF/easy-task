@@ -7,6 +7,21 @@
 
   angular
     .module('easy-task-angular')
+    .directive('fileModel', ['$parse', function ($parse) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var model = $parse(attrs.fileModel);
+          var modelSetter = model.assign;
+
+          element.bind('change', function(){
+            scope.$apply(function(){
+              modelSetter(scope, element[0].files[0]);
+            });
+          });
+        }
+      };
+    }])
     .factory('ProjectDetailsService', ProjectDetailsServiceFn);
 
   ProjectDetailsServiceFn.$inject = ['$log', '$resource'];
@@ -18,9 +33,16 @@
     var projectResource = $resource('http://localhost:8000/api/project/:id', {}, {});
     var tasksResource = $resource('http://localhost:8000/api/project/tasks/:id', {}, {});
     var commentsResource = $resource('http://localhost:8000/api/project/comments/:id', {}, {});
-    var projectsResource = $resource('http://localhost:8000/api/project/documents/:id', {}, {});
+    var documentsResource = $resource('http://localhost:8000/api/project/documents/:id', {}, {});
     var newTaskResource = $resource('http://localhost:8000/api/task/:id', {}, {});
     var newCommentsResource = $resource('http://localhost:8000/api/comment/:id', {}, {});
+    var newDocumentResource = $resource('http://localhost:8000/api/document/', {},{
+      save: {
+        method:'POST',
+        headers: {'Content-Type': undefined}
+      }
+    });
+    var documentResource = $resource('http://localhost:8000/api/document/:id', {}, {});
 
     var service = {
       getUser: getUserFn,
@@ -29,7 +51,8 @@
       getComments: getCommentsFn,
       getDocuments: getDocumentsFn,
       insertNewTask: insertNewTaskFn,
-      insertNewComment: insertNewCommentFn
+      insertNewComment: insertNewCommentFn,
+      fileUpload: fileUploadFn
     };
     return service;
 
@@ -50,7 +73,7 @@
     }
 
     function getDocumentsFn(projectId) {
-      return projectsResource.query({id:projectId}).$promise;
+      return documentsResource.query({id:projectId}).$promise;
     }
 
     function insertNewTaskFn(newTask){
@@ -68,6 +91,15 @@
       }).$promise;
 
     }
+
+    function fileUploadFn(file, project,user){
+        var fd = new FormData();
+         fd.append('file', file);
+         fd.append('project',project);
+         fd.append('user',user);
+      return newDocumentResource.save(fd).$promise;
+    }
   }
+
 
 })(angular);

@@ -29,40 +29,43 @@
   <!-- /.row -->
 
   <ul  class="nav nav-tabs">
-    <li class="active">
-      <a href="#1a" data-toggle="tab"><i class="fa fa-fw fa-hourglass-half"></i>Tasks</a>
+    <li class="active" >
+      <a id="tasks" data-toggle="tab"><i class="fa fa-fw fa-hourglass-half"></i>Tasks</a>
     </li>
     <li>
-      <a href="#2a" ng-click="vm.getDocuments()" data-toggle="tab"><i class="fa fa-fw fa-file"></i>Documents</a>
+      <a  id="documents" ng-click="vm.getDocuments()" data-toggle="tab"><i class="fa fa-fw fa-file"></i>Documents</a>
     </li>
     <li>
-      <a href="#3a" ng-click="vm.getComments()" data-toggle="tab"><i class="fa fa-fw fa-commenting"></i>Comments</a>
+      <a  id="comments" ng-click="vm.getComments()" data-toggle="tab"><i class="fa fa-fw fa-commenting"></i>Comments</a>
     </li>
     <li>
-      <a href="#4a" data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Information</a>
+      <a  id="info"  data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Information</a>
     </li>
     <li>
-      <a href="#5a" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
+      <a   id="stats" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
     </li>
   </ul>
 
   <div class="tab-content clearfix">
-    <div class="tab-pane active" id="1a">
+    <div class="tab-pane active" id="tasks-tab">
 
       <br>
-      <div class="row">
-        <div class="col-md-3">
+
+
           <!-- Button trigger modal -->
           <button ng-show="vm.uiState.addNewButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
             <i class="fa fa-fw fa-plus-square"> </i>
             Add new task
           </button>
-        </div>
-        <div class="col-md-9 panel panel-warning text-center text-success" ng-show="vm.uiState.addNewTask.successMsg">
+          <br>
+          <br>
+
+      <div class="panel panel-success" ng-show="vm.uiState.addNewTask.successMsg">
+        <div class="panel-heading   text-center text-success" >
           {{vm.uiState.addNewTask.successMsg}}
         </div>
       </div>
-      <br><br>
+
       <!-- Modal -->
       <div class="modal fade" id="modalTask" tabindex="-1" role="dialog" aria-labelledby="myModalLabelTask">
         <div class="modal-dialog modal-lg" role="document">
@@ -213,19 +216,27 @@
         </div>
       </div>
     </div>
-    <div class="tab-pane" id="2a">
+
+
+    <div class="tab-pane" id="documents-tab">
       <!--<h3>Documents</h3>-->
       <br>
+
       <!-- Button trigger modal -->
-      <div ng-show="vm.uiState.addNewButton">
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
+        <button ng-show="vm.uiState.addNewButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
           <i class="fa fa-fw fa-plus-square"> </i>
-          Add new document
+          Upload file
         </button>
+      <br>
+      <br>
+      <div class="panel panel-success" ng-show="vm.uiState.addNewDocument.successMsg">
+        <div class="panel-heading   text-center text-success" >
+        {{vm.uiState.addNewDocument.successMsg}}
+        </div>
       </div>
-      <br><br>
+
       <!-- Modal -->
-      <div class="modal fade" id="modalDoc" tabindex="-1" role="dialog" aria-labelledby="myModalLabelDoc">
+      <div class="modal fade" data-backdrop="static" data-keyboard="false" id="modalDoc" tabindex="-1" role="dialog" aria-labelledby="myModalLabelDoc">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -233,13 +244,34 @@
               <h4 class="modal-title" id="myModalLabelDoc">Add new document</h4>
             </div>
             <div class="modal-body">
-              <form id="newDocument" name="newDocumentFrom" ng-submit="">
+              <form id="newDocument" name="newDocumentFrom" ng-submit="vm.saveNewDocument()" enctype="multipart/form-data" >
+                <div class="form-group">
+                <input
+                                id="file"
+                                 type="file"
+                                 file-model="myFile"
+                                class="btn btn-danger"
+                                required
+                />
 
+                  </div>
               </form>
+              <br>
+              <div class="panel panel-default" id="fileUploading" hidden>
+                <div class="panel-heading text-center">
+                <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                <span id="fileUploadingText">&nbsp;Uploading {{vm.file.name}} ...</span>
+                  </div>
+              </div>
+              <div id="documentErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewDocument.errorMsg">
+              <div class="panel-heading text-center" >
+                {{vm.uiState.addNewDocument.errorMsg}}
+              </div>
+              </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button form="newDocument" type="submit" class="btn btn-primary" ng-disabled="newDocumentForm.$invalid">
+              <button id="documentFormCancel" type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clearNewDocument()">Close</button>
+              <button form="newDocument" id="documentFormSubmit" type="submit" class="btn btn-primary" disabled>
                 <i class="fa fa-fw fa-save"></i> Save
               </button>
             </div>
@@ -249,42 +281,52 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-file fa-fw"></i> Documents for project</h3>
+
+
+        <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-file fa-fw"></i> Documents </span>
+          </span>
+        <span class="pull-right">
+            <button class="btn btn-xs btn-success" ng-click="vm.refreshDocuments()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
+          </span>
         </div>
         <div class="panel-body">
-
-          <table class="table table-striped">
+          <div ng-show="vm.uiState.documents.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="documents" st-safe-src="vm.entitiesData.documents" ng-show="vm.uiState.documents.showDocuments" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th> Name </th>
-              <th> Posted from </th>
-              <th> Posted on </th>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Created By</th>
+            </tr>
+            <tr>
+              <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by file name..."> </th>
             </tr>
             </thead>
-
             <tbody>
-            <tr>
-              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 1 </a> </td>
-              <td> User 1 </td>
-              <td> 22.07.2017 17:25 </td>
-            </tr>
-            <tr>
-              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 2 </a> </td>
-              <td> User 1 </td>
-              <td> 22.07.2017 17:29 </td>
-            </tr>
-            <tr>
-              <td> <i class="fa fa-file-text"></i> <a href="#">Doc 3 </a> </td>
-              <td> User 2 </td>
-              <td> 23.07.2017 20:23 </td>
+            <tr ng-repeat="d in documents | orderBy:['date']:reverse = true| filter:searchProfName">
+              <td><a href={{"http://localhost:8080/api/document/"+d.id}}><i class="fa fa-file{{d.icon}}"></i>&nbsp;{{d.name}}</a></td>
+              <!--<td>{{t.id}}</td>-->
+              <td>{{d.date}}</td>
+              <td>{{d.user.name}}</td>
             </tr>
             </tbody>
-
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
           </table>
         </div>
       </div>
     </div>
-    <div class="tab-pane" id="3a">
+    <div class="tab-pane" id="comments-tab">
       <!--<h3>Comments</h3>-->
       <br><br>
       <div class="panel panel-default">
@@ -355,10 +397,10 @@
 
 
     </div>
-    <div class="tab-pane" id="4a">
+    <div class="tab-pane" id="info-tab">
       <h3>Information</h3>
     </div>
-    <div class="tab-pane" id="5a">
+    <div class="tab-pane" id="stats-tab">
       <!--<h3>Stats</h3>-->
       <br> <br>
       <div class="panel panel-default">
@@ -385,4 +427,7 @@
 
 
 </div>
+<script src="custom_js/tabs.js"></script>
+<script src="custom_js/bootstrap-filestyle.min.js"></script>
+<script src="custom_js/file_upload.js"></script>
 <!-- /.container-fluid -->
