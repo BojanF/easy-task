@@ -28,11 +28,11 @@
         </div>
         <div class="panel-body">
           <!--<div id="chart3" style="max-height: 320px; position: relative;"></div>-->
-          <c3chart bindto-id="chart1"
-                   show-labels="false"
-                   chart-data="vm.c3DataTest.time_chart.points"
-                   chart-columns="vm.c3DataTest.time_chart.columns"
-                   chart-x="vm.c3DataTest.time_chart.tickValues2">
+          <!--<c3chart bindto-id="chart1"-->
+                   <!--show-labels="false"-->
+                   <!--chart-data="vm.c3DataTest.time_chart.points"-->
+                   <!--chart-columns="vm.c3DataTest.time_chart.columns"-->
+                   <!--chart-x="vm.c3DataTest.time_chart.tickValues2">-->
             <!--<chart-column column-id="line1"-->
                           <!--column-name="Created"-->
                           <!--column-values="30, 5, 3, 10, 18, 25"-->
@@ -67,40 +67,8 @@
                           <!--show-point="true"-->
                           <!--point-expand-enabled="true"-->
                           <!--point-expand-radius="10"/>-->
-          </c3chart>
+          <!--</c3chart>-->
 
-        </div>
-        <!--TODO da se napise description-->
-        <div class="panel-footer">
-          <p> Descrption for this statistic category</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
-        </div>
-        <div class="panel-body">
-          <div ng-show="vm.uiState.donuts.tasks.loadGif">
-            <img src="pictures//loading.gif" style="width:20px; height:20px;">
-          </div>
-          <c3chart bindto-id="tasks-chart"
-                   chart-data="vm.c3DataTest.donuts.points.tasks"
-                   chart-columns="vm.c3DataTest.donuts.columns.tasks"
-                   ng-show="vm.uiState.donuts.tasks.showStats">
-            <chart-legend show-legend="true" legend-position="right"/>
-            <chart-size chart-height="350" chart-width="450"/>
-            <chart-donut title="Tasks stage percentages" width="60"/>
-          </c3chart>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.tasks.showNoStatsPanel">
-            Your projects don`t have any tasks!
-          </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.tasks.showErrorPanel">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
-          </div>
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">
@@ -126,12 +94,52 @@
             <chart-size chart-height="350" chart-width="450"/>
             <chart-donut title="Projects state percentages" width="60"/>
           </c3chart>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.projects.showNoStatsPanel">
-            Don`t have !
+          <div class="panel panel-info" ng-show="vm.uiState.donuts.projects.showNoStatsPanel">
+            <div class="panel-heading text-center text-info">
+              You are not leader to any project!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.donuts.projects.showErrorPanel">
-            <div> We run into error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.donuts.projects.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+        </div>
+        <!--TODO da se napise description-->
+        <div class="panel-footer">
+          <p> Descrption for this statistic category</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.donuts.tasks.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <c3chart bindto-id="tasks-chart"
+                   chart-data="vm.c3DataTest.donuts.points.tasks"
+                   chart-columns="vm.c3DataTest.donuts.columns.tasks"
+                   ng-show="vm.uiState.donuts.tasks.showStats">
+            <chart-legend show-legend="true" legend-position="right"/>
+            <chart-size chart-height="350" chart-width="450"/>
+            <chart-donut title="Tasks stage percentages" width="60"/>
+          </c3chart>
+          <div class="panel panel-info" ng-show="vm.uiState.donuts.tasks.showNoStatsPanel">
+            <div class="panel-heading text-center text-danger">
+              Your projects don`t have any tasks!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.donuts.tasks.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
         </div>
         <!--TODO da se napise description-->
@@ -147,7 +155,9 @@
           <h3 class="panel-title"><i class="fa fa-bar-chart"></i> Projects per team </h3>
         </div>
         <div class="panel-body">
-          <div id="chart4" style="max-height: 320px; position: relative;"></div>
+          <c3chart bindto-id="bar-chart" chart-data="vm.c3DataTest.bar_chart.points" chart-columns="vm.c3DataTest.bar_chart.columns">
+            <chart-axis axis-rotate="true"/>
+          </c3chart>
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">

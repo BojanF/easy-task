@@ -1,8 +1,10 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.Task;
 import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITaskRepository;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
@@ -70,5 +72,23 @@ public class TaskRepositoryImpl implements ITaskRepository {
     public Task removeUserFromTask(Task task, User user) {
         task.removeUser(user);
         return update(task);
+    }
+
+    public List<Task> getDeadlineBreachedTasks(DateTime now){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> from = cq.from(Task.class);
+
+        cq.select(from).where(
+                cb.or(
+                        cb.equal(from.get(Task.FIELDS.STATE),
+                                TaskState.NOT_STARTED),
+                        cb.equal(from.get(Task.FIELDS.STATE),
+                                TaskState.IN_PROGRESS)
+                ),
+                cb.lessThan(from.get(Task.FIELDS.DEADLINE).as(DateTime.class), now)
+        );
+
+        return entityManager.createQuery(cq).getResultList();
     }
 }

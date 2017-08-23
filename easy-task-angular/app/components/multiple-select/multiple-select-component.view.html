@@ -24,8 +24,9 @@
     {{user.name+" "+user.surname}}
   </ui-select-choices>
 </ui-select>
-<div class="panel panel-danger text-center text-danger"
-     ng-hide="$ctrl.users.length>0">
+<div class="panel panel-danger" ng-hide="$ctrl.users.length>0">
   <!--There are no users in this project!!-->
-  {{$ctrl.info}}
+  <div class="panel-heading text-center text-danger">
+    {{$ctrl.info}}
+  </div>
 </div>

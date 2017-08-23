@@ -234,5 +234,19 @@ public class UserRepositoryImpl implements IUserRepository {
         return entityManager.createQuery(cq).getResultList();
     };
 
+    public List<Long> projectStatsLeader(Long userId){
+
+        ProjectsStatesByLeader projectStats = entityManager.createQuery("SELECT projectStats FROM ProjectsStatesByLeader projectStats WHERE projectStats.id=:id", ProjectsStatesByLeader.class).setParameter("id", userId).getSingleResult();
+        return projectStats.getStats();
+
+    }
+
+    public List<Long> tasksStatsLeader(Long userId){
+
+        TasksStatesByLeader taskStats = entityManager.createQuery("SELECT taskStats FROM TasksStatesByLeader taskStats WHERE taskStats.id=:id", TasksStatesByLeader.class).setParameter("id", userId).getSingleResult();
+        return taskStats.getStats();
+
+    }
+
 }
 

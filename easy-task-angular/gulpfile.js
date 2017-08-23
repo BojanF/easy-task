@@ -61,6 +61,7 @@ var JS_APP = [
   //coworkers
   'app/views/coworkers/coworkers.state.js',
   'app/views/coworkers/coworkers.controller.js',
+  'app/views/coworkers/coworkers.service.js',
 
   //new-team
   'app/views/new-team/new-team.state.js',

@@ -44,18 +44,18 @@
           ]
         }
       }
-    }
+    };
     vm.newEntities = {
       task:{},
       comment:{},
       document:{}
-    }
+    };
 
     vm.entitiesData = {
       tasks: [],
       comments: [],
       documents:[]
-    }
+    };
 
     vm.uiState = {
       showProject: false,
@@ -94,10 +94,11 @@
         canComment: false
       },
       showStats: false
-    }
+    };
 
-    vm.inputDates = null;
+    // vm.inputDates = null;
 
+    vm.datesRestriction = {};
     //functions declaration
 
     vm.getDocuments = getDocumentsFn;
@@ -148,6 +149,12 @@
         if(vm.project.id != undefined){
           console.log('loadiraj');
           getTasksFn();
+
+          //dateRestriction start
+          vm.datesRestriction.createdOn = moment(new Date(vm.project.createdOn));
+          vm.datesRestriction.deadline = moment(new Date(vm.project.deadline));
+          //dateRestriction end
+
           if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
             vm.uiState.addNewButton = true;
             vm.uiState.addNewDocumentButton = true;
@@ -301,11 +308,13 @@
 
 
     function saveNewTaskFn(){
-      console.log(vm.inputDates);
+      // console.log(vm.inputDates);
       vm.newEntities.task.project = vm.project;
       vm.newEntities.task.leader = vm.project.team.leader;
-      vm.newEntities.task.createdOn =vm.inputDates.createdOn.toDate().getTime();
-      vm.newEntities.task.deadline = vm.inputDates.deadline.toDate().getTime();
+      // vm.newEntities.task.createdOn =vm.inputDates.createdOn.toDate().getTime();
+      // vm.newEntities.task.deadline = vm.inputDates.deadline.toDate().getTime();
+      vm.newEntities.task.createdOn =vm.newEntities.task.createdOn.toDate().getTime();
+      vm.newEntities.task.deadline = vm.newEntities.task.deadline.toDate().getTime();
       vm.newEntities.task.state = 'NOT_STARTED';
 
       vm.uiState.addNewTask.successMsg = null;
@@ -342,6 +351,7 @@
       }
 
       function errorCallbackNewTask() {
+        $('#documentFormCancel').prop('disabled',false);
         $("#fileUploading").hide();
          vm.uiState.addNewDocument.errorMsg = "Cannot upload, please try again.";
       }
@@ -349,7 +359,7 @@
 
     function clearNewTaskFn(){
       vm.newEntities.task = null;
-      vm.inputDates = null;
+      // vm.inputDates = null;
       vm.uiState.addNewTask.errorMsg = null;
     }
 
@@ -444,7 +454,7 @@
           finished++;
         }
         else{
-          currTask.cssClass == 'label label-danger';
+          currTask.cssClass = 'label label-danger';
           currTask.state = 'BREACH OF DEADLINE';
           breach++;
         }

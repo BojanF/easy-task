@@ -70,6 +70,14 @@
           ]
         }
       },
+      bar_chart:{
+        points: [{"Team 1": 25},
+          {"Team 2": 20},
+          {"Team 3": 80}],
+        columns: [{"id": "Team 1", "type": "bar"},
+          {"id": "Team 2", "type": "bar"},
+          {"id": "Team 3", "type": "bar"}]
+      },
       time_chart:{
         points: [
           {/*"x": "2017-01-01",*/ "Created": 30, "Not started": 0, "In progress": 0, "Up to date": 0, "Finished": 0, "Deadline braech": 0},
@@ -81,7 +89,7 @@
           {/*"x": "2017-01-06",*/ "Created": 25, "Not started": 20, "In progress": 85, "Up to date": 35, "Finished": 45, "Deadline braech": 0}
         ],
         columns: [
-           // {"id": "x", "type": ""},
+          // {"id": "x", "type": ""},
           {"id": "Created", "type": "spline", "color": "#777"},
           {"id": "Not started", "type": "spline", "color": "#5bc0de"},
           {"id": "In progress", "type": "spline", "color": "#f0ad4e"},
@@ -90,39 +98,54 @@
           {"id": "Deadline braech", "type": "spline", "color": "#d9534f"}
         ],
         tickValues: {"Created": "2017-01-01",
-                      "Not started": "2017-01-02",
-                      "In progress": "2017-01-03", "Up to date": "2017-01-04", "Finished": "2017-01-05", "Deadline braech": "2017-01-06"},
+          "Not started": "2017-01-02",
+          "In progress": "2017-01-03", "Up to date": "2017-01-04", "Finished": "2017-01-05", "Deadline braech": "2017-01-06"},
 
         tickValues2: [ "2017-01-01",
-                       "2017-01-02",
-                      "2017-01-03", "2017-01-04", "2017-01-05",  "2017-01-06"],
+          "2017-01-02",
+          "2017-01-03", "2017-01-04", "2017-01-05",  "2017-01-06"],
         proba: {"id": "x", "name": "My Data points"}
       }
-    }
+    };
 
     vm.entitiesData = {
       administratingProjects: [],
-      tasksForAdminProjects: []
-    }
+      tasksForAdminProjects: [],
+
+      projectsStats: []
+    };
     //functions declaration
 
 
     //functions invocation
-    getAdministratingProjects();
+    getProjectStats();
+
+
 
     //functions implementation
-    function getAdministratingProjects(){
-      console.log(vm.USER_ID);
-      StatsChartsService.getAdministratingProjects(vm.USER_ID).then(successCallbackProjects, errorCallbackProjects);
 
-      function successCallbackProjects(data){
+
+    function getProjectStats(){
+
+      StatsChartsService.getProjectStats(vm.USER_ID).then(successProjects, errorProjects);
+
+      function successProjects(data){
         console.log("Yes");
-        vm.entitiesData.administratingProjects = data;
+        var projectsStats = data;
 
         vm.uiState.donuts.projects.loadGif = false;
         vm.uiState.donuts.projects.showErrorPanel = false;
-        if(vm.entitiesData.administratingProjects.length > 0){
-          calculateStatsProjects(vm.entitiesData.administratingProjects);
+        if(projectsStats.length > 0){
+
+          vm.c3DataTest.donuts.points.projects = [
+            {"Created": projectsStats[0]},
+            {"Not started": projectsStats[1]},
+            {"In progress": projectsStats[2]},
+            {"Up to date": projectsStats[3]},
+            {"Finished": projectsStats[4]},
+            {"Deadline braech": projectsStats[5]}
+          ];
+
           vm.uiState.donuts.projects.showStats = true;
           vm.uiState.donuts.projects.showNoStatsPanel = false;
           console.log(vm.c3DataTest.donuts.points.projects);
@@ -139,7 +162,8 @@
 
         }
       }
-      function errorCallbackProjects(){
+
+      function errorProjects(){
         console.log("No");
         vm.uiState.donuts.projects.loadGif = false;
         vm.uiState.donuts.projects.showStats = false;
@@ -152,35 +176,42 @@
 
     function getTaskStats(){
 
-      StatsChartsService.getTaskStatesForProjects(vm.USER_ID).then(successTasks, errorTasks);
+      StatsChartsService.getTasksStats(vm.USER_ID).then(
 
-      function successTasks(data){
+        function(data){
+          //success callback
+          var states = data;
 
-        var states = data;
+          vm.uiState.donuts.tasks.loadGif = false;
 
-        vm.uiState.donuts.tasks.loadGif = false;
-        vm.uiState.donuts.tasks.showStats = true;
-        vm.uiState.donuts.tasks.showNoStatsPanel = false;
-        vm.uiState.donuts.tasks.showErrorPanel = false;
+          vm.uiState.donuts.tasks.showErrorPanel = false;
 
-        vm.c3DataTest.donuts.points.tasks = [
-                {"Not started": states[0]},
-                {"In progress": states[1]},
-                {"Finish": states[2]},
-                {"Deadline braech": states[3]}
-              ];
-        console.log(vm.c3DataTest.donuts.points.tasks);
-      }
-
-      function errorTasks(){
-        errorTasksPanel();
-      }
-
+          if(states.length > 0){
+            vm.uiState.donuts.tasks.showStats = true;
+            vm.uiState.donuts.tasks.showNoStatsPanel = false;
+            vm.c3DataTest.donuts.points.tasks = [
+              {"Not started": states[0]},
+              {"In progress": states[1]},
+              {"Finish": states[2]},
+              {"Deadline braech": states[3]}
+            ];
+            console.log(vm.c3DataTest.donuts.points.tasks);
+          }
+          else{
+            vm.uiState.donuts.tasks.showStats = false;
+            vm.uiState.donuts.tasks.showNoStatsPanel = true;
+          }
+        },
+        function(){
+          //error callback
+          errorTasksPanel();
+        }
+      );
 
 
     }
 
-
+    //helper functions
     function errorTasksPanel(){
       vm.uiState.donuts.tasks.loadGif = false;
       vm.uiState.donuts.tasks.showStats = false;
@@ -188,54 +219,10 @@
       vm.uiState.donuts.tasks.showErrorPanel = true;
     }
 
-    //helper functions
-
-    function calculateStatsProjects(projects){
-      //TODO da se presmetuva vo backend
-      var size = projects.length;
-      var created = 0;
-      var notStarted = 0;
-      var inProgress = 0;
-      var upToDate = 0;
-      var finished = 0;
-      var breach = 0;
-
-      for(var i=0 ; i<size ; i++){
-        var currProject = projects[i];
 
 
 
-        if(currProject.state == 'CREATED'){
-          created++;
-        }
-        else if(currProject.state == 'NOT_STARTED'){
-          notStarted++;
-        }
-        else if(currProject.state == 'IN_PROGRESS'){
-          inProgress++;
-        }
-        else if(currProject.state == 'UP_TO_DATE'){
-          upToDate++;
-        }
-        else if(currProject.state == 'FINISHED'){
-          finished++;
-
-        }
-        else{
-          breach++;
-        }
-
-        vm.c3DataTest.donuts.points.projects = [
-          {"Created": created},
-          {"Not started": notStarted},
-          {"In progress": inProgress},
-          {"Up to date": upToDate},
-          {"Finished": finished},
-          {"Deadline braech": breach}]
-      }
-
-
-    }
   }
 
 })(angular);
+

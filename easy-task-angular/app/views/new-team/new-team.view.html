@@ -56,11 +56,15 @@
         </div>
       </form>
       <br>
-      <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.successNewTeam">
-        {{vm.uiState.successNewTeam}}
+      <div class="panel panel-success" ng-show="vm.uiState.successNewTeam">
+        <div class="panel-heading text-center text-success">
+          {{vm.uiState.successNewTeam}}
+        </div>
       </div>
-      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.errorNewTeam">
-        {{vm.uiState.errorNewTeam}}
+      <div class="panel panel-danger" ng-show="vm.uiState.errorNewTeam">
+        <div class="panel-heading text-center text-danger">
+          {{vm.uiState.errorNewTeam}}
+        </div>
       </div>
 
 

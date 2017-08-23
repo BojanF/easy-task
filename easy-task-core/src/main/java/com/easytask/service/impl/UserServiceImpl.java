@@ -106,36 +106,6 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getUrgentProjectsForUser(userId);
     }
 
-    public Map<Long, Integer> mapTeamProjectCount(Long userId){
-        Map<Long, Integer> map = new HashMap<Long, Integer>();
-        List<Team> teamsLedByUser = getTeamsLeadByUser(userId);
-
-        for(Team t : teamsLedByUser){
-            Integer size = teamRepository.getAllProjectsByTeam(t.getId()).size();
-
-            map.put(t.getId(), size);
-        }
-        return map;
-    }
-
-    public Map<Long, Integer> mapTasksByTeam(Long userId){
-        Map<Long, Integer> map = new HashMap<Long, Integer>();
-        List<Team> teamsLedByUser = getTeamsLeadByUser(userId);
-
-        List<Project> projectsForTeam;
-        for(Team t : teamsLedByUser){
-            int countTasks = 0;
-            projectsForTeam = teamRepository.getAllProjectsByTeam(t.getId());
-            for(Project p : projectsForTeam)
-                countTasks += projectRepository.getAllTasksForProject(p.getId()).size();
-            //zemi gi site proekti za timot
-            //za sekoj proekt zemi gi taskovite
-            map.put(t.getId(), countTasks);
-        }
-        return map;
-    }
-
-
     //donut all tasks
     public List<Integer> getTaskStatesForAllProjectsLedByUser(Long userId){
         List<Integer> resultList = new ArrayList<Integer>();
@@ -165,4 +135,12 @@ public class UserServiceImpl implements IUserService {
         resultList.add(breach);
         return resultList;
     }
+
+    public List<Long> projectStatsLeader(Long userId){
+        return userRepository.projectStatsLeader(userId);
+    };
+
+    public List<Long> tasksStatsLeader(Long userId){
+        return userRepository.tasksStatsLeader(userId);
+    };
 }

@@ -13,6 +13,9 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <task:annotation-driven/>
+    <bean id="myAppScheduleJobs" class="com.easytask.scheduled.AutomationProcess" />
+
     <context:component-scan base-package="com.easytask"/>
     <import resource="classpath:spring/persistence-config.xml"/>
 

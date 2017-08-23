@@ -3,6 +3,7 @@
  */
 
 
+
 (function (angular) {
   'use strict';
 
@@ -16,24 +17,25 @@
   function StatsChartsServiceFn($log, $resource) {
 
 
-    var administratingProjectsResource = $resource('http://localhost:8000/api/user/administrating-projects/:id', {}, {});
-    var tasksStats = $resource('http://localhost:8000/api/user/tasks-stats/:id', {}, {});
+    var projectStatsResource = $resource('http://localhost:8000/api/user/project-stats/:id', {}, {});
+    var taskStatsResource = $resource('http://localhost:8000/api/user/task-stats/:id', {}, {});
 
     var service = {
 
-      getAdministratingProjects: getAdministratingProjectsFn,
-      getTaskStatesForProjects: getTaskStatesForProjectsFn
+      getProjectStats: getProjectStatsFn,
+      getTasksStats: getTaskStatsFn
+
     };
     return service;
 
 
 
-    function getAdministratingProjectsFn(userId){
-      return administratingProjectsResource.query({id:userId}).$promise;
+    function getProjectStatsFn(userId){
+      return projectStatsResource.query({id:userId}).$promise;
     }
 
-    function getTaskStatesForProjectsFn(userId){
-      return tasksStats.query({id:userId}).$promise;
+    function getTaskStatsFn(userId){
+      return taskStatsResource.query({id:userId}).$promise;
     }
 
 

@@ -80,7 +80,9 @@
                          locale="en-gb"
                          ng-model-options="{ updateOn: 'blur' }"
                          placeholder="Select deadline..."
-                         moment-picker="vm.newProject.deadline">
+                         moment-picker="vm.newProject.deadline"
+                         ng-disabled="!vm.newProject.createdOn"
+                         min-date="vm.newProject.createdOn">
                 </div>
               </div>
             </div>
@@ -96,7 +98,6 @@
                                required="true"
                                placeholder="Pick team"
                                info="{{vm.uiState.fetchingTeamsMessage}}">
-
                 </single-select>
               </div>
             </div>
@@ -106,11 +107,15 @@
         </div>
 
       </form>
-      <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.successNewProject">
-        Project with name {{vm.uiState.successNewProject}}
+      <div class="panel panel-success" ng-show="vm.uiState.successNewProject">
+        <div class="panel-heading text-center text-success">
+          Project with name {{vm.uiState.successNewProject}}
+        </div>
       </div>
-      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.errorNewProject">
-        {{vm.uiState.errorNewProject}}
+      <div class="panel panel-danger" ng-show="vm.uiState.errorNewProject">
+        <div class="panel-heading text-center text-danger">
+          {{vm.uiState.errorNewProject}}
+        </div>
       </div>
 
     </div>

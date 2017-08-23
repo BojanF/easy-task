@@ -2,6 +2,8 @@ package com.easytask.persistence;
 
 import com.easytask.model.jpa.Task;
 import com.easytask.model.jpa.User;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 /**
@@ -23,4 +25,6 @@ public interface ITaskRepository {
     Task addUserOnTask(Task task, User user);
 
     Task removeUserFromTask(Task task,User user);
+
+    List<Task> getDeadlineBreachedTasks(DateTime now);
 }

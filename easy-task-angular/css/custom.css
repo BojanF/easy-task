@@ -1,0 +1,21 @@
+/*Bojan*/
+td, th{
+  text-align: center;
+}
+
+.comments-et{
+  text-align: left;
+}
+
+.font-awesome-padding-right{
+  padding-right: 1.5%;
+}
+
+/*za datepickerot da izleguva vo modalot*/
+.moment-picker{
+  z-index: 1050 !important;
+}
+
+.nav-tabs>li>a{
+  cursor: pointer;
+}

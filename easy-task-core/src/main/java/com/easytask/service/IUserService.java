@@ -40,12 +40,12 @@ public interface IUserService {
 
     List<Project> getUrgentProjectsForUser(Long userId);
 
-    Map<Long, Integer> mapTeamProjectCount(Long userId);
-
-    Map<Long, Integer> mapTasksByTeam(Long userId);
-
     //List<Team> getTeamsLeadByUser(Long userId);
     List<Integer> getTaskStatesForAllProjectsLedByUser(Long userId);
+
+    List<Long> projectStatsLeader(Long userId);
+
+    List<Long> tasksStatsLeader(Long userId);
 
 
 }

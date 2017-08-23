@@ -76,14 +76,19 @@ public class UserController implements ApplicationContextAware {
         return service.getTeamsLeadByUser(id);
     }
 
-    @RequestMapping(value = "/projects-by-teams/{id}", method = RequestMethod.GET)
-    public Map<Long, Integer> getProjectsByTeams(@PathVariable Long id){
-        return service.mapTeamProjectCount(id);
-    }
-
     @RequestMapping(value = "/tasks-stats/{id}", method = RequestMethod.GET)
     public List<Integer> getTaskStatesForAllProjectsLedByUser(@PathVariable Long id){
         return service.getTaskStatesForAllProjectsLedByUser(id);
+    }
+
+    @RequestMapping(value = "/project-stats/{id}", method = RequestMethod.GET)
+    public List<Long> projectStats(@PathVariable Long id){
+        return service.projectStatsLeader(id);
+    }
+
+    @RequestMapping(value = "/task-stats/{id}", method = RequestMethod.GET)
+    public List<Long> taskStats(@PathVariable Long id){
+        return service.tasksStatsLeader(id);
     }
 
 

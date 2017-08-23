@@ -4,179 +4,307 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">
-        {{vm.title}}
+        Coworkers panel
       </h1>
       <ol class="breadcrumb">
         <li>
           <i class="fa fa-dashboard"></i>  <a href="#/home-page">Dashboard</a>
         </li>
         <li class="active">
-          <i class="fa fa-handshake-o"></i> Coworkers
+          <i class="fa fa-fw fa-handshake-o"></i> Coworkers
         </li>
       </ol>
     </div>
   </div>
   <!-- /.row -->
 
-  <div class="row">
 
+  <ul  class="nav nav-tabs">
+    <li class="active">
+      <a id="coworkers" data-toggle="tab"><i class="fa fa-fw fa-handshake-o"></i>Coworkers</a>
+    </li>
+    <li>
+      <a id="send-requests" ng-click="" data-toggle="tab"><i class="fa fa-plus-square"></i>Send request</a>
+    </li>
+    <li>
+      <a id="sent-requests" ng-click="vm.getSentRequests()" data-toggle="tab"><i class="fa fa-arrow-circle-o-up"></i>Sent requests</a>
+    </li>
+    <li>
+      <a id="received-request" ng-click="vm.getReceivedRequests()" data-toggle="tab"><i class="fa fa-arrow-circle-o-down"></i>Requests for you</a>
+    </li>
+  </ul>
 
+  <br><br>
 
+  <div class="tab-content clearfix">
 
-
-    <div class="col-md-6">
+    <div class="tab-pane active" id="coworkers-tab">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-handshake-o"></i> Your coworkers </h3>
+          <!--<h3 class="panel-title"><i class="fa fa-handshake-o"></i> Coworkers </h3>-->
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-handshake-o"></i>Coworkers</span>
+          </span>
+          <span class="pull-right">
+            <button class="btn btn-xs btn-success" ng-click="vm.refreshCoworkers()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
+          </span>
         </div>
         <div class="panel-body">
-          <table class="table table-bordered table-striped col-md-6">
+          <div ng-show="vm.uiState.coworkers.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+
+          <table st-table="coworkers" st-safe-src="vm.fetchedData.coworkers" ng-show="vm.uiState.coworkers.showCoworkers" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th> User </th>
-              <th> Username </th>
-              <th> Email </th>
-              <th> Actions </th>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>User</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <th colspan="4"> <input type="text" class="form-control" st-search st-delay="400" type="search" placeholder="search..."> </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td> Riste Stojanov </td>
-              <td> @RisteS </td>
-              <td> email</td>
+            <tr ng-repeat="cw in coworkers">
+              <td><a href="#">{{cw.name+" "+cw.surname}}</a></td>
+              <!--<td>{{t.id}}</td>-->
+              <td>{{cw.username}}</td>
+              <td>{{cw.email}}</td>
               <td>
-                <button class="btn btn-danger btn-xs"data-toggle="tooltip" data-placement="top" title="remove as your coworker">
-                  <i class="fa fa-times"></i>
+                <button class="btn btn-danger btn-xs" ng-click="vm.removeAsCoworker(cw.id)">
+                  <i class="fa fa-times"></i> Remove as coworker
                 </button>
               </td>
             </tr>
-            <tr>
-              <td> Marijo Kostanchev </td>
-              <td> @MarijoK </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-danger btn-xs"data-toggle="tooltip" data-placement="top" title="remove as your coworker">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Vojche Stojanoski </td>
-              <td> @VojcheS </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-danger btn-xs"data-toggle="tooltip" data-placement="top" title="remove as your coworker">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Stefan Kostov </td>
-              <td> @StefanK </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-danger btn-xs"data-toggle="tooltip" data-placement="top" title="remove as your coworker">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Damjan Mitkovski </td>
-              <td> @DamjanM </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-danger btn-xs"data-toggle="tooltip" data-placement="top" title="remove as your coworker">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-
             </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
           </table>
+
+          <div class="panel panel-info" ng-show="vm.uiState.coworkers.showNoCoworkersPanel">
+            <div class="panel-heading text-center text-info">
+              You don`t have coworkers yet!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.coworkers.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+          <div class="panel panel-success" ng-show="vm.uiState.coworkers.successMsg">
+            <div class="panel-heading text-center text-success">
+              {{vm.uiState.coworkers.successMsg}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.coworkers.errorMsg">
+            <div class="panel-heading text-center text-danger">
+              {{vm.uiState.coworkers.errorMsg}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+
+    <div class="tab-pane" id="send-requests-tab">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-plus-square"></i> Add coworker</h3>
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-plus-square"></i>Send request</span>
+          </span>
+          <!--<span class="pull-right">-->
+          <!--<button class="btn btn-xs btn-success" ng-click=""> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>-->
+          <!--</span>-->
         </div>
         <div class="panel-body">
-          <h3> Multiple choice dropdown list</h3>
+          <div ng-show="vm.uiState.eligibleUsers.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
 
-          <button class="btn btn-success pull-right">
-            <i class="fa fa-plus"></i> Add co-workers
-          </button>
-          <br><br>
-          <h2> OR </h2>
-          <table class="table table-bordered table-striped col-md-6">
+          <div class="panel panel-info" ng-show="vm.uiState.eligibleUsers.showNoEligibleUsers">
+            <div class="panel-heading text-center text-info">
+              Everybody in the system is your coworker!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.eligibleUsers.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="sent-requests-tab">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-arrow-circle-o-up"></i>Sent requests</span>
+          </span>
+          <!--<span class="pull-right">-->
+          <!--<button class="btn btn-xs btn-success" ng-click="vm.refreshSentRequests()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>-->
+          <!--</span>-->
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.sent.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+
+          <table st-table="sentRequests" st-safe-src="vm.fetchedData.sentRequests" ng-show="vm.uiState.sent.showSentRequests" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th> User </th>
-              <th> Username </th>
-              <th> Email </th>
-              <th> Actions </th>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>User</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <th colspan="4"> <input type="text" class="form-control" st-search st-delay="400" type="search" placeholder="search..."> </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td> Riste Stojanov </td>
-              <td> @RisteS </td>
-              <td> email</td>
+            <tr ng-repeat="sr in sentRequests">
+              <td><a href="#">{{sr.name+" "+sr.surname}}</a></td>
+              <td>{{sr.username}}</td>
+              <td>{{sr.email}}</td>
               <td>
-                <button class="btn btn-success btn-xs"data-toggle="tooltip" data-placement="top" title="add as your coworker">
-                  <i class="fa fa-plus"></i>
+                <button class="btn btn-warning btn-xs" ng-click="vm.cancelRequest(sr.id)">
+                  <i class="fa fa-plus"></i> Cancel request
                 </button>
               </td>
             </tr>
-            <tr>
-              <td> Marijo Kostanchev </td>
-              <td> @MarijoK </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-success btn-xs"data-toggle="tooltip" data-placement="top" title="add as your coworker">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Vojche Stojanoski </td>
-              <td> @VojcheS </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-success btn-xs"data-toggle="tooltip" data-placement="top" title="add as your coworker">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Stefan Kostov </td>
-              <td> @StefanK </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-success btn-xs"data-toggle="tooltip" data-placement="top" title="add as your coworker">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td> Damjan Mitkovski </td>
-              <td> @DamjanM </td>
-              <td> email</td>
-              <td>
-                <button class="btn btn-success btn-xs"data-toggle="tooltip" data-placement="top" title="add as your coworker">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </td>
-            </tr>
-
             </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
           </table>
+
+          <div class="panel panel-info" ng-show="vm.uiState.sent.showNoSentRequests">
+            <div class="panel-heading text-center text-info">
+              You did not have sent requests!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.sent.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+          <div class="panel panel-success" ng-show="vm.uiState.sent.successMsg">
+            <div class="panel-heading text-center text-success">
+              {{vm.uiState.sent.successMsg}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.sent.errorMsg">
+            <div class="panel-heading text-center text-danger">
+              {{vm.uiState.sent.errorMsg}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="received-request-tab">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span class="pull-left>">
+            <span class="panel-title"><i class="fa fa-arrow-circle-o-down"></i>Requests for you</span>
+          </span>
+          <span class="pull-right">
+            <button class="btn btn-xs btn-success" ng-click="vm.refreshReceivedRequests()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
+          </span>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.received.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+
+          <table st-table="receivedRequests" st-safe-src="vm.fetchedData.receivedRequests" ng-show="vm.uiState.received.showReceivedRequests" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>User</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <th colspan="4"> <input type="text" class="form-control" st-search st-delay="400" type="search" placeholder="search..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="rr in receivedRequests">
+              <td><a href="#">{{rr.name+" "+rr.surname}}</a></td>
+              <!--<td>{{t.id}}</td>-->
+              <td>{{rr.username}}</td>
+              <td>{{rr.email}}</td>
+              <td>
+                <button class="btn btn-success btn-xs" ng-click="vm.acceptRequest(rr)">
+                  <i class="fa fa-plus"></i> Accept
+                </button>
+                <button class="btn btn-danger btn-xs" ng-click="vm.refuseRequest(rr.id)">
+                  <i class="fa fa-times"></i> Turn down
+                </button>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+
+          <div class="panel panel-info" ng-show="vm.uiState.received.showNoReceivedRequests">
+            <div class="panel-heading text-center text-info">
+              You don`t have requests yet!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.received.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+          <div class="panel panel-success" ng-show="vm.uiState.received.successMsg">
+            <div class="panel-heading  text-center text-success">
+              {{vm.uiState.received.successMsg}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.received.errorMsg">
+            <div class="panel-heading  text-center text-danger">
+                 {{vm.uiState.received.errorMsg}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
   </div>
-  <!-- /.row -->
+
 </div>
 <!-- /.container-fluid -->
+
+<script src="custom_js/tabs.js"></script>

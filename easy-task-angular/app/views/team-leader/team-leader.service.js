@@ -14,25 +14,17 @@
   /* @ngInject */
   function TeamLeaderServiceFn($log, $resource) {
 
-
     var getTeamsResource = $resource("http://localhost:8000/api/user/led-teams/:id", {}, {});
-    var getProjectsByTeamsResource = $resource("http://localhost:8000/api/user/projects-by-teams/:id", {}, {});
 
     var service = {
 
-      getTeamsLedByUser: getTeamsLedByUserFn,
-      getProjectsByTeams: getProjectsByTeamsFn
+      getTeamsLedByUser: getTeamsLedByUserFn
     };
     return service;
 
     function getTeamsLedByUserFn(userId){
       return getTeamsResource.query({id:userId}).$promise;
     }
-
-    function getProjectsByTeamsFn(userId){
-      return getProjectsByTeamsResource.get({id:userId}).$promise;
-    }
-
 
   }
 

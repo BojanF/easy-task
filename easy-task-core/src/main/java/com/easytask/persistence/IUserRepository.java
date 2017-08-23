@@ -39,4 +39,8 @@ public interface IUserRepository {
 
     List<Team> getTeamsLeadByUser(Long userId);
     //TODO Da go vrakja passwordot za username i mail
+
+    List<Long> projectStatsLeader(Long userId);
+
+    List<Long> tasksStatsLeader(Long userId);
 }

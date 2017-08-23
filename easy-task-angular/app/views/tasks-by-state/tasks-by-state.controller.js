@@ -9,10 +9,10 @@
     .module('easy-task-angular')
     .controller('TasksByStateController', TasksByStateController);
 
-  TasksByStateController.$inject = ['$log', '$location', 'TasksByStateService'];
+  TasksByStateController.$inject = ['$log', 'TasksByStateService', '$stateParams'];
 
   /* @ngInject */
-  function TasksByStateController($log, $location, TasksByStateService) {
+  function TasksByStateController($log,  TasksByStateService, $stateParams) {
 
     //variables declaration
     var vm = this;
@@ -23,7 +23,10 @@
     vm.cssClassState = "";
     vm.taskState = "";
     vm.infoMessage = "Wrong state id!!!";
-    vm.infoMessageCssClass = "panel panel-warning text-danger";
+    vm.infoMessageCssClass = {
+      panel: null,
+      heading: null
+    };
     vm.uiState = {
       loadGif: true,
       showTasks: false,
@@ -37,15 +40,14 @@
 
     //functions invocation
     getState();
-    // getTasksFn();
+
 
     //functions implementation
     function getState(){
       console.log("YESSSS");
-      var searchObject = $location.search();
 
 
-      var stateCode = searchObject.state;
+      var stateCode = $stateParams.state;
 
       if (!/^\d+$/.test(stateCode) || parseInt(stateCode)<1 || parseInt(stateCode)>4 ) {
         vm.uiState.showPage = false;
@@ -57,25 +59,30 @@
           vm.cssClassState = "label label-info";
           vm.taskState = "Tasks not started yet";
           vm.infoMessage = "You don`t have any tasks that are not started yet!";
-          vm.infoMessageCssClass = "panel panel-warning text-center text-success";
+          vm.infoMessageCssClass.panel = "panel panel-success";
+          vm.infoMessageCssClass.heading = "panel-heading text-center text-success";
+
         }
         else if (stateCode == 2) {
           vm.cssClassState = "label label-warning";
           vm.taskState = "Currently active tasks";
           vm.infoMessage = "You don`t have any tasks that you are currently working on!";
-          vm.infoMessageCssClass = "panel panel-warning text-center text-danger";
+          vm.infoMessageCssClass.panel = "panel panel-info";
+          vm.infoMessageCssClass.heading = "panel-heading text-center text-info";
         }
         else if (stateCode == 3) {
           vm.cssClassState = "label label-success";
           vm.taskState = "Finished tasks";
           vm.infoMessage = "You don`t have any finished tasks yet!";
-          vm.infoMessageCssClass = "panel panel-warning text-center text-danger";
+          vm.infoMessageCssClass.panel = "panel panel-info";
+          vm.infoMessageCssClass.heading = "panel-heading text-center text-info";
         }
         else if (stateCode == 4) {
           vm.cssClassState = "label label-danger";
           vm.taskState = "Breach of deadline tasks";
           vm.infoMessage = "You don`t have tasks with breached deadline";
-          vm.infoMessageCssClass = "panel panel-warning text-center text-success";
+          vm.infoMessageCssClass.panel = "panel panel-success";
+          vm.infoMessageCssClass.heading = "panel-heading text-center text-success";
         }
         getTasksFn(stateCode)
       }

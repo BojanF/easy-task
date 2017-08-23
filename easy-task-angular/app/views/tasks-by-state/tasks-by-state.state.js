@@ -15,7 +15,7 @@
   function registerState($stateProvider) {
 
     $stateProvider.state('tasks-by-state', {
-      url: '/tasks-by-state',
+      url: '/tasks-by-state/:state',
       templateUrl: 'app/views/tasks-by-state/tasks-by-state.view.html',
       controller: 'TasksByStateController',
       controllerAs: 'vm'

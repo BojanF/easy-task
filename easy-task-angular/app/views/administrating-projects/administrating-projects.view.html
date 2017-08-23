@@ -67,12 +67,16 @@
         </tr>
         </tfoot>
       </table>
-      <div class="panel panel-warning text-danger" ng-show="vm.uiState.showNoProjectsPanel">
-        You don`t have projects for administrating!
+      <div class="panel panel-info" ng-show="vm.uiState.showNoProjectsPanel">
+        <div class="panel-heading text-center text-info">
+          You don`t have projects for administrating!
+        </div>
       </div>
-      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showErrorPanel">
-        <div> We run into an error!</div>
-        <div> Try again later!</div>
+      <div class="panel panel-danger" ng-show="vm.uiState.showErrorPanel">
+        <div class="panel-heading text-center text-danger">
+          <div> We run into an error!</div>
+          <div> Try again later!</div>
+        </div>
       </div>
     </div>
   </div>

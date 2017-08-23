@@ -72,12 +72,16 @@
             </tr>
             </tfoot>
           </table>
-          <div ng-class="vm.infoMessageCssClass" ng-show="vm.uiState.showNoTasksPanel">
-            {{vm.infoMessage}}
+          <div ng-class="vm.infoMessageCssClass.panel" ng-show="vm.uiState.showNoTasksPanel">
+            <div ng-class="vm.infoMessageCssClass.heading">
+              {{vm.infoMessage}}
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showError">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.showError">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
         </div>
       </div>

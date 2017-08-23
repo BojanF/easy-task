@@ -7,6 +7,7 @@ import com.easytask.model.jpa.User;
 import com.easytask.persistence.IProjectRepository;
 import com.easytask.persistence.ITaskRepository;
 import com.easytask.service.ITaskService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,4 +65,8 @@ public class TaskServiceImpl implements ITaskService {
     public Task removeUserFromTask(Task task, User user) {
        return taskRepository.removeUserFromTask(task, user);
     }
+
+    public List<Task> getDeadlineBreachedTasks(DateTime now){
+        return taskRepository.getDeadlineBreachedTasks(now);
+    };
 }

@@ -61,7 +61,7 @@
           <br>
 
       <div class="panel panel-success" ng-show="vm.uiState.addNewTask.successMsg">
-        <div class="panel-heading   text-center text-success" >
+        <div class="panel-heading text-center text-success" >
           {{vm.uiState.addNewTask.successMsg}}
         </div>
       </div>
@@ -105,11 +105,13 @@
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                           <input class="form-control"
                                  ng-required="true"
-                                 ng-model="vm.inputDates.createdOn"
+                                 ng-model="vm.newEntities.task.createdOn"
                                  locale="en-gb"
                                  ng-model-options="{ updateOn: 'blur' }"
                                  placeholder="Created on..."
-                                 moment-picker="vm.inputDates.createdOn">
+                                 moment-picker="vm.newEntities.task.createdOn"
+                                 min-date="vm.datesRestriction.createdOn"
+                                 max-date="vm.datesRestriction.deadline">
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -118,11 +120,14 @@
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                           <input class="form-control"
                                  ng-required="true"
-                                 ng-model="vm.inputDates.deadline"
+                                 ng-model="vm.newEntities.task.deadline"
                                  locale="en-gb"
                                  ng-model-options="{ updateOn: 'blur' }"
                                  placeholder="Select deadline..."
-                                 moment-picker="vm.inputDates.deadline">
+                                 moment-picker="vm.newEntities.task.deadline"
+                                 ng-disabled="!vm.newEntities.task.createdOn"
+                                 min-date="vm.newEntities.task.createdOn"
+                                 max-date="vm.datesRestriction.deadline">
                         </div>
                       </div>
                     </div>
@@ -143,8 +148,10 @@
 
               </form>
 
-              <div class="col-md-9 panel panel-warning text-center text-danger" ng-show="vm.uiState.addNewTask.errorMsg">
-                {{vm.uiState.addNewTask.errorMsg}}
+              <div class="col-md-9 panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">
+                <div class="panel-heading text-center text-danger">
+                  {{vm.uiState.addNewTask.errorMsg}}
+                </div>
               </div>
 
             </div>
@@ -206,12 +213,16 @@
               </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-danger" ng-show="vm.uiState.tasks.showNoTasksPanel">
-            This project doesn`t have any tasks!
+          <div class="panel panel-info" ng-show="vm.uiState.tasks.showNoTasksPanel">
+            <div class="panel-heading text-center text-info">
+              This project doesn`t have any tasks!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.tasks.showErrorPanel">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.tasks.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
         </div>
       </div>
@@ -223,14 +234,14 @@
       <br>
 
       <!-- Button trigger modal -->
-        <button ng-show="vm.uiState.addNewButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
           <i class="fa fa-fw fa-plus-square"> </i>
           Upload file
         </button>
       <br>
       <br>
       <div class="panel panel-success" ng-show="vm.uiState.addNewDocument.successMsg">
-        <div class="panel-heading   text-center text-success" >
+        <div class="panel-heading text-center text-success" >
         {{vm.uiState.addNewDocument.successMsg}}
         </div>
       </div>
@@ -246,15 +257,12 @@
             <div class="modal-body">
               <form id="newDocument" name="newDocumentFrom" ng-submit="vm.saveNewDocument()" enctype="multipart/form-data" >
                 <div class="form-group">
-                <input
-                                id="file"
-                                 type="file"
-                                 file-model="myFile"
-                                class="btn btn-danger"
-                                required
-                />
-
-                  </div>
+                  <input id="file"
+                       type="file"
+                       file-model="myFile"
+                       class="btn btn-danger"
+                       required/>
+                </div>
               </form>
               <br>
               <div class="panel panel-default" id="fileUploading" hidden>
@@ -264,9 +272,9 @@
                   </div>
               </div>
               <div id="documentErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewDocument.errorMsg">
-              <div class="panel-heading text-center" >
-                {{vm.uiState.addNewDocument.errorMsg}}
-              </div>
+                <div class="panel-heading text-center" >
+                  {{vm.uiState.addNewDocument.errorMsg}}
+                </div>
               </div>
             </div>
             <div class="modal-footer">
@@ -309,7 +317,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="d in documents | orderBy:['date']:reverse = true| filter:searchProfName">
-              <td><a href={{"http://localhost:8080/api/document/"+d.id}}><i class="fa fa-file{{d.icon}}"></i>&nbsp;{{d.name}}</a></td>
+              <td><i class="fa fa-file{{d.icon}}"></i><a href={{"http://localhost:8080/api/document/"+d.id}}>&nbsp;{{d.name}}</a></td>
               <!--<td>{{t.id}}</td>-->
               <td>{{d.date}}</td>
               <td>{{d.user.name}}</td>
@@ -346,7 +354,7 @@
           <table st-table="comments" st-safe-src="vm.entitiesData.comments" ng-show="vm.uiState.comments.showComments" class="table">
             <tbody>
               <tr ng-repeat="c in comments">
-                <td class="commets-et">
+                <td class="comments-et">
                   <div class="media">
                     <div class="media-left">
                       <a href="#">
@@ -370,19 +378,27 @@
             </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-danger" ng-show="vm.uiState.comments.showNoCommentsPanel">
-            There are no comments for this project!
+          <div class="panel panel-info" ng-show="vm.uiState.comments.showNoCommentsPanel">
+            <div class="panel-heading text-center text-info">
+              There are no comments for this project!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.comments.showErrorPanel">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.comments.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
 
-          <div class="panel panel-warning text-center text-success" ng-show="vm.uiState.comments.successMsg">
-            Successfully submitted comment!
+          <div class="panel panel-success" ng-show="vm.uiState.comments.successMsg">
+            <div class="panel-heading text-center text-success">
+              Successfully submitted comment!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.comments.errorMsg">
-            Try again to comment!
+          <div class="panel panel-danger" ng-show="vm.uiState.comments.errorMsg">
+            <div class="panel-heading">
+              Try again to comment!
+            </div>
           </div>
         </div>
         <div class="panel-footer text-right" ng-show="vm.uiState.comments.canComment">
@@ -397,9 +413,11 @@
 
 
     </div>
+
     <div class="tab-pane" id="info-tab">
       <h3>Information</h3>
     </div>
+
     <div class="tab-pane" id="stats-tab">
       <!--<h3>Stats</h3>-->
       <br> <br>
@@ -415,8 +433,10 @@
             <chart-legend show-legend="true" legend-position="right"/>
             <chart-donut title="Tasks stage percentages" width="60"/>
           </c3chart>
-          <div class="panel panel-warning text-danger" ng-hide="vm.uiState.showStats">
-            This project does not contains any tasks!
+          <div class="panel panel-info" ng-hide="vm.uiState.showStats">
+            <div class="panel-heading text-center text-info">
+              This project does not contains any tasks!
+            </div>
           </div>
 
         </div>
