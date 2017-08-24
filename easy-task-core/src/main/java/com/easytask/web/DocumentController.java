@@ -32,6 +32,8 @@ import javax.validation.Valid;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,6 +44,9 @@ import java.util.List;
 @RequestMapping(value = "/api/document", produces = "application/json")
 public class DocumentController {
 
+    List<String> imageFormats = Arrays.asList("png","jpg","jpeg");
+    List<String>  textFormats = Arrays.asList("txt","c","java");
+    List<String> zipFormats = Arrays.asList("zip","rar","7z");
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         IDocumentService documentServiceBean = applicationContext.getBean(IDocumentService.class);
@@ -59,7 +64,6 @@ public class DocumentController {
     }
 
     @RequestMapping(value = "",method = RequestMethod.POST)
-
     public Document save(HttpServletRequest request){
 
         MultipartHttpServletRequest mRequest;
@@ -80,6 +84,9 @@ public class DocumentController {
             MultipartFile mFile = mRequest.getFile((String)itr.next());
             String fileName = mFile.getOriginalFilename();
             document.setName(fileName);
+            document.setSize(mFile.getSize());
+
+            document.setIcon(formatFilter(fileName));
 
             Blob blob = new SerialBlob(mFile.getBytes());
             document.setData(blob);
@@ -88,6 +95,18 @@ public class DocumentController {
             e.printStackTrace();
         }
         return documentService.insert(document);
+    }
+
+    private String formatFilter(String name) {
+        String[] nameArray = name.split("\\.");
+        String extension = nameArray[nameArray.length-1];
+        System.out.println("eeeeeeeeeeeextension"+extension);
+        if (extension.equals("pdf")) return "-pdf-o";
+        else if (textFormats.contains(extension)) return "-text-o";
+        else if (zipFormats.contains(extension)) return "-zip-o";
+        else if(imageFormats.contains(extension)) return "-image-o";
+
+        return " ";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -108,5 +127,9 @@ public class DocumentController {
         }
     }
 
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+    public void delete(@PathVariable Long id){
+        documentService.deleteById(id);
+    }
 
 }

@@ -115,6 +115,8 @@
     vm.refreshTasks = refreshTasksFn;
     vm.refreshDocuments = refreshDocumentsFn;
 
+    vm.removeDocument = removeDocumentFn;
+
 
     //functions invocation
     getProjectIdFn();
@@ -233,21 +235,8 @@
 
         ProjectDetailsService.getDocuments(vm.PROJECT_ID).then(function (data) {
 
-          var format = vm.entitiesData.documents = data;
-          for(var i=0; i < format.length; i++){
-            if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),imageFormats)>-1){
-              vm.entitiesData.documents[i].icon="-image-o";
-            }
-            else if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),textFormats)>-1){
-              vm.entitiesData.documents[i].icon="-text-o";
-            }
-            else if($.inArray(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase(),zipFormats)>-1){
-              vm.entitiesData.documents[i].icon="-zip-o";
-            }
-            else if(format[i].name.split(".")[format[i].name.split(".").length-1].toLowerCase()==("pdf")){
-              vm.entitiesData.documents[i].icon="-pdf-o";
-            }
-          }
+          vm.entitiesData.documents = data;
+
 
           vm.uiState.documents.loadGif = false;
           vm.uiState.documents.showErrorPanel = false;
@@ -337,23 +326,26 @@
     }
 
     function saveNewDocumentFn(){
+      vm.uiState.addNewDocument.errorMsg = null;
       vm.file = $scope.myFile;
       ProjectDetailsService.fileUpload(vm.file, vm.project.id,vm.USER_ID).then(successCallbackNewTask, errorCallbackNewTask);;
 
       function successCallbackNewTask(data) {
-         console.log("SAVEEEEE");
-         $("#modalDoc").modal('hide');
-         $("#fileUploading").hide();
-         clearNewDocumentFn();
-         refreshDocumentsFn();
+        console.log("SAVEEEEE");
+        $("#modalDoc").modal('hide');
+        $("#fileUploading").hide();
+        $('#file_name').val(" ");
+        $('#file').val(null);
+        clearNewDocumentFn();
+        refreshDocumentsFn();
         $('#documentFormCancel').prop('disabled',false);
-         vm.uiState.addNewDocument.successMsg = "Successfully uploaded \"" + vm.file.name + "\""
+        vm.uiState.addNewDocument.successMsg = "Successfully uploaded \"" + vm.file.name + "\""
       }
 
       function errorCallbackNewTask() {
-        $('#documentFormCancel').prop('disabled',false);
         $("#fileUploading").hide();
-         vm.uiState.addNewDocument.errorMsg = "Cannot upload, please try again.";
+        $('#documentFormCancel').prop('disabled',false);
+        vm.uiState.addNewDocument.errorMsg = "Cannot upload, please try again.";
       }
     }
 
@@ -418,6 +410,18 @@
       console.log("refresh documents");
       vm.uiState.documents = {loadGif:true, showDocuments:false, showNoDocumentsPanel:false, showErrorPanel: false};
       getDocumentsFn();
+    }
+
+    function removeDocumentFn(id){
+
+      ProjectDetailsService.removeDocument(id).then(
+        function(){
+          vm.uiState.addNewDocument.successMsg = "File removed"
+          refreshDocumentsFn();
+        },function () {
+        console.log("meeeeeeeh");
+      });
+
     }
 
     //helper functions

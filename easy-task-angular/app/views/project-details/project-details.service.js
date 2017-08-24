@@ -52,7 +52,8 @@
       getDocuments: getDocumentsFn,
       insertNewTask: insertNewTaskFn,
       insertNewComment: insertNewCommentFn,
-      fileUpload: fileUploadFn
+      fileUpload: fileUploadFn,
+      removeDocument:removeDocumentFn
     };
     return service;
 
@@ -98,6 +99,10 @@
          fd.append('project',project);
          fd.append('user',user);
       return newDocumentResource.save(fd).$promise;
+    }
+
+    function removeDocumentFn(document_id){
+      return documentResource.delete({id:document_id}).$promise;
     }
   }
 

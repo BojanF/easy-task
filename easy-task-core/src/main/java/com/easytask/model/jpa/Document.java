@@ -25,9 +25,14 @@ public class Document {
     @NotNull
     private String name;
 
+    private String icon;
+
     @NotNull
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime date;
+
+    @NotNull
+    private Long size;
 
     @NotNull
     @JsonIgnore
@@ -58,12 +63,20 @@ public class Document {
         return data;
     }
 
+    public Long getSize() {
+        return size;
+    }
+
     public Project getProject() {
         return project;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
 
@@ -84,6 +97,9 @@ public class Document {
         this.data=data;
     }
 
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
     @JsonProperty
     public void setProject(Project project) {
@@ -92,6 +108,10 @@ public class Document {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
 
@@ -107,5 +127,9 @@ public class Document {
         public static String PROJECT = "project";
 
         public static String USER = "user";
+
+        public static String SIZE = "size";
+
+        public static String ICON = "icon";
     }
 }

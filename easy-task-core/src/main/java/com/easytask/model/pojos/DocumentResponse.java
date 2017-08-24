@@ -18,11 +18,18 @@ public class DocumentResponse {
 
     private User user;
 
-    public DocumentResponse(Long id, String name, DateTime date, User user) {
+    private Long size;
+
+
+    private String icon;
+
+    public DocumentResponse(Long id, String name, DateTime date, User user, Long size, String icon) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.user = user;
+        this.size = size;
+        this.icon = icon;
     }
 
 
@@ -42,6 +49,15 @@ public class DocumentResponse {
         return user;
     }
 
+    public Long getSize() {
+        return size;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+
 
     public void setId(Long id) {
         this.id = id;
@@ -57,5 +73,13 @@ public class DocumentResponse {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

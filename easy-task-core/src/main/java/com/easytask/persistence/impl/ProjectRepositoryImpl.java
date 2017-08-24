@@ -97,7 +97,7 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<DocumentResponse> cq = cb.createQuery(DocumentResponse.class);
         Root<Document> root = cq.from(Document.class);
-        cq.multiselect(root.get(Document.FIELDS.ID), root.get(Document.FIELDS.NAME),root.get(Document.FIELDS.DATE),root.get(Document.FIELDS.USER))
+        cq.multiselect(root.get(Document.FIELDS.ID), root.get(Document.FIELDS.NAME),root.get(Document.FIELDS.DATE),root.get(Document.FIELDS.USER),root.get(Document.FIELDS.SIZE), root.get(Document.FIELDS.ICON))
         .where(
                 cb.equal(
                         root.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),

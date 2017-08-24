@@ -13,14 +13,16 @@
            ng-required="$ctrl.required"
            ng-model="$ctrl.model"
            theme="bootstrap"
-           close-on-select="false">
+           close-on-select="false"
+           >
   <ui-select-match
-    placeholder="Select users...">
+    placeholder="Select users ...">
     {{$item.name+" "+$item.surname}}
   </ui-select-match>
   <ui-select-choices
     repeat="user in ($ctrl.users | filter:$select.search)"
-    position="auto">
+    position="auto"
+  >
     {{user.name+" "+user.surname}}
   </ui-select-choices>
 </ui-select>

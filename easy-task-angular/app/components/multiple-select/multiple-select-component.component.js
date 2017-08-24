@@ -10,7 +10,7 @@
     .component('multipleSelect', {
       templateUrl: 'app/components/multiple-select/multiple-select-component.view.html',
       bindings: {
-        // placeholder: '@',
+        //placeholder: '<',
         // label: '@',
         // type: '@',
         users: '<',

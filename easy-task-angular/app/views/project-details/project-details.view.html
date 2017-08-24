@@ -1,3 +1,4 @@
+<script src="custom_js/project_details.js"></script>
 <div ng-hide="vm.uiState.showProject" class="container-fluid">
   <div class="jumbotron">
     <h1>Ooooops!</h1>
@@ -104,6 +105,7 @@
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                           <input class="form-control"
+                                 format="DD/MM/YYYY HH:mm"
                                  ng-required="true"
                                  ng-model="vm.newEntities.task.createdOn"
                                  locale="en-gb"
@@ -119,6 +121,7 @@
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                           <input class="form-control"
+                                 format="DD/MM/YYYY HH:mm"
                                  ng-required="true"
                                  ng-model="vm.newEntities.task.deadline"
                                  locale="en-gb"
@@ -144,15 +147,18 @@
 
 
                   </div>
+                  <div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">
+                    <div class="panel-heading text-center" >
+                      {{vm.uiState.addNewTask.errorMsg}}
+                    </div>
+                  </div>
                 </div>
+
+
 
               </form>
 
-              <div class="col-md-9 panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">
-                <div class="panel-heading text-center text-danger">
-                  {{vm.uiState.addNewTask.errorMsg}}
-                </div>
-              </div>
+
 
             </div>
             <div class="modal-footer">
@@ -188,7 +194,7 @@
                 <th>Name</th>
                 <th>Created on</th>
                 <th>Deadline</th>
-                <th>Leader</th>
+                <th>Working on</th>
                 <th>State</th>
               </tr>
               <tr>
@@ -197,11 +203,12 @@
             </thead>
             <tbody>
               <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
-                <td><a href="#">{{t.name}}</a></td>
+                <td valign="center"><a href="#">{{t.name}}</a></td>
                 <!--<td>{{t.id}}</td>-->
-                <td>{{t.createdOn}}</td>
-                <td>{{t.deadline}}</td>
-                <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
+                <td >{{t.createdOn}}</td>
+                <td >{{t.deadline}}</td>
+                <td><span ng-repeat="u in t.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
+                <!--<td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>-->
                 <td><span ng-class="t.cssClass">{{t.state}}</span></td>
               </tr>
             </tbody>
@@ -308,8 +315,10 @@
               <!--<th st-sort="name">Name</th>-->
               <!--<th st-sort="shortName">Short name</th>-->
               <th>Name</th>
+              <th>Size</th>
               <th>Created on</th>
-              <th>Created By</th>
+              <th>Uploaded By</th>
+              <th>Actions</th>
             </tr>
             <tr>
               <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by file name..."> </th>
@@ -318,9 +327,12 @@
             <tbody>
             <tr ng-repeat="d in documents | orderBy:['date']:reverse = true| filter:searchProfName">
               <td><i class="fa fa-file{{d.icon}}"></i><a href={{"http://localhost:8080/api/document/"+d.id}}>&nbsp;{{d.name}}</a></td>
-              <!--<td>{{t.id}}</td>-->
+              <td>{{d.size/1024 | number:0 }}&nbsp; KB</td>
               <td>{{d.date}}</td>
               <td>{{d.user.name}}</td>
+              <td><button class="btn btn-danger btn-xs removeButtons" ng-click="vm.removeDocument(d.id)">
+                <i class="fa fa-times"></i>&nbsp; Remove document
+              </button></td>
             </tr>
             </tbody>
             <tfoot>
@@ -331,6 +343,11 @@
             </tr>
             </tfoot>
           </table>
+          <div class="panel panel-info" ng-show="vm.uiState.documents.showNoDocumentsPanel">
+            <div class="panel-heading text-center text-info">
+              This project doesn`t have any documents!
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -435,7 +452,7 @@
           </c3chart>
           <div class="panel panel-info" ng-hide="vm.uiState.showStats">
             <div class="panel-heading text-center text-info">
-              This project does not contains any tasks!
+              This project does not contain any tasks!
             </div>
           </div>
 

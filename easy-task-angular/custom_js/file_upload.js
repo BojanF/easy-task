@@ -23,3 +23,4 @@ $('#documentFormCancel').click(function(){
   $('#file').val(null);
   $("#documentFormSubmit").prop('disabled', true);
 });
+
