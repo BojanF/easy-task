@@ -37,6 +37,9 @@
 
     //functions implementation
     function saveNewProjectFn() {
+
+      $("#savingProject").show();
+
       vm.uiState.successNewProject = null;
       vm.uiState.errorNewProject = null;
 
@@ -47,11 +50,13 @@
       NewProjectService.saveNewProject(vm.newProject).then(successCallbackNewProject, errorCallbackNewProject);
 
       function successCallbackNewProject(data){
+        $("#savingProject").hide();
         vm.uiState.successNewProject = "Project with name \"" + data.name + "\" was successfully created!"
         clearNewProjectFn();
       }
 
       function errorCallbackNewProject(data){
+        $("#savingProject").hide();
         vm.uiState.errorNewProject = "Project was not successfully created! Try again later!";
       }
 

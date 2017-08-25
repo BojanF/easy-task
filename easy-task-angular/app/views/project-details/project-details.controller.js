@@ -59,7 +59,7 @@
 
     vm.uiState = {
       showProject: false,
-      addNewButton: false,
+      leader: false, //addNewButton
       addNewTask:{
         // button: false,
         users: false,
@@ -81,7 +81,8 @@
         loadGif: true,
         showDocuments: false,
         showNoDocumentsPanel: false,
-        loaded: false
+        loaded: false,
+        showErrorPanel: false
       },
       comments:{
         loadGif: false,
@@ -115,7 +116,9 @@
     vm.refreshTasks = refreshTasksFn;
     vm.refreshDocuments = refreshDocumentsFn;
 
+    vm.removeTask = removeTaskFn;
     vm.removeDocument = removeDocumentFn;
+    vm.removeComment = removeCommentFn;
 
 
     //functions invocation
@@ -158,7 +161,7 @@
           //dateRestriction end
 
           if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
-            vm.uiState.addNewButton = true;
+            vm.uiState.leader = true;
             vm.uiState.addNewDocumentButton = true;
             console.log(vm.project.team.users.length);
 
@@ -363,6 +366,7 @@
     }
 
     function saveNewCommentFn(){
+      $("#savingComment").show();
       vm.uiState.comments.errorMsg = null;
       vm.uiState.comments.successMsg = null;
 
@@ -378,13 +382,15 @@
       promise.then(successCallback, errorCallback);
 
       function successCallback(data){
+        $("#savingComment").hide();
         refreshCommentsFn();
-        vm.uiState.comments.successMsg = true;
+        vm.uiState.comments.successMsg = 'Successfully submitted comment!'; //true
         vm.newEntities.comment = {};
       }
 
       function errorCallback(data) {
-        vm.uiState.comments.errorMsg = true;
+        $("#savingComment").hide();
+        vm.uiState.comments.errorMsg = 'Try again to comment!'; //true
       }
     }
 
@@ -412,16 +418,88 @@
       getDocumentsFn();
     }
 
-    function removeDocumentFn(id){
+    function removeDocumentFn(documentId, userId){
 
-      ProjectDetailsService.removeDocument(id).then(
-        function(){
-          vm.uiState.addNewDocument.successMsg = "File removed"
-          refreshDocumentsFn();
-        },function () {
-        console.log("meeeeeeeh");
-      });
+      if(userId!=vm.USER_ID && !vm.uiState.leader){
+          //disable delete button
+        var button = $(".removeDocument");
+        button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
+        button.prop('disabled',true);
+      }
+      else{
+        ProjectDetailsService.removeDocument(documentId).then(
 
+          function(){
+            //success callback
+            vm.uiState.addNewDocument.successMsg = "File removed";
+            refreshDocumentsFn();
+          },
+          function () {
+            //error callback
+            console.log("meeeeeeeh");
+            var button = $(".removeDocument");
+            button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
+            button.prop('disabled',false);
+          }
+        );
+      }
+
+    }
+
+    function removeTaskFn(taskId){
+      console.log(taskId);
+      if(vm.uiState.leader) {
+        ProjectDetailsService.removeTask(taskId).then(
+          function () {
+            //success callback
+
+            refreshTasksFn();
+            vm.uiState.addNewTask.successMsg = "Successfully deleted task!";
+          },
+          function () {
+            //error callback
+            //refreshTasksFn();
+            console.log("neuspesno brisenje task");
+            //vm.uiState.addNewTask.errorMsg = "Try again";
+            var button = $(".removeTask");
+            button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
+            button.prop('disabled',false);
+          }
+        );
+      }
+      else{
+        var button = $(".removeTask");
+        button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
+        button.prop('disabled',true);
+      }
+    }
+
+    function removeCommentFn(commentId, userId){
+
+      if(userId!=vm.USER_ID && !vm.uiState.leader){
+        //disable delete button
+        var button = $(".removeComment");
+        button.html('<i class="fa fa-times"></i>');
+        button.prop('disabled',true);
+      }
+      else{
+        ProjectDetailsService.removeComment(commentId).then(
+
+          function(){
+            //success callback
+            refreshCommentsFn();
+            vm.uiState.comments.successMsg = "Successfully deleted comment!";
+          },
+          function(){
+            //error callback
+            vm.uiState.comments.errorMsg = "Try again later!";
+            var button = $(".removeComment");
+            button.html('<i class="fa fa-times"></i>');
+            button.prop('disabled',false);
+          }
+
+        );
+      }
     }
 
     //helper functions

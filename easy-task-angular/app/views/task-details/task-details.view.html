@@ -1,0 +1,241 @@
+<div ng-hide="vm.uiState.showPage" class="container-fluid">
+  <div class="jumbotron">
+    <h1>Ooooops!</h1>
+    <p>We can`t find that task!</p>
+  </div>
+</div>
+
+<div ng-show="vm.uiState.showPage" class="container-fluid">
+
+
+
+  <!-- Page Heading -->
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        <!--{{vm.title}} <small>dashboard</small>-->
+        <!--Task name-->
+        {{vm.task.name}}
+      </h1>
+      <ol class="breadcrumb">
+        <li >
+          <i class="fa fa-dashboard"></i> <a href="/">Dashboard</a>
+        </li>
+        <li class="active">
+          {{vm.task.name}}
+        </li>
+      </ol>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <ul  class="nav nav-tabs">
+    <li class="active">
+      <a id="details" data-toggle="tab"><i class="fa fa-fw fa-handshake-o"></i>Details</a>
+    </li>
+    <li ng-show="vm.uiState.showUpdate">
+      <a id="update" data-toggle="tab"><i class="fa fa-plus-square"></i>Update</a>
+    </li>
+
+  </ul>
+
+  <br/><br/>
+
+
+  <div class="tab-content clearfixtab-pane">
+
+    <div class="tab-pane active" id="details-tab">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Task details</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+
+          <div ng-show="vm.uiState.showDetails">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <th> Name:</th>
+                  <td class="td-left-align">{{vm.task.name}}</td>
+                </tr>
+                <tr>
+                  <th> Project:</th>
+                  <td class="td-left-align"> <a href="#project-details/{{vm.task.project.id}}">{{vm.task.project.name}}</a></td>
+                </tr>
+                <tr>
+                  <th> Leader:</th>
+                  <td class="td-left-align">{{vm.task.leader.user.name + vm.task.leader.user.surname}}</td>
+                </tr>
+                <tr>
+                  <th> Description:</th>
+                  <td class="td-left-align">{{vm.task.description}}</td>
+                </tr>
+                <tr>
+                  <th> Created:</th>
+                  <td class="td-left-align">{{vm.task.createdOnString}}</td>
+                </tr>
+                <tr>
+                  <th> Deadline:</th>
+                  <td class="td-left-align">{{vm.task.deadlineString}}</td>
+                </tr>
+                <tr>
+                  <th> Finished:</th>
+                  <td class="td-left-align">{{vm.task.completedOnString}}</td>
+                </tr>
+                <tr>
+                  <th> Task state </th>
+                  <td class="td-left-align"><span ng-class="vm.task.cssClass">{{vm.task.stateString}}</span></td>
+                </tr>
+              <tr>
+                <th> Working on: </th>
+                <td class="td-left-align"> <span ng-repeat="u in vm.task.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel panel-danger" ng-show="vm.uiState.showError">
+            <div class="panel-heading text-center text-danger" >
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <br>
+    </div>
+
+    <div class="tab-pane" id="update-tab">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Task update</h3>
+        </div>
+        <div class="panel-body">
+
+          <div ng-show="vm.uiState.showDetails">
+            <form id="updateTask" name="updateTaskForm" ng-submit="vm.updateTask()">
+              <div class="container-fluid">
+                <div class="form-group">
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <input-component placeholder="name for task"
+                                       label="Task name"
+                                       type="text"
+                                       model="vm.task.name"
+                                       required="true"
+                                       focus="true">
+                      </input-component>
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label> Description for the project </label>
+                      <textarea ng-model="vm.task.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label> Change state </label>
+                      <single-select model="vm.task.state"
+                                     entities="vm.states"
+                                     required="true"
+                                     placeholder="Select state">
+                      </single-select>
+                    </div>
+                    <div class="col-md-6">
+                      <label> Deadline </label>
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input class="form-control"
+                               format="DD/MM/YYYY HH:mm"
+                               ng-required="true"
+                               ng-model="vm.task.deadline"
+                               locale="en-gb"
+                               ng-model-options="{ updateOn: 'blur' }"
+                               placeholder="Select deadline date..."
+                               moment-picker="vm.task.deadline"
+                               min-date="vm.task.createdOn"
+                               max-date="vm.projectDeadline">
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <label> Select users </label>
+                      <multiple-select users="vm.task.project.team.users"
+                                       model="vm.task.users"
+                                       required="true">
+                      </multiple-select>
+                    </div>
+                  </div>
+
+
+                </div>
+                <div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">
+                  <div class="panel-heading text-center" >
+                    {{vm.uiState.addNewTask.errorMsg}}
+                  </div>
+                </div>
+              </div>
+
+
+
+            </form>
+
+            <div class="panel panel-info" id="savingTeam" ng-show="vm.uiState.updatingGif">
+              <div class="panel-heading text-center">
+                <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                <span id="fileUploadingText">&nbsp;Updating ...</span>
+              </div>
+            </div>
+            <div class="panel panel-success" ng-show="vm.uiState.successMsg">
+              <div class="panel-heading text-center text-success">
+                {{vm.uiState.successMsg}}
+              </div>
+            </div>
+            <div class="panel panel-danger" ng-show="vm.uiState.errorMsg">
+              <div class="panel-heading text-center text-danger">
+                {{vm.uiState.errorMsg}}
+              </div>
+            </div>
+          </div>
+
+          <div class="panel panel-danger" ng-show="vm.uiState.showError">
+            <div class="panel-heading text-center text-danger" >
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="panel-footer text-right">
+
+          <!--<button class="btn btn-default" ng-click="vm.clearNewTeam()" type="reset">-->
+            <!--<i class="fa fa-fw fa-refresh"></i>	Clear-->
+          <!--</button>-->
+          <button class="btn btn-primary" form="updateTask" ng-disabled="updateTaskForm.$invalid" type="submit">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+          </button>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+  </div>
+
+</div>
+<!-- /.container-fluid -->
+
+
+<script src="custom_js/tabs.js"></script>

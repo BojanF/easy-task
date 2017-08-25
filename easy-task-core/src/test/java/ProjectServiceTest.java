@@ -227,14 +227,14 @@ public class ProjectServiceTest {
         Document document1 = new Document();
         document1.setDate(DateTime.now());
         document1.setProject(project);
-        document1.setUrl("kostancev.com/documents/"+document1.getId());
+//        document1.setUrl("kostancev.com/documents/"+document1.getId());
         document1.setUser(user1);
         document1 = documentService.insert(document1);
 
         Document document2 = new Document();
         document2.setDate(DateTime.now());
         document2.setProject(project);
-        document2.setUrl("kostancev.com/documents/"+document2.getId());
+//        document2.setUrl("kostancev.com/documents/"+document2.getId());
         document2.setUser(user1);
         document2 = documentService.insert(document2);
 

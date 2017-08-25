@@ -45,4 +45,15 @@ public class TaskController implements ApplicationContextAware {
         return taskService.insert(task);
     }
 
+    @RequestMapping(value = "/update", method = RequestMethod.POST, headers="Accept=application/json")
+    public Task update(@Valid @RequestBody Task task){
+        int x = 0;
+        return taskService.update(task);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void taskDelete(@PathVariable Long id){
+        taskService.deleteById(id);
+    }
+
 }

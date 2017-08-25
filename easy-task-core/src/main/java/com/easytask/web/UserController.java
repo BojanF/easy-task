@@ -1,9 +1,6 @@
 package com.easytask.web;
 
-import com.easytask.model.jpa.Coworkers;
-import com.easytask.model.jpa.Project;
-import com.easytask.model.jpa.Team;
-import com.easytask.model.jpa.User;
+import com.easytask.model.jpa.*;
 import com.easytask.service.IUserService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,11 +73,6 @@ public class UserController implements ApplicationContextAware {
         return service.getTeamsLeadByUser(id);
     }
 
-    @RequestMapping(value = "/tasks-stats/{id}", method = RequestMethod.GET)
-    public List<Integer> getTaskStatesForAllProjectsLedByUser(@PathVariable Long id){
-        return service.getTaskStatesForAllProjectsLedByUser(id);
-    }
-
     @RequestMapping(value = "/project-stats/{id}", method = RequestMethod.GET)
     public List<Long> projectStats(@PathVariable Long id){
         return service.projectStatsLeader(id);
@@ -89,6 +81,11 @@ public class UserController implements ApplicationContextAware {
     @RequestMapping(value = "/task-stats/{id}", method = RequestMethod.GET)
     public List<Long> taskStats(@PathVariable Long id){
         return service.tasksStatsLeader(id);
+    }
+
+    @RequestMapping(value = "/team-stats/{id}", method = RequestMethod.GET)
+    public List<TeamLeader> getTeamStats(@PathVariable Long id){
+        return service.getTeamsInfoLeadByUser(id);
     }
 
 

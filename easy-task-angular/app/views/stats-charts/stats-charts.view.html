@@ -155,10 +155,33 @@
           <h3 class="panel-title"><i class="fa fa-bar-chart"></i> Projects per team </h3>
         </div>
         <div class="panel-body">
-          <c3chart bindto-id="bar-chart" chart-data="vm.c3DataTest.bar_chart.points" chart-columns="vm.c3DataTest.bar_chart.columns">
+          <div ng-show="vm.uiState.teams.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <c3chart bindto-id="bar-chart"
+                   chart-data="vm.c3DataTest.bar_chart.points"
+                   chart-columns="vm.c3DataTest.bar_chart.columns"
+                   ng-show="vm.uiState.teams.showStats">
             <chart-axis axis-rotate="true"/>
+            <!--<chart-size chart-height="650" chart-width="1042"/>-->
+            <chart-bar ratio="0.8"/>
           </c3chart>
+
+          <div class="panel panel-info" ng-show="vm.uiState.teams.showNoStatsPanel">
+            <div class="panel-heading text-center text-danger">
+              You are not leader to any team!
+            </div>
+          </div>
+
+          <div class="panel panel-danger" ng-show="vm.uiState.teams.errorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
         </div>
+
         <!--TODO da se napise description-->
         <div class="panel-footer">
           <p> Descrption for this statistic category</p>

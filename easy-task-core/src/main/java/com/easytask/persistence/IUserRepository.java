@@ -2,6 +2,7 @@ package com.easytask.persistence;
 
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
+
 import java.util.List;
 
 /**
@@ -43,4 +44,8 @@ public interface IUserRepository {
     List<Long> projectStatsLeader(Long userId);
 
     List<Long> tasksStatsLeader(Long userId);
+
+    List<TeamLeader> getTeamsInfoLeadByUser(Long leaderId);
+
+    List<Task> getUrgentTask(Long userId);
 }

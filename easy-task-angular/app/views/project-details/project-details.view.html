@@ -1,4 +1,5 @@
 <script src="custom_js/project_details.js"></script>
+
 <div ng-hide="vm.uiState.showProject" class="container-fluid">
   <div class="jumbotron">
     <h1>Ooooops!</h1>
@@ -34,16 +35,16 @@
       <a id="tasks" data-toggle="tab"><i class="fa fa-fw fa-hourglass-half"></i>Tasks</a>
     </li>
     <li>
-      <a  id="documents" ng-click="vm.getDocuments()" data-toggle="tab"><i class="fa fa-fw fa-file"></i>Documents</a>
+      <a id="documents" ng-click="vm.getDocuments()" data-toggle="tab"><i class="fa fa-fw fa-file"></i>Documents</a>
     </li>
     <li>
-      <a  id="comments" ng-click="vm.getComments()" data-toggle="tab"><i class="fa fa-fw fa-commenting"></i>Comments</a>
+      <a id="comments" ng-click="vm.getComments()" data-toggle="tab"><i class="fa fa-fw fa-commenting"></i>Comments</a>
     </li>
     <li>
-      <a  id="info"  data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Information</a>
+      <a id="info"  data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Information</a>
     </li>
     <li>
-      <a   id="stats" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
+      <a id="stats" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
     </li>
   </ul>
 
@@ -51,21 +52,23 @@
     <div class="tab-pane active" id="tasks-tab">
 
       <br>
-
-
-          <!-- Button trigger modal -->
-          <button ng-show="vm.uiState.addNewButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
-            <i class="fa fa-fw fa-plus-square"> </i>
-            Add new task
-          </button>
-          <br>
-          <br>
+      <!-- Button trigger modal -->
+      <button ng-show="vm.uiState.leader" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
+        <i class="fa fa-fw fa-plus-square"> </i>
+        Add new task
+      </button>
+      <br/> <br/>
 
       <div class="panel panel-success" ng-show="vm.uiState.addNewTask.successMsg">
         <div class="panel-heading text-center text-success" >
           {{vm.uiState.addNewTask.successMsg}}
         </div>
       </div>
+      <!--<div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">-->
+        <!--<div class="panel-heading text-center" >-->
+          <!--{{vm.uiState.addNewTask.errorMsg}}-->
+        <!--</div>-->
+      <!--</div>-->
 
       <!-- Modal -->
       <div class="modal fade" id="modalTask" tabindex="-1" role="dialog" aria-labelledby="myModalLabelTask">
@@ -153,13 +156,7 @@
                     </div>
                   </div>
                 </div>
-
-
-
               </form>
-
-
-
             </div>
             <div class="modal-footer">
               <button type="button" ng-click="vm.clearNewTask()" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -196,6 +193,7 @@
                 <th>Deadline</th>
                 <th>Working on</th>
                 <th>State</th>
+                <th>Actions</th>
               </tr>
               <tr>
                 <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
@@ -203,18 +201,27 @@
             </thead>
             <tbody>
               <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
-                <td valign="center"><a href="#">{{t.name}}</a></td>
+                <td valign="center"><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
                 <!--<td>{{t.id}}</td>-->
                 <td >{{t.createdOn}}</td>
                 <td >{{t.deadline}}</td>
                 <td><span ng-repeat="u in t.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
                 <!--<td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>-->
-                <td><span ng-class="t.cssClass">{{t.state}}</span></td>
+                <td>
+                  <span ng-class="t.cssClass"> {{t.state}} </span>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-xs removeTask"
+                          ng-disabled="!vm.uiState.leader"
+                          ng-click="vm.removeTask(t.id)">
+                    <i class="fa fa-times"></i>&nbsp; Delete task
+                  </button>
+                </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="5" class="text-center">
+                <td colspan="6" class="text-center">
                   <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
                 </td>
               </tr>
@@ -234,7 +241,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="tab-pane" id="documents-tab">
       <!--<h3>Documents</h3>-->
@@ -272,7 +278,7 @@
                 </div>
               </form>
               <br>
-              <div class="panel panel-default" id="fileUploading" hidden>
+              <div class="panel panel-info" id="fileUploading" hidden>
                 <div class="panel-heading text-center">
                 <img src="pictures//loading.gif" style="width:20px; height:20px;">
                 <span id="fileUploadingText">&nbsp;Uploading {{vm.file.name}} ...</span>
@@ -330,9 +336,13 @@
               <td>{{d.size/1024 | number:0 }}&nbsp; KB</td>
               <td>{{d.date}}</td>
               <td>{{d.user.name}}</td>
-              <td><button class="btn btn-danger btn-xs removeButtons" ng-click="vm.removeDocument(d.id)">
-                <i class="fa fa-times"></i>&nbsp; Remove document
-              </button></td>
+              <td>
+                <button class="btn btn-danger btn-xs removeDocument"
+                          ng-disabled="{{d.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
+                          ng-click="vm.removeDocument(d.id, d.user.id)">
+                  <i class="fa fa-times"></i>&nbsp; Remove document
+                </button>
+              </td>
             </tr>
             </tbody>
             <tfoot>
@@ -343,14 +353,24 @@
             </tr>
             </tfoot>
           </table>
+
           <div class="panel panel-info" ng-show="vm.uiState.documents.showNoDocumentsPanel">
             <div class="panel-heading text-center text-info">
               This project doesn`t have any documents!
             </div>
           </div>
+
+          <div class="panel panel-danger" ng-show="vm.uiState.documents.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
+
     <div class="tab-pane" id="comments-tab">
       <!--<h3>Comments</h3>-->
       <br><br>
@@ -371,7 +391,7 @@
           <table st-table="comments" st-safe-src="vm.entitiesData.comments" ng-show="vm.uiState.comments.showComments" class="table">
             <tbody>
               <tr ng-repeat="c in comments">
-                <td class="comments-et">
+                <td class="td-left-align">
                   <div class="media">
                     <div class="media-left">
                       <a href="#">
@@ -385,16 +405,32 @@
                     </div>
                   </div>
                 </td>
+                <td>
+                  <button class="btn btn-danger btn-xs removeComment"
+                          ng-disabled="{{c.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
+                          ng-click="vm.removeComment(c.id, c.user.id)">
+                    <i class="fa fa-times"></i><!--&nbsp; Remove comment-->
+                  </button>
+                </td>
               </tr>
+
             </tbody>
             <tfoot>
             <tr>
               <td colspan="5" class="text-center">
-                <div st-pagination="" st-items-by-page="3" st-displayed-pages="5"></div>
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
               </td>
             </tr>
             </tfoot>
           </table>
+
+          <div class="panel panel-info" id="savingComment" hidden>
+            <div class="panel-heading text-center">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+              <span>&nbsp;Saving new comment ...</span>
+            </div>
+          </div>
+
           <div class="panel panel-info" ng-show="vm.uiState.comments.showNoCommentsPanel">
             <div class="panel-heading text-center text-info">
               There are no comments for this project!
@@ -409,12 +445,14 @@
 
           <div class="panel panel-success" ng-show="vm.uiState.comments.successMsg">
             <div class="panel-heading text-center text-success">
-              Successfully submitted comment!
+              <!--Successfully submitted comment!-->
+              {{vm.uiState.comments.successMsg}}
             </div>
           </div>
           <div class="panel panel-danger" ng-show="vm.uiState.comments.errorMsg">
-            <div class="panel-heading">
-              Try again to comment!
+            <div class="panel-heading text-center text-danger">
+              <!--Try again to comment!-->
+              {{vm.uiState.comments.errorMsg}}
             </div>
           </div>
         </div>
@@ -433,6 +471,8 @@
 
     <div class="tab-pane" id="info-tab">
       <h3>Information</h3>
+      <span>State:</span>
+      <span> {{vm.project.state}} </span>
     </div>
 
     <div class="tab-pane" id="stats-tab">
@@ -464,7 +504,9 @@
 
 
 </div>
+<!-- /.container-fluid -->
+
 <script src="custom_js/tabs.js"></script>
 <script src="custom_js/bootstrap-filestyle.min.js"></script>
 <script src="custom_js/file_upload.js"></script>
-<!-- /.container-fluid -->
+

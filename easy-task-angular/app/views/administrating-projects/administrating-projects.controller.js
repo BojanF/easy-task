@@ -22,11 +22,11 @@
       showProjects: false,
       showNoProjectsPanel: false,
       showErrorPanel: false
-    }
+    };
 
     //functions declaration
     vm.getAdministratingProjects = getAdministratingProjectsFn;
-
+    vm.removeProject = removeProjectFn;
     //functions invocation
     getAdministratingProjectsFn();
 
@@ -61,6 +61,27 @@
       }
     }
 
+    function removeProjectFn(projectId){
+
+      AdministratingProjectsService.removeProject(projectId).then(
+
+        function(){
+          //success callback
+          console.log("Se izbrisa!!!");
+          getAdministratingProjectsFn();
+        },
+
+        function(){
+          //error callback
+          console.log("ne se izbrisa meeeh :(")
+          var button = $(".removeProject");
+          button.html('<i class="fa fa-times"></i>&nbsp; Delete project');
+          button.prop('disabled',false);
+        }
+
+      );
+
+    }
     //helper functions
     function setProjectsCssClassAndDates(projects){
 
@@ -85,14 +106,14 @@
         }
         else if(currProject.state == 'UP_TO_DATE'){
           currProject.cssClass = 'label label-primary';
-          currProject.state = 'UP_TO_DATE';
+          currProject.state = 'UP TO DATE';
         }
         else if(currProject.state == 'FINISHED'){
           currProject.cssClass = 'label label-success';
 
         }
         else{
-          currProject.cssClass == 'label label-danger';
+          currProject.cssClass = 'label label-danger';
           currProject.state = 'BREACH OF DEADLINE';
         }
 

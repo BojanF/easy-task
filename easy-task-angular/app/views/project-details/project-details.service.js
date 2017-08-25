@@ -34,7 +34,7 @@
     var tasksResource = $resource('http://localhost:8000/api/project/tasks/:id', {}, {});
     var commentsResource = $resource('http://localhost:8000/api/project/comments/:id', {}, {});
     var documentsResource = $resource('http://localhost:8000/api/project/documents/:id', {}, {});
-    var newTaskResource = $resource('http://localhost:8000/api/task/:id', {}, {});
+    var taskResource = $resource('http://localhost:8000/api/task/:id', {}, {});
     var newCommentsResource = $resource('http://localhost:8000/api/comment/:id', {}, {});
     var newDocumentResource = $resource('http://localhost:8000/api/document/', {},{
       save: {
@@ -53,7 +53,9 @@
       insertNewTask: insertNewTaskFn,
       insertNewComment: insertNewCommentFn,
       fileUpload: fileUploadFn,
-      removeDocument:removeDocumentFn
+      removeDocument: removeDocumentFn,
+      removeTask: removeTaskFn,
+      removeComment: removeCommentFn
     };
     return service;
 
@@ -79,7 +81,7 @@
 
     function insertNewTaskFn(newTask){
       console.log("PD service");
-      return newTaskResource.save(newTask, function (data){
+      return taskResource.save(newTask, function (data){
         newTask.id = data.id;
 
       }).$promise;
@@ -103,6 +105,14 @@
 
     function removeDocumentFn(document_id){
       return documentResource.delete({id:document_id}).$promise;
+    }
+
+    function removeTaskFn(taskId){
+      return taskResource.delete({id:taskId}).$promise;
+    }
+
+    function removeCommentFn(commentId){
+      return newCommentsResource.delete({id:commentId}).$promise;
     }
   }
 

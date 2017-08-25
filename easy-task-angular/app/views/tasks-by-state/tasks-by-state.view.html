@@ -20,7 +20,7 @@
           <i class="fa fa-dashboard"></i> <a href="#/home-page">Dashboard</a>
         </li>
         <li class="active">
-          {{vm.taskState}}
+          {{vm.state}}
         </li>
       </ol>
     </div>
@@ -60,7 +60,6 @@
               <td>{{t.deadline}}</td>
               <td><a href="#/project-details">{{t.project.name}}</a></td>
               <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
-              <!--<td><span ng-class="{{t.cssClass}}">{{t.state}}</span></td>-->
               <td><span ng-class="vm.cssClassState">{{t.state}}</span></td>
             </tr>
             </tbody>

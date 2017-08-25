@@ -63,3 +63,20 @@ $("#received-request").click(function(){
   hideCoworkersTabs();
   $("#received-request-tab").show();
 });
+
+//tas details tabs
+
+function hideTaskDetailsTab(){
+  $("#details-tab").hide();
+  $("#update-tab").hide();
+}
+
+$("#details").click(function (){
+  hideTaskDetailsTab();
+  $("#details-tab").show();
+});
+
+$("#update").click(function (){
+  hideTaskDetailsTab();
+  $("#update-tab").show();
+});

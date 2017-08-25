@@ -56,6 +56,12 @@
         </div>
       </form>
       <br>
+      <div class="panel panel-info" id="savingTeam" hidden>
+        <div class="panel-heading text-center">
+          <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          <span id="fileUploadingText">&nbsp;Saving new team ...</span>
+        </div>
+      </div>
       <div class="panel panel-success" ng-show="vm.uiState.successNewTeam">
         <div class="panel-heading text-center text-success">
           {{vm.uiState.successNewTeam}}

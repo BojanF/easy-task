@@ -1,10 +1,7 @@
 package com.easytask.service;
 
 import com.easytask.model.enums.TaskState;
-import com.easytask.model.jpa.Comment;
-import com.easytask.model.jpa.Document;
-import com.easytask.model.jpa.Project;
-import com.easytask.model.jpa.Task;
+import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
 
 import java.util.List;
@@ -36,6 +33,8 @@ public interface IProjectService {
     List<DocumentResponse> getAllDocumentsForProjectWithoutData(Long projectId);
 
     //novi bez test
-    List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId);
+//    List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId);
+
+    TasksByProject getTasksStatesByProject(Long projectId);
 
 }

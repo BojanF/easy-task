@@ -120,7 +120,7 @@
       function successCallbackUrgentProjects(data) {
 
         vm.urgentProjects = data;
-
+        console.log(vm.urgentProjects);
         vm.uiState.urgentProjects.loadGif = false;
         vm.uiState.urgentProjects.showErrorPanel = false;
         if(vm.urgentProjects.length > 0){
@@ -168,10 +168,28 @@
 
     function setCssClassUrgentProjects(urgentProjects){
       var size = urgentProjects.length;
-
+      console.log("setCssClassUrgentProjects");
       for(var i=0 ; i<size ; i++){
-        urgentProjects[i].createdOn = dateMillisecondsToDate(urgentProjects[i].createdOn);
-        urgentProjects[i].deadline = dateMillisecondsToDate(urgentProjects[i].deadline);
+        var currProject = urgentProjects[i];
+        currProject.createdOn = dateMillisecondsToDate(urgentProjects[i].createdOn);
+        currProject.deadline = dateMillisecondsToDate(urgentProjects[i].deadline);
+
+        if(currProject.state == 'CREATED'){
+          currProject.cssClass = 'label label-default';
+        }
+        else if(currProject.state == 'NOT_STARTED'){
+          currProject.cssClass = 'label label-info';
+          currProject.state = 'NOT STARTED';
+        }
+        else if(currProject.state == 'IN_PROGRESS'){
+          currProject.cssClass = 'label label-warning';
+          currProject.state = 'IN PROGRESS';
+        }
+        else{
+          currProject.cssClass = 'label label-danger';
+          currProject.state = 'BREACH OF DEADLINE';
+        }
+        urgentProjects[i] = currProject;
       }
     }
 

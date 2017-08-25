@@ -73,10 +73,17 @@ var JS_APP = [
   'app/views/tasks-by-state/tasks-by-state.controller.js',
   'app/views/tasks-by-state/tasks-by-state.service.js',
 
+  //task-details
+  'app/views/task-details/task-details.state.js',
+  'app/views/task-details/task-details.controller.js',
+  'app/views/task-details/task-details.service.js',
+
   //components
   'app/components/single-select/single-select-component.component.js',
   'app/components/input-component/input-component.component.js',
   'app/components/multiple-select/multiple-select-component.component.js'
+
+
 ];
 
 var TEMPLATES_SRC = [
@@ -90,7 +97,8 @@ var TEMPLATES_SRC = [
   'app/views/teams-working-on/teams-working-on.view.html',
   'app/views/coworkers/coworkers.view.html',
   'app/views/new-team/new-team.view.html',
-  'app/views/tasks-by-state/tasks-by-state.view.html'
+  'app/views/tasks-by-state/tasks-by-state.view.html',
+  'app/views/task-details/task-details.view.html'
 ];
 
 var CSS_APP = [

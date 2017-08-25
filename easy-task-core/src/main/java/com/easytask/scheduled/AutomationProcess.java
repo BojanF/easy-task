@@ -22,7 +22,7 @@ public class AutomationProcess {
 //        System.out.println("Every five seconds: " + DateTime.now());
 //    }
 
-    @Scheduled(cron = "0 20 12 ? * *")
+    @Scheduled(cron = "0 29 16 ? * *")
     public void every5Seconds() {
         System.out.println("TOCNO VO 12:20 " + DateTime.now());
 

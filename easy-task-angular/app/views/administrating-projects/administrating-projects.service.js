@@ -16,14 +16,20 @@
 
 
     var administratingProjectsResource = $resource('http://localhost:8000/api/user/administrating-projects/:id', {}, {});
+    var projectRepository = $resource('http://localhost:8000/api/project/:id', {}, {});
 
     var service = {
-      getAdministratingProjects: getAdministratingProjectsFn
+      getAdministratingProjects: getAdministratingProjectsFn,
+      removeProject: removeProjectFn
     };
     return service;
 
     function getAdministratingProjectsFn(userId){
       return administratingProjectsResource.query({id:userId}).$promise;
+    }
+
+    function removeProjectFn(projectId){
+      return projectRepository.delete({id:projectId}).$promise;
     }
 
   }

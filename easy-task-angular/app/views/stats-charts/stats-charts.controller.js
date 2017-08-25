@@ -17,7 +17,7 @@
 
     //variables declaration
     vm.USER_ID = 1;
-
+    vm.teamStats = [];
     vm.uiState = {
       donuts:{
         tasks: {
@@ -32,8 +32,14 @@
           showNoStatsPanel: false,
           showErrorPanel: false
         }
+      },
+      teams:{
+        loadGif: true,
+        showStats: false,
+        showNoStatsPanel: false,
+        errorPanel:false
       }
-    }
+    };
 
     vm.c3DataTest = {
       donuts: {
@@ -71,7 +77,8 @@
         }
       },
       bar_chart:{
-        points: [{"Team 1": 25},
+        points: [
+          {"Team 1": 25},
           {"Team 2": 20},
           {"Team 3": 80}],
         columns: [{"id": "Team 1", "type": "bar"},
@@ -119,7 +126,7 @@
 
     //functions invocation
     getProjectStats();
-
+    getTeamStats();
 
 
     //functions implementation
@@ -211,7 +218,70 @@
 
     }
 
+    function getTeamStats(){
+
+      StatsChartsService.getTeamStats(vm.USER_ID).then(
+
+
+        function (data){
+          //success callback
+
+          vm.teamStats = data;
+
+          vm.uiState.teams.loadGif = false;
+
+          if(vm.teamStats.length == 0){
+            console.log("za ovoj user ne postojat timovi na koi e lider");
+            vm.uiState.teams.showNoStatsPanel = true;
+            vm.uiState.teams.showStats = false;
+          }
+          else{
+            console.log("im timovi na koi e lider!");
+
+            calculateStats(vm.teamStats);
+
+            vm.uiState.teams.showNoStatsPanel = false;
+            vm.uiState.teams.showStats = true;
+            console.log(vm.c3DataTest.bar_chart);
+          }
+
+        },
+
+        function(){
+          //error callback
+          console.log("leader error");
+          vm.uiState.teams.loadGif = false;
+          vm.uiState.teams.showNoStatsPanel = false;
+          vm.uiState.teams.showStats = false;
+          vm.uiState.teams.errorPanel = true;
+
+
+
+        }
+      );
+    }
+
     //helper functions
+
+    function calculateStats(teamStats){
+
+      var size = teamStats.length;
+
+      vm.c3DataTest.bar_chart.points = [];
+      vm.c3DataTest.bar_chart.columns = [];
+      var point = {};
+
+      for(var i=0 ; i<size ; i++){
+        var currTeam = teamStats[i];
+        point[currTeam.name] = currTeam.projectNum;
+        vm.c3DataTest.bar_chart.columns.push({"id":currTeam.name, "type":"bar"});
+
+      }
+      vm.c3DataTest.bar_chart.points.push(point);
+
+
+    }
+
     function errorTasksPanel(){
       vm.uiState.donuts.tasks.loadGif = false;
       vm.uiState.donuts.tasks.showStats = false;

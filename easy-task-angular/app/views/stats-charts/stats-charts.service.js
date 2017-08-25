@@ -19,11 +19,13 @@
 
     var projectStatsResource = $resource('http://localhost:8000/api/user/project-stats/:id', {}, {});
     var taskStatsResource = $resource('http://localhost:8000/api/user/task-stats/:id', {}, {});
+    var getLeaderResource = $resource("http://localhost:8000/api/user/team-stats/:id", {}, {});
 
     var service = {
 
       getProjectStats: getProjectStatsFn,
-      getTasksStats: getTaskStatsFn
+      getTasksStats: getTaskStatsFn,
+      getTeamStats: getTeamStatsFn
 
     };
     return service;
@@ -36,6 +38,10 @@
 
     function getTaskStatsFn(userId){
       return taskStatsResource.query({id:userId}).$promise;
+    }
+
+    function getTeamStatsFn(userId){
+      return getLeaderResource.query({id:userId}).$promise;
     }
 
 

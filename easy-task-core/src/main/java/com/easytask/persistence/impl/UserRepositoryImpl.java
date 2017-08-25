@@ -3,7 +3,9 @@ package com.easytask.persistence.impl;
 import com.easytask.model.enums.ProjectState;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
+
 import com.easytask.persistence.IUserRepository;
+
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -38,19 +40,6 @@ public class UserRepositoryImpl implements IUserRepository {
 
     @Transactional
     public User findById(Long id) {
-
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery q = cb.createQuery(User.class);
-//        Root o = q.from(User.class);
-//        o.fetch(User.FIELDS.COWORKERS, JoinType.INNER);
-//        o.fetch("coworkerOf", JoinType.INNER);
-//        q.select(o).where(cb.equal(o.get(User.FIELDS.ID), id));
-//        q.where(cb.equal(o.get(User.FIELDS.ID), id));
-//
-//        User user = (User)this.entityManager.createQuery(q).getSingleResult();
-//
-//        TypedQuery<User> query = entityManager.createQuery(q);
-//        return query.getSingleResult();
 
         User user = entityManager.find(User.class, id);
         if (user != null) {
@@ -191,31 +180,21 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     public List<Project> getUrgentProjectsForUser(Long userId){
-        List<Team> teamsList = getTeamsForUser(userId);
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Project> cq = cb.createQuery(Project.class);
-        Root<Project> from= cq.from(Project.class);
-        DateTime today = DateTime.now();
 
-        cq.where(
-                from.get(Project.FIELDS.TEAM).in(
-                        teamsList
-                ),
-                //TODO razlika megju denesen datum i deadlin ako e <7 da e urgent project
-//                TODO
-                cb.or(
-                        cb.equal(from.get(Project.FIELDS.STATE),
-                                ProjectState.NOT_STARTED
-                        ),
-                        cb.equal(from.get(Project.FIELDS.STATE),
-                                ProjectState.IN_PROGRESS
-                        ),
-                        cb.equal(from.get(Project.FIELDS.STATE),
-                                ProjectState.BREACH_OF_DEADLINE
-                        )
-                )
-        ).orderBy(cb.asc(from.get(Project.FIELDS.DEADLINE)));
-        return entityManager.createQuery(cq).getResultList();
+        List<Team> teamsList = getTeamsForUser(userId);
+
+        TypedQuery<Project> urgentProjects = entityManager.createQuery("select p\n" +
+                "from Project p\n" +
+                "where\n" +
+                "p.team IN (:teamsList) and\n" +
+                "( datediff(p.deadline, now())<=7 or now()>p.deadline ) and\n" +
+                "( p.state = 'CREATED' or\n" +
+                "  p.state = 'NOT_STARTED' or\n" +
+                "  p.state = 'IN_PROGRESS' or\n" +
+                "  p.state = 'BREACH_OF_DEADLINE')", Project.class);
+        urgentProjects.setParameter("teamsList", teamsList);
+        List<Project> queryResults = urgentProjects.getResultList();
+        return queryResults;
     }
 
     public List<Team> getTeamsLeadByUser(Long userId){
@@ -248,5 +227,33 @@ public class UserRepositoryImpl implements IUserRepository {
 
     }
 
+    public List<TeamLeader> getTeamsInfoLeadByUser(Long userId){
+
+        TypedQuery<TeamLeader> teamsInfo = entityManager.createQuery("select tl\n" +
+                "from User u, Leader l, Team t, TeamLeader tl\n" +
+                "where\n" +
+                "u.id = :userId and\n" +
+                "u.id = l.user.id and\n" +
+                "l.id = t.leader.id and\n" +
+                "t.id = tl.id", TeamLeader.class);
+        teamsInfo.setParameter("userId", userId);
+        return teamsInfo.getResultList();
+    }
+
+    @Transactional
+    public List<Task> getUrgentTask(Long userId){
+
+
+
+//        User user = findById(userId);
+//
+//        TypedQuery<Task> urgentTasks = entityManager.createQuery("select t from Task t where :user in (t.users) and t.state!='FINISHED' and ( datediff(t.deadline, now())<=7 or now()>t.deadline) ", Task.class);
+//
+//        urgentTasks.setParameter("user", user);
+//        return urgentTasks.getResultList();
+
+        return new ArrayList<Task>();
+
+    }
 }
 

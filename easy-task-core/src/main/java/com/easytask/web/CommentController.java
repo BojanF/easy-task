@@ -35,4 +35,9 @@ public class CommentController {
         int x =0;
         return commentService.insert(comment);
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteComment(@PathVariable Long id){
+        commentService.deleteById(id);
+    }
 }

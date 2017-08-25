@@ -45,8 +45,9 @@ import java.util.List;
 public class DocumentController {
 
     List<String> imageFormats = Arrays.asList("png","jpg","jpeg");
-    List<String>  textFormats = Arrays.asList("txt","c","java");
+    List<String> textFormats = Arrays.asList("txt");
     List<String> zipFormats = Arrays.asList("zip","rar","7z");
+    List<String> codeFormats = Arrays.asList("c","cpp", "py", "java", "sql", "cs");
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         IDocumentService documentServiceBean = applicationContext.getBean(IDocumentService.class);
@@ -102,9 +103,13 @@ public class DocumentController {
         String extension = nameArray[nameArray.length-1];
         System.out.println("eeeeeeeeeeeextension"+extension);
         if (extension.equals("pdf")) return "-pdf-o";
+        else if(extension.equals("doc") || extension.equals("docx")) return "-word-o";
+        else if(extension.equals("xlsx") || extension.equals("xls")) return "-excel-o";
+        else if(extension.equals("pptx") || extension.equals("ppt")) return "-powerpoint-o";
         else if (textFormats.contains(extension)) return "-text-o";
         else if (zipFormats.contains(extension)) return "-zip-o";
         else if(imageFormats.contains(extension)) return "-image-o";
+        else if(codeFormats.contains(extension)) return "-code-o";
 
         return " ";
     }

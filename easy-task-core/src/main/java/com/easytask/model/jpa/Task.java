@@ -57,7 +57,6 @@ public class Task {
     )
     private Set<User> users = new HashSet<User>();
 
-
     //getters
     public Long getId() {
         return id;

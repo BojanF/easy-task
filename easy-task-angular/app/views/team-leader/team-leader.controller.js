@@ -33,7 +33,7 @@
     //functions implementation
 
     function getTeams(){
-        TeamLeaderService.getTeamsLedByUser(vm.USER_ID).then(successCallback, errorCallback);
+        TeamLeaderService.getTeamStats(vm.USER_ID).then(successCallback, errorCallback);
 
       function successCallback(data){
         vm.teams = data;
@@ -41,7 +41,7 @@
         vm.uiState.loadGif = false;
         vm.uiState.showErrorPanel = false;
         if(vm.teams.length > 0){
-          countUsersOnTeam(vm.teams);
+
           vm.uiState.showTeams = true;
           vm.uiState.showNoTeamsPanel = false;
 

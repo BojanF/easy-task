@@ -46,15 +46,15 @@
           <th>Workers</th>
         </tr>
         <tr>
-          <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+          <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by team name..."> </th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="t in teams | orderBy:['name'] | filter:searchProfName">
           <td><a href="#">{{t.name}}</a></td>
-          <td>NaN</td>
-          <td>NaN</td>
-          <td>{{t.usersCount}}</td>
+          <td>{{t.projectNum}}</td>
+          <td>{{t.tasksNum==null ? 0 : t.tasksNum}}</td>
+          <td>{{t.usersNum}}</td>
         </tr>
         </tbody>
         <tfoot>

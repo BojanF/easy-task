@@ -1,10 +1,7 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.enums.TaskState;
-import com.easytask.model.jpa.Comment;
-import com.easytask.model.jpa.Document;
-import com.easytask.model.jpa.Project;
-import com.easytask.model.jpa.Task;
+import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.persistence.IProjectRepository;
 import org.springframework.context.annotation.Primary;
@@ -121,19 +118,39 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         return entityManager.createQuery(cq).getResultList();
     }
 
-    @Transactional
-    public List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TaskState> cq = cb.createQuery(TaskState.class);
-        Root<Task> from= cq.from(Task.class);
-        cq.select(from.get(Task.FIELDS.STATE).as(TaskState.class)).where(
-                cb.equal(
-                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
-                        projectId
-                )
-        );
-        return entityManager.createQuery(cq).getResultList();
-    }
+//    @Transactional
+//    public List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId) {
+//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<TaskState> cq = cb.createQuery(TaskState.class);
+//        Root<Task> from= cq.from(Task.class);
+//        cq.select(from.get(Task.FIELDS.STATE).as(TaskState.class)).where(
+//                cb.equal(
+//                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
+//                        projectId
+//                )
+//        );
+//        return entityManager.createQuery(cq).getResultList();
+//    }
+
+    public TasksByProject getTasksStatesByProject(Long projectId){
+
+        TasksByProject result = entityManager.createQuery("SELECT tbp FROM TasksByProject tbp WHERE tbp.id=:id", TasksByProject.class).setParameter("id", projectId).getSingleResult();
+        return result;
+    };
+
+//    public List<Task> getTasksForUserOnProject(Long projectId, Long userId){
+//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+//        Root<Task> from= cq.from(Task.class);
+//        cq.where(
+//                cb.equal(
+//                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
+//                        projectId
+//                ),
+//                cb.equal(from.get(Task.FIELDS.))
+//        );
+//        return entityManager.createQuery(cq).getResultList();
+//    }
 
 
 }

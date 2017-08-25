@@ -68,4 +68,10 @@ public class ProjectController implements ApplicationContextAware {
     public List<DocumentResponse> getDocumentsForProject(@PathVariable Long id){
         return projectService.getAllDocumentsForProjectWithoutData(id);
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteProject(@PathVariable Long id){
+
+        projectService.deleteById(id);
+    }
 }

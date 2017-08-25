@@ -43,6 +43,7 @@
     //functions declaration
     vm.saveTeam = saveTeamFn;
     vm.clearNewTeam = clearNewTeamFn;
+    vm.disableSubmit = disableSubmitFn;
 
 
     //functions invocation
@@ -147,6 +148,7 @@
     }
 
     function saveTeamFn(){
+      $("#savingTeam").show();
       console.log(vm.newTeam);
       vm.uiState.successNewTeam = null;
       vm.uiState.errorNewTeam = null;
@@ -159,10 +161,12 @@
 
       function successCallbackNewTeam(data){
         clearNewTeamFn();
+        $("#savingTeam").hide();
         vm.uiState.successNewTeam = "Successfully created \"" + data.name + "\" team";
       }
 
       function errorCallbackNewTeam(){
+        $("#savingTeam").hide();
         vm.uiState.errorNewTeam = "Something went wrong! Try again later!"
       }
     }
@@ -174,7 +178,21 @@
     }
 
     //helper functions
+    function disableSubmitFn(invalidForm){
+      console.log("disable submit "+invalidForm);
+      var result;
+      if(invalidForm && vm.uiState.canSubmit)
+        result = false;
+      else if(invalidForm && !vm.uiState.canSubmit)
+        result = false;
+      else if(!invalidForm && vm.uiState.canSubmit)
+        result = true;
+      else result = false;
 
+      console.log("REsult " + result);
+
+      return result;
+    }
   }
 
 })(angular);

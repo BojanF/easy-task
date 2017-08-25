@@ -118,8 +118,8 @@
         </div>
         <div class="panel-body">
           <div ng-show="vm.uiState.activeTasks.loadGif">
-          <img src="pictures//loading.gif" style="width:20px; height:20px;">
-        </div>
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
           <table st-table="activeTasks" st-safe-src="vm.activeTasks" ng-show="vm.uiState.activeTasks.showTasks" class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -138,7 +138,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="t in activeTasks | orderBy:['name'] | filter:searchProfName">
-              <td><a href="#">{{t.name}}</a></td>
+              <td><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
               <td>{{t.createdOn}}</td>
               <td>{{t.deadline}}</td>
               <td><a href="#/project-details?id={{t.project.id}}">{{t.project.name}}</a></td>
@@ -154,12 +154,16 @@
             </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
-            You don`t have any active tasks!
+          <div class="panel panel-info" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
+            <div class="panel-heading text-center text-info">
+              You don`t have any active tasks!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.activeTasks.showErrorPanel">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.activeTasks.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
         </div>
       </div>
@@ -193,9 +197,7 @@
               <td>{{up.createdOn}}</td>
               <td>{{up.deadline}}</td>
               <td><a href="#">{{up.team.name}}</a></td>
-
-              <!--<td><span ng-class="{{t.cssClass}}">{{t.state}}</span></td>-->
-              <td><span> <!--ng-class="t.cssClass"-->{{up.state}}</span></td>
+              <td><span ng-class="up.cssClass">{{up.state}}</span></td>
             </tr>
             </tbody>
             <tfoot>
@@ -206,12 +208,16 @@
             </tr>
             </tfoot>
           </table>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
-            You don`t have any urgent projects!
+          <div class="panel panel-info" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
+            <div class="panel-heading text-center text-info">
+              You don`t have any urgent projects!
+            </div>
           </div>
-          <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.urgentProjects.showErrorPanel">
-            <div> We run into an error!</div>
-            <div> Try again later!</div>
+          <div class="panel panel-danger" ng-show="vm.uiState.urgentProjects.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
           </div>
         </div>
       </div>

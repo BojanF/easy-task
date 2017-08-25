@@ -14,16 +14,15 @@
   /* @ngInject */
   function TeamLeaderServiceFn($log, $resource) {
 
-    var getTeamsResource = $resource("http://localhost:8000/api/user/led-teams/:id", {}, {});
+    var getLeaderResource = $resource("http://localhost:8000/api/user/team-stats/:id", {}, {});
 
     var service = {
-
-      getTeamsLedByUser: getTeamsLedByUserFn
+      getTeamStats: getTeamStatsFn
     };
     return service;
 
-    function getTeamsLedByUserFn(userId){
-      return getTeamsResource.query({id:userId}).$promise;
+    function getTeamStatsFn(userId){
+      return getLeaderResource.query({id:userId}).$promise;
     }
 
   }

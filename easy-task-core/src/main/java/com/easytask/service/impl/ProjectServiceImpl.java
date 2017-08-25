@@ -1,10 +1,7 @@
 package com.easytask.service.impl;
 
 import com.easytask.model.enums.TaskState;
-import com.easytask.model.jpa.Comment;
-import com.easytask.model.jpa.Document;
-import com.easytask.model.jpa.Project;
-import com.easytask.model.jpa.Task;
+import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.persistence.IProjectRepository;
 import com.easytask.persistence.IUserRepository;
@@ -74,7 +71,11 @@ public class ProjectServiceImpl implements IProjectService {
 
     }
 
-    public List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId){
-        return projectRepository.getAllTaskStatesForTasksOnProject(projectId);
+//    public List<TaskState> getAllTaskStatesForTasksOnProject(Long projectId){
+//        return projectRepository.getAllTaskStatesForTasksOnProject(projectId);
+//    }
+
+    public TasksByProject getTasksStatesByProject(Long projectId){
+        return projectRepository.getTasksStatesByProject(projectId);
     }
 }

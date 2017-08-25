@@ -115,7 +115,7 @@ public class DocumentServiceTest {
         Document document = new Document();
         document.setDate(DateTime.now());
         document.setProject(project);
-        document.setUrl("kostancev.com/documents/"+document.getId());
+//        document.setUrl("kostancev.com/documents/"+document.getId());
         document.setUser(user1);
         document = documentService.insert(document);
 
@@ -134,14 +134,14 @@ public class DocumentServiceTest {
         Document document = new Document();
         document.setDate(DateTime.now());
         document.setProject(project);
-        document.setUrl("kostancev.com/documents/"+document.getId());
+//        document.setUrl("kostancev.com/documents/"+document.getId());
         document.setUser(user1);
         document = documentService.insert(document);
 
-        document.setUrl("kostancev.com/edited_url");
+//        document.setUrl("kostancev.com/edited_url");
         document = documentService.update(document);
 
-        Assert.assertEquals("kostancev.com/edited_url",documentService.findById(document.getId()).getUrl());
+//        Assert.assertEquals("kostancev.com/edited_url",documentService.findById(document.getId()).getUrl());
 
         documentService.deleteById(document.getId());
     }
@@ -152,14 +152,14 @@ public class DocumentServiceTest {
         Document document1 = new Document();
         document1.setDate(DateTime.now());
         document1.setProject(project);
-        document1.setUrl("kostancev.com/documents/"+document1.getId());
+//        document1.setUrl("kostancev.com/documents/"+document1.getId());
         document1.setUser(user1);
         document1 = documentService.insert(document1);
 
         Document document2 = new Document();
         document2.setDate(DateTime.now());
         document2.setProject(project);
-        document2.setUrl("kostancev.com/documents/"+document2.getId());
+//        document2.setUrl("kostancev.com/documents/"+document2.getId());
         document2.setUser(user3);
         document2 = documentService.insert(document2);
 
