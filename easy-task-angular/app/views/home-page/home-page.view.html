@@ -141,7 +141,7 @@
               <td><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
               <td>{{t.createdOn}}</td>
               <td>{{t.deadline}}</td>
-              <td><a href="#/project-details?id={{t.project.id}}">{{t.project.name}}</a></td>
+              <td><a href="#/project-details/{{t.project.id}}">{{t.project.name}}</a></td>
               <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
               <td><span ng-class="t.cssClass">{{t.state}}</span></td>
             </tr>
@@ -193,10 +193,10 @@
             </thead>
             <tbody>
             <tr ng-repeat="up in urgentProjects | orderBy:['name'] | filter:searchProfName">
-              <td><a href="#">{{up.name}}</a></td>
+              <td><a href="#/project-details/{{up.id}}">{{up.name}}</a></td>
               <td>{{up.createdOn}}</td>
               <td>{{up.deadline}}</td>
-              <td><a href="#">{{up.team.name}}</a></td>
+              <td><a href="#/team-details/{{up.team.id}}">{{up.team.name}}</a></td>
               <td><span ng-class="up.cssClass">{{up.state}}</span></td>
             </tr>
             </tbody>

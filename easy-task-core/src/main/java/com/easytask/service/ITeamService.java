@@ -29,4 +29,6 @@ public interface ITeamService {
 
     List<Project> getAllProjectsByTeam(Long teamId);
 
+    List<Long> teamStats(Long teamId);
+
 }

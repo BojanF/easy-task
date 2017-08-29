@@ -71,6 +71,7 @@
         var currProject = projects[i];
 
         currProject.createdOn = dateMillisecondsToDate(currProject.createdOn);
+        currProject.completedOn = dateMillisecondsToDate(currProject.completedOn);
         currProject.deadline = dateMillisecondsToDate(currProject.deadline);
 
         if(currProject.state == 'CREATED'){
@@ -100,25 +101,25 @@
 
         projects[i] = currProject;
       }
-
-
-
     }
 
-
     function dateMillisecondsToDate(milliseconds){
-      var d = new Date(milliseconds);
-      var month = parseInt(d.getMonth()) + 1;
-      var minutes = d.getMinutes();
-      if(minutes.toString().length == 1){
-        minutes = '0' + minutes;
+      if(milliseconds != null) {
+        var d = new Date(milliseconds);
+        var month = parseInt(d.getMonth()) + 1;
+        var minutes = d.getMinutes();
+        if (minutes.toString().length == 1) {
+          minutes = '0' + minutes;
+        }
+        return d.getDate() + "." +
+          month + "." +
+          d.getFullYear() + " " +
+          d.getHours() + ":" +
+          minutes;
       }
-      return d.getDate() + "." +
-        month + "." +
-        d.getFullYear() + " " +
-        d.getHours() + ":" +
-        minutes;
-
+      else{
+        return "Not finished yet";
+      }
     }
 
   }

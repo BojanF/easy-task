@@ -37,4 +37,10 @@ public interface IProjectService {
 
     TasksByProject getTasksStatesByProject(Long projectId);
 
+    int deleteAllTasksForProject(Long projectId);
+
+    int deleteAllCommentsForProject(Long projectId);
+
+    int deleteAllDocumentsForProject(Long projectId);
+
 }

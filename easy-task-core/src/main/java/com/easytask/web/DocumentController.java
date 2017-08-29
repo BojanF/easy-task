@@ -100,7 +100,7 @@ public class DocumentController {
 
     private String formatFilter(String name) {
         String[] nameArray = name.split("\\.");
-        String extension = nameArray[nameArray.length-1];
+        String extension = nameArray[nameArray.length-1].toLowerCase();
         System.out.println("eeeeeeeeeeeextension"+extension);
         if (extension.equals("pdf")) return "-pdf-o";
         else if(extension.equals("doc") || extension.equals("docx")) return "-word-o";

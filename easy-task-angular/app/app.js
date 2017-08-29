@@ -8,7 +8,8 @@
       'smart-table',
       'ngResource',
       'gridshore.c3js.chart',
-      'moment-picker'
+      'moment-picker',
+      'confirmClick'
     ]);
 
 })(angular);

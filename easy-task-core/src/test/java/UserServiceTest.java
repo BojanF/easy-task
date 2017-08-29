@@ -313,7 +313,7 @@ public class UserServiceTest {
         project2.setTeam(team);
         project2 = projectService.insert(project2);
 
-
+        //promeneta e func moze i da ne projde testot 29.8
         Assert.assertEquals(userService.getProjectsByUser(user.getId()).size(),2);
 
         for (Project p : projectService.findAll()){

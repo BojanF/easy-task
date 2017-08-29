@@ -2,12 +2,15 @@
  * Created by Marijo on 22-Aug-17.
  */
 
+//project-details taba
+
 function hideOtherContents(){
   $('#tasks-tab').hide();
   $('#documents-tab').hide();
   $('#comments-tab').hide();
   $('#info-tab').hide();
   $('#stats-tab').hide();
+  $('#update-tab').hide();
 };
 
 $("#tasks").click(function(){
@@ -33,6 +36,11 @@ $("#info").click(function(){
 $("#stats").click(function(){
   hideOtherContents();
   $("#stats-tab").show();
+});
+
+$("#update").click(function(){
+  hideOtherContents();
+  $("#update-tab").show();
 });
 
 //coworkers tabs
@@ -64,7 +72,7 @@ $("#received-request").click(function(){
   $("#received-request-tab").show();
 });
 
-//tas details tabs
+//task details tabs
 
 function hideTaskDetailsTab(){
   $("#details-tab").hide();
@@ -80,3 +88,8 @@ $("#update").click(function (){
   hideTaskDetailsTab();
   $("#update-tab").show();
 });
+
+
+//team details tabs
+
+

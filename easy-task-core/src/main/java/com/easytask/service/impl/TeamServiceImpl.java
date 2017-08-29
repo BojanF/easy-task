@@ -4,6 +4,7 @@ import com.easytask.model.jpa.Project;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITeamRepository;
+import com.easytask.service.IProjectService;
 import com.easytask.service.ITeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class TeamServiceImpl implements ITeamService {
     
     @Autowired
     ITeamRepository teamRepository;
+
+    @Autowired
+    IProjectService projectService;
     
     public Team insert(Team team) {
         return teamRepository.insert(team);
@@ -40,8 +44,17 @@ public class TeamServiceImpl implements ITeamService {
     }
 
     public void deleteById(Long id) {
+
         Team team = teamRepository.findById(id);
-        if (team != null) {
+
+        List<Project> projectForTeam = getAllProjectsByTeam(id);
+        for(Project p : projectForTeam){
+            projectService.deleteById(p.getId());
+        }
+
+        projectForTeam = getAllProjectsByTeam(id);
+
+        if (team!=null && projectForTeam.size()==0) {
             teamRepository.deleteById(id);
         }
     }
@@ -61,4 +74,8 @@ public class TeamServiceImpl implements ITeamService {
     public List<Project> getAllProjectsByTeam(Long teamId) {
         return teamRepository.getAllProjectsByTeam(teamId);
     }
+
+    public List<Long> teamStats(Long teamId){
+        return teamRepository.teamStats(teamId);
+    };
 }

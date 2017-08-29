@@ -3,9 +3,14 @@ package com.easytask.service.impl;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
+import com.easytask.persistence.IDocumentRepository;
 import com.easytask.persistence.IProjectRepository;
+import com.easytask.persistence.ITaskRepository;
 import com.easytask.persistence.IUserRepository;
+import com.easytask.service.ICommentService;
+import com.easytask.service.IDocumentService;
 import com.easytask.service.IProjectService;
+import com.easytask.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -36,8 +41,21 @@ public class ProjectServiceImpl implements IProjectService {
         return projectRepository.update(project);
     }
 
-    public void deleteById(Long id) {
-        projectRepository.deleteById(id);
+    public void deleteById(Long projectId) {
+        int tasksSize = projectRepository.getNumberOfTasksForProject(projectId);
+        int documentsSize = projectRepository.getNumberOfDocumentsForProject(projectId);
+        int commentsSize = projectRepository.getNumberOfCommentsForProject(projectId);
+
+        int deleteTasks = deleteAllTasksForProject(projectId);
+        int deleteDocuments = deleteAllDocumentsForProject(projectId);
+        int deleteComments = deleteAllCommentsForProject(projectId);
+
+        if(tasksSize==deleteTasks &&
+           documentsSize==deleteDocuments &&
+           commentsSize==deleteComments) {
+
+           projectRepository.deleteById(projectId);
+        }
     }
 
     public List<Project> findAll() {
@@ -78,4 +96,16 @@ public class ProjectServiceImpl implements IProjectService {
     public TasksByProject getTasksStatesByProject(Long projectId){
         return projectRepository.getTasksStatesByProject(projectId);
     }
+
+    public int deleteAllTasksForProject(Long projectId){
+        return projectRepository.deleteAllTasksForProject(projectId);
+    };
+
+    public int deleteAllCommentsForProject(Long projectId){
+        return projectRepository.deleteAllCommentsForProject(projectId);
+    };
+
+    public int deleteAllDocumentsForProject(Long projectId){
+        return projectRepository.deleteAllDocumentsForProject(projectId);
+    };
 }

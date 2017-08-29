@@ -35,6 +35,17 @@ public interface IProjectRepository {
 
     TasksByProject getTasksStatesByProject(Long projectId);
 
+    int deleteAllTasksForProject(Long projectId);
+
+    int deleteAllCommentsForProject(Long projectId);
+
+    int deleteAllDocumentsForProject(Long projectId);
+
+    Integer getNumberOfCommentsForProject(Long projectId);
+
+    Integer getNumberOfDocumentsForProject(Long projectId);
+
+    Integer getNumberOfTasksForProject(Long projectId);
 
 
 }

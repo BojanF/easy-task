@@ -15,14 +15,20 @@
   function TeamLeaderServiceFn($log, $resource) {
 
     var getLeaderResource = $resource("http://localhost:8000/api/user/team-stats/:id", {}, {});
+    var teamRepository = $resource("http://localhost:8000/api/team/:id", {}, {});
 
     var service = {
-      getTeamStats: getTeamStatsFn
+      getTeamStats: getTeamStatsFn,
+      deleteTeam: deleteTeamFn
     };
     return service;
 
     function getTeamStatsFn(userId){
       return getLeaderResource.query({id:userId}).$promise;
+    }
+
+    function deleteTeamFn(teamId){
+      return teamRepository.delete({id:teamId}).$promise;
     }
 
   }

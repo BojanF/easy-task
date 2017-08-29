@@ -58,12 +58,12 @@ public class UserController implements ApplicationContextAware {
         service.deleteById(id);
     }
 
-    @RequestMapping(value = "administrating-projects/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/administrating-projects/{id}", method = RequestMethod.GET)
     public List<Project> getAdministratingProjects(@PathVariable Long id) {
         return service.getProjectsLeadByUser(id);
     }
 
-    @RequestMapping(value = "your-projects/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/your-projects/{id}", method = RequestMethod.GET)
     public List<Project> getProjectThatUserWorksOn(@PathVariable Long id) {
         return service.getProjectsByUser(id);
     }
@@ -88,6 +88,10 @@ public class UserController implements ApplicationContextAware {
         return service.getTeamsInfoLeadByUser(id);
     }
 
+    @RequestMapping(value = "/teams-working-on/{id}", method = RequestMethod.GET)
+    public List<TeamLeader> getTeamsInfoTeamsForUser(@PathVariable Long id){
+        return service.getTeamsInfoTeamsForUser(id);
+    }
 
 
 }

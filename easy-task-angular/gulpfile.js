@@ -57,6 +57,7 @@ var JS_APP = [
   //teams-working-on
   'app/views/teams-working-on/teams-working-on.state.js',
   'app/views/teams-working-on/teams-working-on.controller.js',
+  'app/views/teams-working-on/teams-working-on.service.js',
 
   //coworkers
   'app/views/coworkers/coworkers.state.js',
@@ -78,6 +79,11 @@ var JS_APP = [
   'app/views/task-details/task-details.controller.js',
   'app/views/task-details/task-details.service.js',
 
+  //team-details
+  'app/views/team-details/team-details.state.js',
+  'app/views/team-details/team-details.controller.js',
+  'app/views/team-details/team-details.service.js',
+
   //components
   'app/components/single-select/single-select-component.component.js',
   'app/components/input-component/input-component.component.js',
@@ -98,7 +104,8 @@ var TEMPLATES_SRC = [
   'app/views/coworkers/coworkers.view.html',
   'app/views/new-team/new-team.view.html',
   'app/views/tasks-by-state/tasks-by-state.view.html',
-  'app/views/task-details/task-details.view.html'
+  'app/views/task-details/task-details.view.html',
+  'app/views/team-details/team-details.view.html'
 ];
 
 var CSS_APP = [

@@ -28,4 +28,6 @@ public interface ITeamRepository {
     Team removeAllTeamUsers(Long teamId);
 
     List<Project> getAllProjectsByTeam(Long teamId);
+
+    List<Long> teamStats(Long teamId);
 }

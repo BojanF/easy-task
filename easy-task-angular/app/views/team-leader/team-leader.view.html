@@ -8,7 +8,7 @@
       </h1>
       <ol class="breadcrumb">
         <li>
-          <i class="fa fa-dashboard"></i>  <a href="#/home-page">Dashboard</a>
+          <i class="fa fa-dashboard"></i>  <a href="/">Dashboard</a>
         </li>
         <li>
           <i class="fa fa-users"></i> Teams
@@ -35,6 +35,18 @@
       <div ng-show="vm.uiState.loadGif">
         <img src="pictures//loading.gif" style="width:20px; height:20px;">
       </div>
+
+      <div class="panel panel-success" ng-show="vm.uiState.successDeleteTeam">
+        <div class="panel-heading text-center text-success">
+          {{vm.uiState.successDeleteTeam}}
+        </div>
+      </div>
+      <div class="panel panel-danger " ng-show="vm.uiState.errorDeleteTeam">
+        <div class="panel-heading text-center text-danger">
+          {{vm.uiState.errorDeleteTeam}}
+        </div>
+      </div>
+
       <table st-table="teams" st-safe-src="vm.teams" ng-show="vm.uiState.showTeams" class="table table-bordered table-striped">
         <thead>
         <tr>
@@ -44,6 +56,7 @@
           <th>Projects number</th>
           <th>Tasks number</th>
           <th>Workers</th>
+          <th>Actions</th>
         </tr>
         <tr>
           <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by team name..."> </th>
@@ -51,10 +64,18 @@
         </thead>
         <tbody>
         <tr ng-repeat="t in teams | orderBy:['name'] | filter:searchProfName">
-          <td><a href="#">{{t.name}}</a></td>
+          <td><a href="#/team-details/{{t.id}}">{{t.name}}</a></td>
           <td>{{t.projectNum}}</td>
           <td>{{t.tasksNum==null ? 0 : t.tasksNum}}</td>
           <td>{{t.usersNum}}</td>
+          <td>
+            <!--TODO napraj paneli za brisenjeto-->
+            <button class="btn btn-danger btn-xs removeTeam"
+                    confirm-click="vm.deleteTeam(t.id)"
+                    confirm-message="Are you sure?">
+              <i class="fa fa-times"></i>&nbsp; Delete team &nbsp;
+            </button>
+          </td>
         </tr>
         </tbody>
         <tfoot>
@@ -65,12 +86,16 @@
         </tr>
         </tfoot>
       </table>
-      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showNoTeamsPanel">
-        You are not leader for any team!
+      <div class="panel panel-info" ng-show="vm.uiState.showNoTeamsPanel">
+        <div class="panel-heading text-center text-info">
+          You are not leader for any team!
+        </div>
       </div>
-      <div class="panel panel-warning text-center text-danger" ng-show="vm.uiState.showErrorPanel">
-        <div> We run into an error!</div>
-        <div> Try again later!</div>
+      <div class="panel panel-danger " ng-show="vm.uiState.showErrorPanel">
+        <div class="panel-heading text-center text-danger">
+          <div> We run into an error!</div>
+          <div> Try again later!</div>
+        </div>
       </div>
 
     </div>

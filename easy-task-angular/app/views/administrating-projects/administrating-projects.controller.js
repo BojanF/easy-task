@@ -21,21 +21,27 @@
       loadGif: true,
       showProjects: false,
       showNoProjectsPanel: false,
-      showErrorPanel: false
+      showErrorPanel: false,
+      successDelete: null,
+      errorDelete: null
     };
 
     //functions declaration
     vm.getAdministratingProjects = getAdministratingProjectsFn;
     vm.removeProject = removeProjectFn;
+
     //functions invocation
     getAdministratingProjectsFn();
 
     //functions implementation
     function getAdministratingProjectsFn(){
 
-      AdministratingProjectsService.getAdministratingProjects(vm.USER_ID).then(successCalback, errorCallback);
+      vm.uiState.successDelete = null;
+      vm.uiState.errorDelete = null;
 
-      function successCalback(data) {
+      AdministratingProjectsService.getAdministratingProjects(vm.USER_ID).then(successCallback, errorCallback);
+
+      function successCallback(data) {
 
         vm.projects = data;
 
@@ -57,11 +63,15 @@
         vm.uiState.loadGif = false;
         vm.uiState.showProjects = false;
         vm.uiState.showNoProjectsPanel = false;
-        vm.uiState.showErrorPanel= true;
+        vm.uiState.showErrorPanel = true;
+
       }
     }
 
     function removeProjectFn(projectId){
+
+      vm.uiState.successDelete = null;
+      vm.uiState.errorDelete = null;
 
       AdministratingProjectsService.removeProject(projectId).then(
 
@@ -69,14 +79,19 @@
           //success callback
           console.log("Se izbrisa!!!");
           getAdministratingProjectsFn();
+          vm.uiState.successDelete = "Project was successfully deleted!";
         },
 
         function(){
           //error callback
           console.log("ne se izbrisa meeeh :(")
           var button = $(".removeProject");
-          button.html('<i class="fa fa-times"></i>&nbsp; Delete project');
-          button.prop('disabled',false);
+          setTimeout(function(){
+            button.html('<i class="fa fa-times"></i>&nbsp; Delete project');
+            button.prop('disabled',true);
+          }, 300);
+
+          vm.uiState.errorDelete = "Something happened. Try again later to delete the project!";
         }
 
       );
@@ -91,6 +106,7 @@
         var currProject = projects[i];
 
         currProject.createdOn = dateMillisecondsToDate(currProject.createdOn);
+        currProject.completedOn = dateMillisecondsToDate(currProject.completedOn);
         currProject.deadline = dateMillisecondsToDate(currProject.deadline);
 
         if(currProject.state == 'CREATED'){
@@ -119,24 +135,25 @@
 
         projects[i] = currProject;
       }
-
     }
 
-
-
     function dateMillisecondsToDate(milliseconds){
-      var d = new Date(milliseconds);
-      var month = parseInt(d.getMonth()) + 1;
-      var minutes = d.getMinutes();
-      if(minutes.toString().length == 1){
-        minutes = '0' + minutes;
+      if(milliseconds != null) {
+        var d = new Date(milliseconds);
+        var month = parseInt(d.getMonth()) + 1;
+        var minutes = d.getMinutes();
+        if (minutes.toString().length == 1) {
+          minutes = '0' + minutes;
+        }
+        return d.getDate() + "." +
+          month + "." +
+          d.getFullYear() + " " +
+          d.getHours() + ":" +
+          minutes;
       }
-      return d.getDate() + "." +
-        month + "." +
-        d.getFullYear() + " " +
-        d.getHours() + ":" +
-        minutes;
-
+      else{
+        return "Not finished yet";
+      }
     }
   }
 

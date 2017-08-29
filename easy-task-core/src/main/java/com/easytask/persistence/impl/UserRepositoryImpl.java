@@ -109,6 +109,11 @@ public class UserRepositoryImpl implements IUserRepository {
         cq.where(
                 from.get(Project.FIELDS.TEAM).in(
                         teamsList
+                ),
+//                TODO da se vidi dali vaka e OK, dolniov uslov !!!
+                cb.notEqual(
+                    from.get(Project.FIELDS.TEAM).get(Team.FIELDS.LEADER).get(Leader.FIELDS.USER).get(User.FIELDS.ID),
+                    userId
                 )
         );
         return entityManager.createQuery(cq).getResultList();
@@ -131,6 +136,7 @@ public class UserRepositoryImpl implements IUserRepository {
 
     public List<Team> getTeamsForUser(Long userId){
 
+        //teams where user is member
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Team> cq = cb.createQuery(Team.class);
         Root<Team> from = cq.from(Team.class);
@@ -139,7 +145,10 @@ public class UserRepositoryImpl implements IUserRepository {
                 cb.equal(
                         join.get(User.FIELDS.ID),
                         userId
-                )
+                )/*,
+                cb.notEqual(from.get(Team.FIELDS.LEADER).get(Leader.FIELDS.USER).get(User.FIELDS.ID),
+                        userId
+                )*/
         );
 
         return entityManager.createQuery(cq).getResultList();
@@ -240,6 +249,17 @@ public class UserRepositoryImpl implements IUserRepository {
         return teamsInfo.getResultList();
     }
 
+    public List<TeamLeader> getTeamsInfoTeamsForUser(Long userId){
+        List<Team> helperList = getTeamsMemberOf(userId);
+        TypedQuery<TeamLeader> teamsInfo = entityManager.createQuery("select tl\n" +
+                "from Team t, TeamLeader tl\n" +
+                "where\n" +
+                "t in (:teams) and\n" +
+                "t.id = tl.id", TeamLeader.class);
+        teamsInfo.setParameter("teams", helperList);
+        return teamsInfo.getResultList();
+    }
+
     @Transactional
     public List<Task> getUrgentTask(Long userId){
 
@@ -254,6 +274,27 @@ public class UserRepositoryImpl implements IUserRepository {
 
         return new ArrayList<Task>();
 
+    }
+
+    public List<Team> getTeamsMemberOf(Long userId){
+
+        //teams where user is member but is not leader
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Team> cq = cb.createQuery(Team.class);
+        Root<Team> from = cq.from(Team.class);
+        Join<Team, User> join = from.join(Team.FIELDS.USERS,JoinType.LEFT);
+        cq.where(
+                cb.equal(
+                        join.get(User.FIELDS.ID),
+                        userId
+                ),
+                cb.notEqual(from.get(Team.FIELDS.LEADER).get(Leader.FIELDS.USER).get(User.FIELDS.ID),
+                        userId
+                )
+        );
+
+        return entityManager.createQuery(cq).getResultList();
     }
 }
 

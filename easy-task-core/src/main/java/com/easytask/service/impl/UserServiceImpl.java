@@ -102,7 +102,15 @@ public class UserServiceImpl implements IUserService {
         return userRepository.getTeamsInfoLeadByUser(leaderId);
     };
 
+    public List<TeamLeader> getTeamsInfoTeamsForUser(Long userId){
+        return userRepository.getTeamsInfoTeamsForUser(userId);
+    };
+
     public List<Task> getUrgentTask(Long userId){
         return userRepository.getUrgentTask(userId);
+    };
+
+    public List<Team> getTeamsMemberOf(Long userId){
+        return userRepository.getTeamsMemberOf(userId);
     };
 }

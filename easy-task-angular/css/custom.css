@@ -7,6 +7,10 @@ td, th{
   text-align: left;
 }
 
+.td-right-align{
+  text-align: right;
+}
+
 .font-awesome-padding-right{
   padding-right: 1.5%;
 }

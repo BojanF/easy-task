@@ -1,4 +1,4 @@
-<script src="custom_js/project_details.js"></script>
+
 
 <div ng-hide="vm.uiState.showProject" class="container-fluid">
   <div class="jumbotron">
@@ -17,10 +17,10 @@
       </h1>
       <ol class="breadcrumb">
         <li>
-          <i class="fa fa-dashboard"></i>  <a href="#/home-page">Dashboard</a>
+          <i class="fa fa-dashboard"></i>  <a href="/">Dashboard</a>
         </li>
         <li>
-          <i class="fa fa-flask"></i> Projects
+          <i class="fa fa-users"></i> <a href="#/team-details/{{vm.project.team.id}}">{{vm.project.team.name}}</a>
         </li>
         <li class="active">
           {{vm.project.name}}
@@ -30,7 +30,7 @@
   </div>
   <!-- /.row -->
 
-  <ul  class="nav nav-tabs">
+  <ul class="nav nav-tabs">
     <li class="active" >
       <a id="tasks" data-toggle="tab"><i class="fa fa-fw fa-hourglass-half"></i>Tasks</a>
     </li>
@@ -46,9 +46,13 @@
     <li>
       <a id="stats" ng-click="vm.getStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a>
     </li>
+    <li>
+      <a id="update" ng-show="vm.uiState.leader" data-toggle="tab"><i class="fa fa-fw fa-pencil-square"></i>Update</a>
+    </li>
   </ul>
 
   <div class="tab-content clearfix">
+
     <div class="tab-pane active" id="tasks-tab">
 
       <br>
@@ -62,6 +66,11 @@
       <div class="panel panel-success" ng-show="vm.uiState.addNewTask.successMsg">
         <div class="panel-heading text-center text-success" >
           {{vm.uiState.addNewTask.successMsg}}
+        </div>
+      </div>
+      <div class="panel panel-danger" ng-show="vm.uiState.tasks.deleteError">
+        <div class="panel-heading text-center text-danger" >
+          {{vm.uiState.tasks.deleteError}}
         </div>
       </div>
       <!--<div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">-->
@@ -190,22 +199,30 @@
                 <!--<th st-sort="shortName">Short name</th>-->
                 <th>Name</th>
                 <th>Created on</th>
+                <th>Comleted on</th>
                 <th>Deadline</th>
                 <th>Working on</th>
                 <th>State</th>
                 <th>Actions</th>
               </tr>
               <tr>
-                <th colspan="6"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+                <th colspan="7"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
                 <td valign="center"><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
                 <!--<td>{{t.id}}</td>-->
-                <td >{{t.createdOn}}</td>
+                <td>{{t.createdOn}}</td>
+                <td>{{t.completedOn}}</td>
                 <td >{{t.deadline}}</td>
-                <td><span ng-repeat="u in t.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
+                <td>
+                  <div ng-repeat="u in t.users" ng-class="{'last': $last}">
+                    {{u.name+" "+u.surname+"\n"}}
+                    <span ng-show="!$last">, &nbsp;</span>
+                    <span ng-show="$last"> &nbsp;</span>
+                  </div>
+                </td>
                 <!--<td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>-->
                 <td>
                   <span ng-class="t.cssClass"> {{t.state}} </span>
@@ -213,15 +230,16 @@
                 <td>
                   <button class="btn btn-danger btn-xs removeTask"
                           ng-disabled="!vm.uiState.leader"
-                          ng-click="vm.removeTask(t.id)">
-                    <i class="fa fa-times"></i>&nbsp; Delete task
+                          confirm-click="vm.removeTask(t.id)"
+                          confirm-message="Are you sure?">
+                    <i class="fa fa-times"></i>&nbsp; Delete task &nbsp;
                   </button>
                 </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="7" class="text-center">
                   <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
                 </td>
               </tr>
@@ -339,7 +357,8 @@
               <td>
                 <button class="btn btn-danger btn-xs removeDocument"
                           ng-disabled="{{d.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
-                          ng-click="vm.removeDocument(d.id, d.user.id)">
+                          confirm-click="vm.removeDocument(d.id, d.user.id)"
+                          confirm-message="Are you sure?">
                   <i class="fa fa-times"></i>&nbsp; Remove document
                 </button>
               </td>
@@ -372,8 +391,9 @@
     </div>
 
     <div class="tab-pane" id="comments-tab">
-      <!--<h3>Comments</h3>-->
+
       <br><br>
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <span class="pull-left>">
@@ -408,7 +428,8 @@
                 <td>
                   <button class="btn btn-danger btn-xs removeComment"
                           ng-disabled="{{c.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
-                          ng-click="vm.removeComment(c.id, c.user.id)">
+                          confirm-click="vm.removeComment(c.id, c.user.id)"
+                          confirm-message="Are you sure?">
                     <i class="fa fa-times"></i><!--&nbsp; Remove comment-->
                   </button>
                 </td>
@@ -470,9 +491,64 @@
     </div>
 
     <div class="tab-pane" id="info-tab">
-      <h3>Information</h3>
-      <span>State:</span>
-      <span> {{vm.project.state}} </span>
+
+      <br/><br/>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-info-circle"></i> Information for project</h3>
+        </div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <tbody>
+            <tr>
+              <th class="td-right-align col-md-2"> Name:</th>
+              <td class="td-left-align col-md-10">{{vm.project.name}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Project state </th>
+              <td class="td-left-align"><span ng-class="vm.project.cssClass">{{vm.project.stateString}}</span></td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Team:</th>
+              <td class="td-left-align">
+                <a href="#/team-details/{{vm.project.team.id}}"> {{vm.project.team.name}} </a>
+              </td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Description:</th>
+              <td class="td-left-align">{{vm.project.description}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Created:</th>
+              <td class="td-left-align">{{vm.project.createdOnString}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Deadline:</th>
+              <td class="td-left-align">{{vm.project.deadlineString}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Finished:</th>
+              <td class="td-left-align">{{vm.project.completedOnString}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Tasks:</th>
+              <td class="td-left-align">{{vm.project.tasksNum==undefined ? 'First load the tasks!' : vm.project.tasksNum}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Projects:</th>
+              <td class="td-left-align">{{vm.project.documentsNum==undefined ? 'First load the documents!' : vm.project.documentsNum}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Comments:</th>
+              <td class="td-left-align">{{vm.project.commentsNum==undefined ? 'First load the comments!' : vm.project.commentsNum}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
     </div>
 
     <div class="tab-pane" id="stats-tab">
@@ -498,7 +574,23 @@
 
         </div>
       </div>
+    </div>
 
+    <div class="tab-pane" id="update-tab">
+
+      <br/><br/>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-pencil-square"></i> Update panel</h3>
+        </div>
+        <div class="panel-body">
+
+        </div>
+        <div class="panel-footer text-right">
+          <button class="btn btn-success" type="submit" ng-disabled="">	<i class="fa fa-fw fa-pencil-square"></i>	Update </button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -21,6 +21,9 @@
         <li >
           <i class="fa fa-dashboard"></i> <a href="/">Dashboard</a>
         </li>
+        <li>
+          <i class="fa fa-flask"></i><a href="#/project-details/{{vm.task.project.id}}">{{vm.task.project.name}}</a>
+        </li>
         <li class="active">
           {{vm.task.name}}
         </li>
@@ -29,12 +32,12 @@
   </div>
   <!-- /.row -->
 
-  <ul  class="nav nav-tabs">
+  <ul ng-show="vm.uiState.showUpdate" class="nav nav-tabs">
     <li class="active">
       <a id="details" data-toggle="tab"><i class="fa fa-fw fa-handshake-o"></i>Details</a>
     </li>
-    <li ng-show="vm.uiState.showUpdate">
-      <a id="update" data-toggle="tab"><i class="fa fa-plus-square"></i>Update</a>
+    <li>
+      <a id="update" data-toggle="tab"><i class="fa fa-fw fa-pencil-square"></i>Update</a>
     </li>
 
   </ul>
@@ -55,44 +58,44 @@
           </div>
 
           <div ng-show="vm.uiState.showDetails">
-            <table class="table table-bordered">
+            <table class="table table-striped">
               <tbody>
                 <tr>
-                  <th> Name:</th>
-                  <td class="td-left-align">{{vm.task.name}}</td>
+                  <th class="td-right-align col-md-2"> Name:</th>
+                  <td class="td-left-align col-md-10">{{vm.task.name}}</td>
                 </tr>
                 <tr>
-                  <th> Project:</th>
+                  <th class="td-right-align"> Project:</th>
                   <td class="td-left-align"> <a href="#project-details/{{vm.task.project.id}}">{{vm.task.project.name}}</a></td>
                 </tr>
                 <tr>
-                  <th> Leader:</th>
+                  <th class="td-right-align"> Leader:</th>
                   <td class="td-left-align">{{vm.task.leader.user.name + vm.task.leader.user.surname}}</td>
                 </tr>
                 <tr>
-                  <th> Description:</th>
+                  <th class="td-right-align"> Description:</th>
                   <td class="td-left-align">{{vm.task.description}}</td>
                 </tr>
                 <tr>
-                  <th> Created:</th>
+                  <th class="td-right-align"> Created:</th>
                   <td class="td-left-align">{{vm.task.createdOnString}}</td>
                 </tr>
                 <tr>
-                  <th> Deadline:</th>
+                  <th class="td-right-align"> Deadline:</th>
                   <td class="td-left-align">{{vm.task.deadlineString}}</td>
                 </tr>
                 <tr>
-                  <th> Finished:</th>
+                  <th class="td-right-align"> Finished:</th>
                   <td class="td-left-align">{{vm.task.completedOnString}}</td>
                 </tr>
                 <tr>
-                  <th> Task state </th>
+                  <th class="td-right-align"> Task state </th>
                   <td class="td-left-align"><span ng-class="vm.task.cssClass">{{vm.task.stateString}}</span></td>
                 </tr>
-              <tr>
-                <th> Working on: </th>
-                <td class="td-left-align"> <span ng-repeat="u in vm.task.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
-              </tr>
+                <tr>
+                  <th class="td-right-align"> Working on: </th>
+                  <td class="td-left-align"> <span ng-repeat="u in vm.task.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -131,7 +134,14 @@
                                        focus="true">
                       </input-component>
                     </div>
-
+                    <div class="col-md-6">
+                      <label> Change state </label>
+                      <single-select model="vm.updatedTaskState"
+                                     entities="vm.states"
+                                     required="true"
+                                     placeholder="Select state">
+                      </single-select>
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
@@ -142,12 +152,21 @@
                   <br>
                   <div class="row">
                     <div class="col-md-6">
-                      <label> Change state </label>
-                      <single-select model="vm.task.state"
-                                     entities="vm.states"
-                                     required="true"
-                                     placeholder="Select state">
-                      </single-select>
+                      <label>Completed on</label>
+                      <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input class="form-control"
+                               ng-model="vm.task.completedOn"
+                               locale="en-gb"
+                               ng-model-options="{ updateOn: 'blur' }"
+                               placeholder="Select completed on date..."
+                               format="DD/MM/YYYY HH:mm"
+                               moment-picker="vm.task.completedOn"
+                               ng-disabled="vm.updatedTaskState.enum!='FINISHED'"
+                               ng-required="vm.updatedTaskState.enum=='FINISHED'"
+                               min-date="vm.task.createdOn"
+                               max-date="vm.task.deadline">
+                      </div>
                     </div>
                     <div class="col-md-6">
                       <label> Deadline </label>
@@ -166,6 +185,7 @@
                       </div>
                     </div>
                   </div>
+
                   <br>
                   <div class="row">
                     <div class="col-md-8">
@@ -176,18 +196,15 @@
                       </multiple-select>
                     </div>
                   </div>
-
-
                 </div>
+
+
                 <div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">
                   <div class="panel-heading text-center" >
                     {{vm.uiState.addNewTask.errorMsg}}
                   </div>
                 </div>
               </div>
-
-
-
             </form>
 
             <div class="panel panel-info" id="savingTeam" ng-show="vm.uiState.updatingGif">
@@ -223,8 +240,8 @@
             <!--<i class="fa fa-fw fa-refresh"></i>	Clear-->
           <!--</button>-->
           <button class="btn btn-primary" form="updateTask" ng-disabled="updateTaskForm.$invalid" type="submit">
-            <i class="fa fa-fw fa-save"></i>
-            Save
+            <i class="fa fa-fw fa-pencil-square"></i>
+            Update
           </button>
         </div>
 

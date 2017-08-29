@@ -1,0 +1,253 @@
+<div ng-hide="vm.uiState.showPage" class="container-fluid">
+  <div class="jumbotron">
+    <h1>Ooooops!</h1>
+    <p>We can`t find team with that identificator!</p>
+  </div>
+</div>
+
+<div ng-show="vm.uiState.showPage" class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">
+        {{vm.fetchedData.team.name}}
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          <i class="fa fa-dashboard"></i>  <a href="/">Dashboard</a>
+        </li>
+        <li>
+          <i class="fa fa-users"></i> Team
+        </li>
+        <li class="active">
+          <i class="fa fa-cogs"></i> {{vm.fetchedData.team.name}}
+        </li>
+      </ol>
+    </div>
+  </div>
+  <!-- /.row -->
+
+  <ul class="nav nav-tabs">
+    <li class="active" >
+      <a id="details" data-toggle="tab"><i class="fa fa-fw fa-info-circle"></i>Team details</a>
+    </li>
+    <li>
+      <a id="stats" ng-click="vm.getTeamStats()" data-toggle="tab"><i class="fa fa-fw fa-pie-chart"></i>Stats</a></a>
+    </li>
+    <li ng-show="vm.uiState.leader">
+      <a id="update" ng-click="vm.getCoworkers()" data-toggle="tab"><i class="fa fa-fw fa-pencil-square"></i>Update</a>
+    </li>
+  </ul>
+
+  <div class="tab-content clearfix">
+
+    <div class="tab-pane active" id="details-tab">
+
+      <br/><br/>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-users fa-fw"></i> Team details </h3>
+        </div>
+
+        <div class="panel-body">
+          <div ng-show="vm.uiState.team.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table class="table table-striped" ng-show="vm.uiState.team.showData">
+            <tbody>
+            <tr>
+              <th class="td-right-align col-md-2"> Name:</th>
+              <td class="td-left-align col-md-10">{{vm.fetchedData.team.name}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Leader:</th>
+              <td class="td-left-align">{{vm.fetchedData.team.leader.user.name+" "+vm.fetchedData.team.leader.user.surname}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align">Number of projects:</th>
+              <td class="td-left-align"> {{vm.fetchedData.team.projectNum}} </td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Members:</th>
+              <td class="td-left-align">
+                <span ng-repeat="u in vm.fetchedData.team.users" ng-class="{'last': $last}">
+                  {{u.name+" "+u.surname+"\n"}}<span ng-show="!$last">, &nbsp;</span>
+                </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="panel panel-danger  " ng-show="vm.uiState.team.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-flask fa-fw"></i> List of projects</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.projects.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <table st-table="projects" st-safe-src="vm.fetchedData.projects" ng-show="vm.uiState.projects.showProjects" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Completed on</th>
+              <th>Deadline</th>
+              <th>State</th>
+            </tr>
+            <tr>
+              <th colspan="5"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by project name..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="p in projects | orderBy:['name'] | filter:searchProfName">
+              <td><a href="#/project-details/{{p.id}}">{{p.name}}</a></td>
+              <td>{{p.createdOn}}</td>
+              <td>{{p.completedOn}}</td>
+              <td>{{p.deadline}}</td>
+              <td><span ng-class="p.cssClass"> {{p.state}}</span></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="7" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+          <div class="panel panel-info" ng-show="vm.uiState.projects.showNoProjects">
+            <div class="panel-heading text-center text-info">
+              This team does not work on any projects!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.projects.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into an error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tab-pane" id="stats-tab">
+
+      <br/><br/>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
+        </div>
+        <div class="panel-body">
+          <div ng-show="vm.uiState.stats.loadGif">
+            <img src="pictures//loading.gif" style="width:20px; height:20px;">
+          </div>
+          <c3chart bindto-id="tasks-chart"
+                   chart-data="vm.c3DataTest.points"
+                   chart-columns="vm.c3DataTest.columns"
+                   ng-show="vm.uiState.stats.showStats">
+            <chart-legend show-legend="true" legend-position="right"/>
+            <!--<chart-size chart-height="350" chart-width="450"/>-->
+            <chart-donut title="Project stages percentages" width="60"/>
+          </c3chart>
+          <div class="panel panel-info" ng-show="vm.uiState.stats.showNoStatsPanel">
+            <div class="panel-heading text-center text-info">
+              This team does not work on any projects!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.stats.showErrorPanel">
+            <div class="panel-heading text-center text-danger">
+              <div> We run into error!</div>
+              <div> Try again later!</div>
+            </div>
+          </div>
+        </div>
+        <!--TODO da se napise description-->
+        <!--<div class="panel-footer">-->
+          <!--<p> Descrption for this statistic category</p>-->
+        <!--</div>-->
+      </div>
+    </div>
+
+    <div class="tab-pane" id="update-tab">
+
+      <br/><br/>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Update team
+        </div>
+        <div class="panel-body">
+          <form  id="updateTeam" name="updateTeamForm" ng-submit="vm.updateTeam()">
+            <div class="row">
+              <div class="col-md-offset-2 col-md-8">
+                <input-component placeholder="name for team"
+                                 label="Team name"
+                                 type="text"
+                                 model="vm.fetchedData.team.name"
+                                 required="true"
+                                 focus="true">
+                </input-component>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-offset-2 col-md-8">
+                <label>Update members for your team</label>
+                <div ng-show="vm.uiState.update.loadGif">
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                </div>
+                <multiple-select users="vm.fetchedData.coworkers"
+                                 model="vm.fetchedData.team.users"
+                                 info="{{vm.uiState.update.fetchingCoworkersMessage}}">
+                </multiple-select>
+
+              </div>
+            </div>
+          </form>
+          <br>
+          <div class="panel panel-info" ng-show="vm.uiState.update.updatingTeam">
+            <div class="panel-heading text-center">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+              <span id="fileUploadingText">&nbsp;Updating team ...</span>
+            </div>
+          </div>
+          <div class="panel panel-success" ng-show="vm.uiState.update.successUpdate">
+            <div class="panel-heading text-center text-success">
+              {{vm.uiState.update.successUpdate}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.update.errorUpdate">
+            <div class="panel-heading text-center text-danger">
+              {{vm.uiState.update.errorUpdate}}
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button class="btn btn-primary" form="updateTeam" ng-disabled="updateTeamForm.$invalid" type="submit">
+            <i class="fa fa-fw fa-pencil-square"></i>
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.container-fluid -->
+
+<script src="custom_js/team-details-tabs.js"></script>

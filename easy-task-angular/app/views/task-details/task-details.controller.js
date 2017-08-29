@@ -18,6 +18,10 @@
     vm.USER_ID = 1;
     vm.TASK_ID = 0;
     vm.task = {};
+    vm.updatedTaskState = null;
+    vm.updateToFinished = {
+      required: false
+    }
     vm.uiState = {
       showPage: true,
       showUpdate: false,
@@ -93,41 +97,36 @@
 
     function updateTaskFn(){
 
-      vm.uiState.updatingGif = true;
+      if(vm.task.id != undefined && vm.uiState.showUpdate) {
+        vm.uiState.updatingGif = true;
 
-      vm.uiState.successMsg = null;
-      vm.uiState.errorMsg = null;
+        vm.uiState.successMsg = null;
+        vm.uiState.errorMsg = null;
 
-      vm.task.state = vm.task.state.enum;
-      vm.task.deadline = vm.task.deadline.toDate().getTime();
+        vm.task.state = vm.updatedTaskState.enum;
+        vm.task.deadline = vm.task.deadline.toDate().getTime();
 
-      if(vm.task.state == 'FINISHED'){
-        var today = new Date();
-        vm.task.completedOn = today.getTime();
-      }
-      console.log(vm.task);
+        if (vm.task.state == 'FINISHED') {
 
-      TaskDetailsService.updateTask(vm.task).then(
-
-        function(data){
-          //success callback
-          vm.uiState.updatingGif = false;
-          vm.task = data;
-          taskParsing();
-          vm.uiState.successMsg = "Successfully updated task \"" + vm.task.name + "\"";
-
-
-
-        },
-
-        function(){
-          //error callback
-          vm.uiState.updatingGif = false;
-          vm.uiState.errorMsg = "Try again later!";
+          vm.task.completedOn = vm.task.completedOn.toDate().getTime();
         }
+        console.log(vm.task);
 
-      );
-
+        TaskDetailsService.updateTask(vm.task).then(
+          function (data) {
+            //success callback
+            vm.uiState.updatingGif = false;
+            vm.task = data;
+            taskParsing();
+            vm.uiState.successMsg = "Successfully updated task \"" + vm.task.name + "\"";
+          },
+          function () {
+            //error callback
+            vm.uiState.updatingGif = false;
+            vm.uiState.errorMsg = "Try again later!";
+          }
+        );
+      }
     }
 
     //helper functions
@@ -152,21 +151,21 @@
         currTask.stateString = 'NOT STARTED';
         currTask.state = undefined;
         vm.states = [{'name':'Not started', 'enum': 'NOT_STARTED'}, {'name':'In progress', 'enum': 'IN_PROGRESS'}];
-
+        vm.updatedTaskState = {'name':'Not started', 'enum': 'NOT_STARTED'};
       }
       else if(currTask.state == 'IN_PROGRESS'){
         currTask.cssClass = 'label label-warning';
         currTask.stateString = 'IN PROGRESS';
         currTask.state = undefined;
         vm.states = [{'name':'Not started', 'enum': 'NOT_STARTED'}, {'name':'In progress', 'enum': 'IN_PROGRESS'}, {'name':'Finished', 'enum': 'FINISHED'}];
-
+        vm.updatedTaskState = {'name':'In progress', 'enum': 'IN_PROGRESS'};
       }
       else if(currTask.state == 'FINISHED'){
         currTask.cssClass = 'label label-success';
         currTask.stateString = 'FINISHED';
         currTask.state = undefined;
-        vm.states = [{'name':'In progress', 'enum': 'IN_PROGRESS'}];
-
+        vm.states = [{'name':'In progress', 'enum': 'IN_PROGRESS'}, {'name':'Finished', 'enum': 'FINISHED'}];
+        vm.updatedTaskState = {'name':'Finished', 'enum': 'FINISHED'};
       }
       else{
         console.log("PROMASHAJ: " + currTask.state);

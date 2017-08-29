@@ -60,6 +60,7 @@
     vm.uiState = {
       showProject: false,
       leader: false, //addNewButton
+
       addNewTask:{
         // button: false,
         users: false,
@@ -70,12 +71,12 @@
         successMsg:null,
         errorMsg:null
       },
-      addNewDocumentButton: false,
       tasks:{
         loadGif: true,
         showTasks: false,
         showNoTasksPanel: false,
-        showErrorPanel: false
+        showErrorPanel: false,
+        deleteError: null
       },
       documents:{
         loadGif: true,
@@ -94,7 +95,11 @@
         showErrorPanel: false,
         canComment: false
       },
-      showStats: false
+      showStats: false,
+      deleteError:{
+        task: null,
+        document: null
+      }
     };
 
     // vm.inputDates = null;
@@ -147,42 +152,50 @@
     function getProjectFn(){
       // getProjectIdFn();
       console.log("asd");
-      ProjectDetailsService.getProject(vm.PROJECT_ID).then(function (data) {
+      ProjectDetailsService.getProject(vm.PROJECT_ID).then(
 
-        vm.project = data;
+        function (data) {
+          //success callback
 
-        if(vm.project.id != undefined){
-          console.log('loadiraj');
-          getTasksFn();
+          vm.project = data;
 
-          //dateRestriction start
-          vm.datesRestriction.createdOn = moment(new Date(vm.project.createdOn));
-          vm.datesRestriction.deadline = moment(new Date(vm.project.deadline));
-          //dateRestriction end
+          if(vm.project.id != undefined){
+            console.log('loadiraj');
+            getTasksFn();
 
-          if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
-            vm.uiState.leader = true;
-            vm.uiState.addNewDocumentButton = true;
-            console.log(vm.project.team.users.length);
+            projectParsing(vm.project);
 
-            //ovoj if vajda, 99%, e vishok :)
-            if(vm.project.team.users.length > 0) {
-              console.log("proektot ima useri na nego");
-              vm.uiState.addNewTask.users = true;
+            //dateRestriction start
+            vm.datesRestriction.createdOn = moment(new Date(vm.project.createdOn));
+            vm.datesRestriction.deadline = moment(new Date(vm.project.deadline));
+            //dateRestriction end
+
+            if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
+              vm.uiState.leader = true;
+
+              console.log(vm.project.team.users.length);
+
+              //ovoj if vajda, 99%, e vishok :)
+              if(vm.project.team.users.length > 0) {
+                console.log("proektot ima useri na nego");
+                vm.uiState.addNewTask.users = true;
+              }
             }
           }
-        }
-        else{
-          vm.uiState.showProject = false;
-          console.log('oops msg');
-        }
+          else{
+            vm.uiState.showProject = false;
+            console.log('oops msg');
+          }
 
-      }, function(){
-        vm.uiState.tasks.loadGif = false;
-        vm.uiState.tasks.showTasks = false;
-        vm.uiState.tasks.showNoTasksPanel = false;
-        vm.uiState.tasks.showErrorPanel = true;
-      })
+        },
+        function(){
+          //error callback
+
+          vm.uiState.tasks.loadGif = false;
+          vm.uiState.tasks.showTasks = false;
+          vm.uiState.tasks.showNoTasksPanel = false;
+          vm.uiState.tasks.showErrorPanel = true;
+        })
     }
 
     function getTasksFn(){
@@ -201,10 +214,17 @@
           vm.uiState.tasks.showNoTasksPanel = false;
           threeInOneFunction(vm.entitiesData.tasks);
           vm.uiState.showStats = true;
+
+          vm.project.tasksNum = vm.entitiesData.tasks.length;
         }
         else{
           vm.uiState.tasks.showTasks = false;
           vm.uiState.tasks.showNoTasksPanel = true;
+          vm.project.tasksNum = 0;
+
+          vm.project.state = 'CREATED';
+          vm.project.cssClass = 'label label-default';
+          vm.project.stateString = 'CREATED';
         }
       }
 
@@ -247,10 +267,12 @@
             vm.uiState.documents.showDocuments = true;
             vm.uiState.documents.showNoDocumentsPanel = false;
             setDates(vm.entitiesData.documents);
+            vm.project.documentsNum = vm.entitiesData.documents.length;
           }
           else{
             vm.uiState.documents.showDocuments = false;
             vm.uiState.documents.showNoDocumentsPanel = true;
+            vm.project.documentsNum = 0;
           }
 
 
@@ -278,10 +300,12 @@
             vm.uiState.comments.showComments = true;
             vm.uiState.comments.showNoCommentsPanel = false;
             setDates(vm.entitiesData.comments);
+            vm.project.commentsNum = vm.entitiesData.comments.length;
           }
           else{
             vm.uiState.comments.showComments = false;
             vm.uiState.comments.showNoCommentsPanel = true;
+            vm.project.commentsNum = 0;
           }
 
 
@@ -318,6 +342,8 @@
       function successCallbackNewTask(data) {
         console.log("SAVEEEEE");
         $("#modalTask").modal('hide');
+        vm.project = data.project;
+        projectParsing(vm.project);
         clearNewTaskFn();
         refreshTasksFn();
         vm.uiState.addNewTask.successMsg = "Successfully created \"" + data.name + "\" task!"
@@ -375,7 +401,7 @@
       var date = new Date(d);
       vm.newEntities.comment.date = date;
       vm.newEntities.comment.user = vm.user;
-      vm.newEntities.comment.project = vm.project.toJSON();
+      vm.newEntities.comment.project = vm.project;
       console.log(vm.newEntities.comment);
       var promise = ProjectDetailsService.insertNewComment(vm.newEntities.comment);
       console.log(promise);
@@ -408,7 +434,9 @@
 
     function refreshTasksFn(){
       console.log("refresh tasks");
-      vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false};
+      vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false, deleteError: null};
+      vm.uiState.addNewTask.successMsg = null;
+
       getTasksFn();
     }
 
@@ -422,9 +450,15 @@
 
       if(userId!=vm.USER_ID && !vm.uiState.leader){
           //disable delete button
+
         var button = $(".removeDocument");
-        button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
-        button.prop('disabled',true);
+        setTimeout(function(){
+          button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
+          button.prop('disabled', true);
+          console.log("DISABLE DELETE DOC");
+        }, 300);
+
+
       }
       else{
         ProjectDetailsService.removeDocument(documentId).then(
@@ -438,8 +472,11 @@
             //error callback
             console.log("meeeeeeeh");
             var button = $(".removeDocument");
-            button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
-            button.prop('disabled',false);
+            setTimeout(function(){
+              button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
+              button.prop('disabled', true);
+              console.log("DISABLE DELETE DOC");
+            }, 300);
           }
         );
       }
@@ -449,6 +486,8 @@
     function removeTaskFn(taskId){
       console.log(taskId);
       if(vm.uiState.leader) {
+        vm.uiState.addNewTask.successMsg = null;
+        vm.uiState.tasks.deleteError = null;
         ProjectDetailsService.removeTask(taskId).then(
           function () {
             //success callback
@@ -461,16 +500,25 @@
             //refreshTasksFn();
             console.log("neuspesno brisenje task");
             //vm.uiState.addNewTask.errorMsg = "Try again";
+            vm.uiState.tasks.deleteError = "Try later to delete the task!";
             var button = $(".removeTask");
-            button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-            button.prop('disabled',false);
+
+            setTimeout(function(){
+              button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
+              button.prop('disabled',true);
+              console.log("DISABLE DELETE TASK");
+            }, 300);
           }
         );
       }
       else{
         var button = $(".removeTask");
-        button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-        button.prop('disabled',true);
+        setTimeout(function(){
+          button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
+          button.prop('disabled',true);
+          console.log("DISABLE DELETE TASK");
+        }, 300);
+
       }
     }
 
@@ -479,8 +527,12 @@
       if(userId!=vm.USER_ID && !vm.uiState.leader){
         //disable delete button
         var button = $(".removeComment");
-        button.html('<i class="fa fa-times"></i>');
-        button.prop('disabled',true);
+        setTimeout(function(){
+          button.html('<i class="fa fa-times"></i>');
+          button.prop('disabled',true);
+          console.log("DISABLE DELETE COMMENT");
+        }, 300);
+
       }
       else{
         ProjectDetailsService.removeComment(commentId).then(
@@ -494,8 +546,11 @@
             //error callback
             vm.uiState.comments.errorMsg = "Try again later!";
             var button = $(".removeComment");
-            button.html('<i class="fa fa-times"></i>');
-            button.prop('disabled',false);
+            setTimeout(function(){
+              button.html('<i class="fa fa-times"></i>');
+              button.prop('disabled',true);
+              console.log("DISABLE DELETE COMMENT");
+            }, 300);
           }
 
         );
@@ -519,6 +574,7 @@
         var currTask = tasks[i];
 
         currTask.createdOn = dateMillisecondsToDate(currTask.createdOn);
+        currTask.completedOn = dateMillisecondsToDate(currTask.completedOn);
         currTask.deadline = dateMillisecondsToDate(currTask.deadline);
 
         if(currTask.state == 'NOT_STARTED'){
@@ -563,17 +619,57 @@
     }
 
     function dateMillisecondsToDate(milliseconds){
-      var d = new Date(milliseconds);
-      var month = parseInt(d.getMonth()) + 1;
-      var minutes = d.getMinutes();
-      if(minutes.toString().length == 1){
-        minutes = '0' + minutes;
+      console.log(milliseconds);
+      if(milliseconds != null) {
+        var d = new Date(milliseconds);
+        var month = parseInt(d.getMonth()) + 1;
+        var minutes = d.getMinutes();
+        if (minutes.toString().length == 1) {
+          minutes = '0' + minutes;
+        }
+        return d.getDate() + "." +
+          month + "." +
+          d.getFullYear() + " " +
+          d.getHours() + ":" +
+          minutes;
       }
-      return d.getDate() + "." +
-        month + "." +
-        d.getFullYear() + " " +
-        d.getHours() + ":" +
-        minutes;
+      else{
+        return "Not finished yet";
+      }
+
+    }
+
+    function projectParsing(project){
+
+      project.createdOnString = dateMillisecondsToDate(project.createdOn);
+      project.deadlineString = dateMillisecondsToDate(project.deadline);
+      project.completedOnString = dateMillisecondsToDate(project.completedOn);
+
+      if(project.state == 'CREATED'){
+        project.cssClass = 'label label-default';
+        project.stateString = 'CREATED';
+      }
+      else if(project.state == 'NOT_STARTED'){
+        project.cssClass = 'label label-info';
+        project.stateString = 'NOT STARTED';
+      }
+      else if(project.state == 'IN_PROGRESS'){
+        project.cssClass = 'label label-warning';
+        project.stateString = 'IN PROGRESS';
+      }
+      else if(project.state == 'UP_TO_DATE'){
+        project.cssClass = 'label label-primary';
+        project.stateString = 'UP TO DATE';
+      }
+      else if(project.state == 'FINISHED'){
+        project.cssClass = 'label label-success';
+        project.stateString = 'FINISHED';
+
+      }
+      else{
+        project.cssClass = 'label label-danger';
+        project.stateString = 'BREACH OF DEADLINE';
+      }
 
     }
 

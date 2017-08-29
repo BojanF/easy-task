@@ -1,5 +1,5 @@
 
-<script src="custom_js/administrating_projects.js"></script>
+
 <div class="container-fluid">
 
   <!-- Page Heading -->
@@ -37,6 +37,18 @@
       <div ng-show="vm.uiState.loadGif">
         <img src="pictures//loading.gif" style="width:20px; height:20px;">
       </div>
+
+      <div class="panel panel-success" ng-show="vm.uiState.successDelete">
+        <div class="panel-heading text-center text-success">
+          {{vm.uiState.successDelete}}
+        </div>
+      </div>
+      <div class="panel panel-danger" ng-show="vm.uiState.errorDelete">
+        <div class="panel-heading text-center text-danger">
+          {{vm.uiState.errorDelete}}
+        </div>
+      </div>
+
       <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table table-bordered table-striped">
         <thead>
         <tr>
@@ -44,25 +56,28 @@
           <!--<th st-sort="shortName">Short name</th>-->
           <th>Name</th>
           <th>Created on</th>
+          <th>Completed on</th>
           <th>Deadline</th>
           <th>Team</th>
           <th>State</th>
           <th>Action</th>
         </tr>
         <tr>
-          <th colspan="7"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+          <th colspan="7"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by project name..."> </th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="p in projects | orderBy:['name'] | filter:searchProfName">
           <td><a href="#/project-details/{{p.id}}">{{p.name}}</a></td>
           <td>{{p.createdOn}}</td>
+          <td>{{p.completedOn}}</td>
           <td>{{p.deadline}}</td>
-          <td><a href="#">{{p.team.name}}</a></td>
+          <td><a href="#/team-details/{{p.team.id}}">{{p.team.name}}</a></td>
           <td><span ng-class="p.cssClass"> {{p.state}}</span></td>
           <td>
             <button class="btn btn-danger btn-xs removeProject"
-                    ng-click="vm.removeProject(p.id)">
+                    confirm-click="vm.removeProject(p.id)"
+                    confirm-message="Are you sure?">
               <i class="fa fa-times"></i>&nbsp; Delete project
             </button>
           </td>
@@ -77,6 +92,9 @@
         </tr>
         </tfoot>
       </table>
+
+
+
       <div class="panel panel-info" ng-show="vm.uiState.showNoProjectsPanel">
         <div class="panel-heading text-center text-info">
           You don`t have projects for administrating!

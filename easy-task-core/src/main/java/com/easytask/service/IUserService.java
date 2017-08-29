@@ -46,7 +46,10 @@ public interface IUserService {
 
     List<TeamLeader> getTeamsInfoLeadByUser(Long leaderId);
 
+    List<TeamLeader> getTeamsInfoTeamsForUser(Long userId);
+
     List<Task> getUrgentTask(Long userId);
 
+    List<Team> getTeamsMemberOf(Long userId);
 
 }

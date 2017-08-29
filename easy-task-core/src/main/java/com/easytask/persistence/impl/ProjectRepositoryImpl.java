@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -151,6 +152,90 @@ public class ProjectRepositoryImpl implements IProjectRepository {
 //        );
 //        return entityManager.createQuery(cq).getResultList();
 //    }
+
+    @Transactional
+    public int deleteAllTasksForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Task> cq = cb.createCriteriaDelete(Task.class);
+        Root<Task> from= cq.from(Task.class);
+        cq.where(
+                cb.equal(
+                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).executeUpdate();
+    }
+
+    @Transactional
+    public int deleteAllCommentsForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Comment> cq = cb.createCriteriaDelete(Comment.class);
+        Root<Comment> from= cq.from(Comment.class);
+        cq.where(
+                cb.equal(
+                        from.get(Comment.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).executeUpdate();
+    }
+
+    @Transactional
+    public int deleteAllDocumentsForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Document> cq = cb.createCriteriaDelete(Document.class);
+        Root<Document> from= cq.from(Document.class);
+        cq.where(
+                cb.equal(
+                        from.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).executeUpdate();
+    }
+
+    //counters
+
+    public Integer getNumberOfCommentsForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Comment> from= cq.from(Comment.class);
+        cq.select(from.get(Comment.FIELDS.ID).as(Long.class)).where(
+                cb.equal(
+                        from.get(Comment.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).getResultList().size();
+    }
+
+    public Integer getNumberOfDocumentsForProject(Long projectId){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Document> root = cq.from(Document.class);
+        cq.select(root.get(Document.FIELDS.ID).as(Long.class))
+                .where(
+                        cb.equal(
+                                root.get(Document.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                                projectId
+                        )
+                );
+        return entityManager.createQuery(cq).getResultList().size();
+    }
+
+    public Integer getNumberOfTasksForProject(Long projectId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Task> from= cq.from(Task.class);
+        cq.select(from.get(Task.FIELDS.ID).as(Long.class)).where(
+                cb.equal(
+                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID),
+                        projectId
+                )
+        );
+        return entityManager.createQuery(cq).getResultList().size();
+    }
 
 
 }

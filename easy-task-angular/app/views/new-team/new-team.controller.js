@@ -34,9 +34,7 @@
       loadGif: true,
       successNewTeam: null,
       errorNewTeam: null,
-      saveButton: true,
       canSubmit: false
-
     };
     // vm.coworkers = [{name: 'aco'}, {name: 'fia'}];
 

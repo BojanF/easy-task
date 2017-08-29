@@ -1,6 +1,7 @@
 package com.easytask.persistence.impl;
 
 import com.easytask.model.jpa.Project;
+import com.easytask.model.jpa.ProjectsPerTeam;
 import com.easytask.model.jpa.Team;
 import com.easytask.model.jpa.User;
 import com.easytask.persistence.ITeamRepository;
@@ -60,6 +61,7 @@ public class TeamRepositoryImpl implements ITeamRepository {
 
     @Transactional
     public void deleteById(Long id) {
+
         entityManager.remove(findById(id));
     }
 
@@ -96,5 +98,15 @@ public class TeamRepositoryImpl implements ITeamRepository {
                 )
         );
         return entityManager.createQuery(cq).getResultList();
+    }
+
+    public List<Long> teamStats(Long teamId){
+        ProjectsPerTeam ppt = entityManager
+                              .createQuery("SELECT ppt FROM ProjectsPerTeam ppt WHERE ppt.id=:id", ProjectsPerTeam.class)
+                              .setParameter("id", teamId).getSingleResult();
+
+        return ppt.getStats();
+
+
     }
 }
