@@ -39,9 +39,9 @@ public class ProjectController implements ApplicationContextAware {
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Project insertProject(@Valid @RequestBody Project project) {
-        int x = 3;
-        project.setState(ProjectState.CREATED);
-        x = 4;
+
+//        project.setState(ProjectState.CREATED);
+
         return projectService.insert(project);
     }
 
@@ -73,5 +73,11 @@ public class ProjectController implements ApplicationContextAware {
     public void deleteProject(@PathVariable Long id){
 
         projectService.deleteById(id);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Project update(@Valid @RequestBody Project project){
+        int x = 0;
+        return projectService.update(project);
     }
 }

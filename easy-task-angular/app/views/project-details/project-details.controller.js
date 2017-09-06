@@ -14,9 +14,7 @@
   /* @ngInject */
   function ProjectDetailsController($log, $location, ProjectDetailsService,$scope,$stateParams) {
     var vm = this;
-    var imageFormats=["png","jpg","jpeg"];
-    var textFormats=["txt","c","java"];
-    var zipFormats=["zip","rar","7z"];
+
     //variables declaration
     vm.title = 'project-details';
     vm.PROJECT_ID = 0;
@@ -25,6 +23,12 @@
     vm.user = {};
     vm.file={};
     vm.project = {};
+    vm.projectUpdate = {
+      currState: {
+        name: null,
+        enum: null
+      }
+    };
     vm.c3DataTest = {
       donuts: {
         points: {
@@ -62,7 +66,7 @@
       leader: false, //addNewButton
 
       addNewTask:{
-        // button: false,
+        button: false,
         users: false,
         successMsg: null,
         errorMsg: null
@@ -83,7 +87,8 @@
         showDocuments: false,
         showNoDocumentsPanel: false,
         loaded: false,
-        showErrorPanel: false
+        showErrorPanel: false,
+        deleteErrorPanel: false
       },
       comments:{
         loadGif: false,
@@ -96,15 +101,43 @@
         canComment: false
       },
       showStats: false,
+      showInfo: false,
       deleteError:{
         task: null,
         document: null
+      },
+      update:{
+        errorUpdateProject: null,
+        successUpdateProject: null,
+        updatingGif: false,
+        completedOnPickerDisabled: true
       }
     };
 
-    // vm.inputDates = null;
+    vm.inputDates = null;
 
-    vm.datesRestriction = {};
+    vm.datesRestrictions = {
+      newTask: {
+        createdOn: {
+          min: null,
+          max: null
+        },
+        deadline: {
+          min: null,
+          max: null
+        }
+      },
+      updateProject: {
+        completedOn: {
+          min: null,
+          max: null
+        },
+        deadline: {
+          min: null,
+          max: null
+        }
+      }
+    };
     //functions declaration
 
     vm.getDocuments = getDocumentsFn;
@@ -124,6 +157,8 @@
     vm.removeTask = removeTaskFn;
     vm.removeDocument = removeDocumentFn;
     vm.removeComment = removeCommentFn;
+
+    vm.updateProject = updateProjectFn;
 
 
     //functions invocation
@@ -158,22 +193,42 @@
           //success callback
 
           vm.project = data;
+          vm.uiState.showInfo = true;
+
 
           if(vm.project.id != undefined){
             console.log('loadiraj');
+            console.log(vm.project);
             getTasksFn();
 
-            projectParsing(vm.project);
+            vm.projectUpdate = copyProject(vm.project);
+            vm.projectUpdate = projectUpdateParsing(vm.projectUpdate);
+
+            vm.datesRestrictions.updateProject.completedOn.max = moment(new Date(vm.project.deadline));
+
+            console.log(vm.projectUpdate);
+
+            vm.project = projectParsing(vm.project);
+            // vm.projectUpdate = projectParsing(vm.projectUpdate);
 
             //dateRestriction start
-            vm.datesRestriction.createdOn = moment(new Date(vm.project.createdOn));
-            vm.datesRestriction.deadline = moment(new Date(vm.project.deadline));
+            var nowDate = new Date();
+            var projectCreatedOnDate = new Date(vm.project.createdOn);
+            if(nowDate > projectCreatedOnDate)
+              vm.datesRestrictions.newTask.createdOn.min = moment(nowDate);
+            else
+              vm.datesRestrictions.newTask.createdOn.min = moment(projectCreatedOnDate);
+            vm.datesRestrictions.newTask.createdOn.max = moment(new Date(vm.project.deadline));
+            vm.datesRestrictions.newTask.deadline.max = vm.datesRestrictions.newTask.createdOn.max;
             //dateRestriction end
 
             if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
               vm.uiState.leader = true;
 
-              console.log(vm.project.team.users.length);
+              if(vm.project.state!='BREACH_OF_DEADLINE' && vm.project.state!='FINISHED')
+                vm.uiState.addNewTask.button = true;
+
+
 
               //ovoj if vajda, 99%, e vishok :)
               if(vm.project.team.users.length > 0) {
@@ -190,7 +245,7 @@
         },
         function(){
           //error callback
-
+          vm.uiState.showInfo = false;
           vm.uiState.tasks.loadGif = false;
           vm.uiState.tasks.showTasks = false;
           vm.uiState.tasks.showNoTasksPanel = false;
@@ -199,8 +254,8 @@
     }
 
     function getTasksFn(){
-      vm.uiState.addNewTask.successMsg = null;
-      vm.uiState.addNewTask.errorMsg = null;
+      // vm.uiState.addNewTask.successMsg = null;
+      // vm.uiState.addNewTask.errorMsg = null;
 
       ProjectDetailsService.getTasks(vm.PROJECT_ID).then(successTasks, errorTasks);
 
@@ -216,15 +271,21 @@
           vm.uiState.showStats = true;
 
           vm.project.tasksNum = vm.entitiesData.tasks.length;
+
+          vm.entitiesData.tasks[0].project;
+
         }
         else{
           vm.uiState.tasks.showTasks = false;
           vm.uiState.tasks.showNoTasksPanel = true;
           vm.project.tasksNum = 0;
 
-          vm.project.state = 'CREATED';
-          vm.project.cssClass = 'label label-default';
-          vm.project.stateString = 'CREATED';
+          if(vm.project.state == 'BREACH_OF_DEADLINE') {
+            vm.projectUpdate.eligibleProjectStates = [{'name': 'Created', 'enum': 'CREATED'}];
+
+          }
+          vm.datesRestrictions.updateProject.deadline.min = moment(new Date()).add(1, 'd');
+
         }
       }
 
@@ -255,7 +316,7 @@
         vm.uiState.documents.loaded = true;
         vm.uiState.documents.loadGif = true;
         console.log("fetch documents");
-
+        vm.uiState.documents.deleteErrorPanel = false;
         ProjectDetailsService.getDocuments(vm.PROJECT_ID).then(function (data) {
 
           vm.entitiesData.documents = data;
@@ -327,29 +388,37 @@
       // console.log(vm.inputDates);
       vm.newEntities.task.project = vm.project;
       vm.newEntities.task.leader = vm.project.team.leader;
-      // vm.newEntities.task.createdOn =vm.inputDates.createdOn.toDate().getTime();
-      // vm.newEntities.task.deadline = vm.inputDates.deadline.toDate().getTime();
-      vm.newEntities.task.createdOn =vm.newEntities.task.createdOn.toDate().getTime();
-      vm.newEntities.task.deadline = vm.newEntities.task.deadline.toDate().getTime();
+      vm.newEntities.task.createdOn = vm.inputDates.createdOn.toDate().getTime();
+      vm.newEntities.task.deadline = vm.inputDates.deadline.toDate().getTime();
+      // vm.newEntities.task.createdOn =vm.newEntities.task.createdOn.toDate().getTime();
+      // vm.newEntities.task.deadline = vm.newEntities.task.deadline.toDate().getTime();
       vm.newEntities.task.state = 'NOT_STARTED';
 
       vm.uiState.addNewTask.successMsg = null;
       vm.uiState.addNewTask.errorMsg = null;
 
+      $("#taskSaving").show();
       console.log(vm.newEntities.task);
       ProjectDetailsService.insertNewTask(vm.newEntities.task).then(successCallbackNewTask, errorCallbackNewTask);
 
       function successCallbackNewTask(data) {
         console.log("SAVEEEEE");
         $("#modalTask").modal('hide');
+        $("#taskSaving").hide();
         vm.project = data.project;
         projectParsing(vm.project);
         clearNewTaskFn();
         refreshTasksFn();
+
+        // vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false, deleteError: null};
+        // //vm.uiState.addNewTask.successMsg = null;
+        // getProjectFn();
+
         vm.uiState.addNewTask.successMsg = "Successfully created \"" + data.name + "\" task!"
       }
 
       function errorCallbackNewTask() {
+        $("#taskSaving").hide();
         vm.uiState.addNewTask.errorMsg = "Try again later";
       }
     }
@@ -380,7 +449,7 @@
 
     function clearNewTaskFn(){
       vm.newEntities.task = null;
-      // vm.inputDates = null;
+      vm.inputDates = null;
       vm.uiState.addNewTask.errorMsg = null;
     }
 
@@ -436,8 +505,9 @@
       console.log("refresh tasks");
       vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false, deleteError: null};
       vm.uiState.addNewTask.successMsg = null;
-
-      getTasksFn();
+      vm.uiState.documents.deleteErrorPanel = false;
+      // getTasksFn();
+      getProjectFn()
     }
 
     function refreshDocumentsFn(){
@@ -447,15 +517,14 @@
     }
 
     function removeDocumentFn(documentId, userId){
-
+      vm.uiState.addNewDocument.successMsg = null;
       if(userId!=vm.USER_ID && !vm.uiState.leader){
-          //disable delete button
+        //disable delete button
 
         var button = $(".removeDocument");
         setTimeout(function(){
           button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
-          button.prop('disabled', true);
-          console.log("DISABLE DELETE DOC");
+          button.prop('disabled', false);
         }, 300);
 
 
@@ -465,17 +534,18 @@
 
           function(){
             //success callback
-            vm.uiState.addNewDocument.successMsg = "File removed";
+            vm.uiState.addNewDocument.successMsg = "File deleted successfully";
+            vm.uiState.documents.deleteErrorPanel = false;
             refreshDocumentsFn();
           },
           function () {
             //error callback
             console.log("meeeeeeeh");
+            vm.uiState.documents.deleteErrorPanel = true;
             var button = $(".removeDocument");
             setTimeout(function(){
               button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
-              button.prop('disabled', true);
-              console.log("DISABLE DELETE DOC");
+              button.prop('disabled', false);
             }, 300);
           }
         );
@@ -483,9 +553,9 @@
 
     }
 
-    function removeTaskFn(taskId){
+    function removeTaskFn(taskId, disabledDeleteButton){
       console.log(taskId);
-      if(vm.uiState.leader) {
+      if(!disabledDeleteButton) {
         vm.uiState.addNewTask.successMsg = null;
         vm.uiState.tasks.deleteError = null;
         ProjectDetailsService.removeTask(taskId).then(
@@ -493,11 +563,16 @@
             //success callback
 
             refreshTasksFn();
+            //dva sledni reda od refresh task za paneli drn-drn
+            // vm.uiState.tasks = {loadGif:true, showTasks:false, showNoTasksPanel:false, showErrorPanel: false, deleteError: null};
+            // // vm.uiState.addNewTask.successMsg = null;
+            // getProjectFn();
+            console.log("PRED");
             vm.uiState.addNewTask.successMsg = "Successfully deleted task!";
           },
           function () {
             //error callback
-            //refreshTasksFn();
+
             console.log("neuspesno brisenje task");
             //vm.uiState.addNewTask.errorMsg = "Try again";
             vm.uiState.tasks.deleteError = "Try later to delete the task!";
@@ -505,8 +580,7 @@
 
             setTimeout(function(){
               button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-              button.prop('disabled',true);
-              console.log("DISABLE DELETE TASK");
+              button.prop('disabled',false);
             }, 300);
           }
         );
@@ -515,22 +589,21 @@
         var button = $(".removeTask");
         setTimeout(function(){
           button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-          button.prop('disabled',true);
-          console.log("DISABLE DELETE TASK");
+          button.prop('disabled',false);
         }, 300);
-
       }
     }
 
     function removeCommentFn(commentId, userId){
+      vm.uiState.comments.successMsg = null;
+      vm.uiState.comments.errorMsg = null;
 
       if(userId!=vm.USER_ID && !vm.uiState.leader){
         //disable delete button
         var button = $(".removeComment");
         setTimeout(function(){
           button.html('<i class="fa fa-times"></i>');
-          button.prop('disabled',true);
-          console.log("DISABLE DELETE COMMENT");
+          button.prop('disabled',false);
         }, 300);
 
       }
@@ -548,13 +621,85 @@
             var button = $(".removeComment");
             setTimeout(function(){
               button.html('<i class="fa fa-times"></i>');
-              button.prop('disabled',true);
-              console.log("DISABLE DELETE COMMENT");
+              button.prop('disabled',false);
             }, 300);
           }
 
         );
       }
+    }
+
+    function updateProjectFn(){
+
+      vm.uiState.update.updatingGif = true;
+      vm.uiState.update.errorUpdateProject = null;
+      vm.uiState.update.successUpdateProject = null;
+
+      vm.projectUpdate.state = vm.projectUpdate.currState.enum;
+
+
+      vm.projectUpdate.deadline = vm.projectUpdate.deadline.toDate().getTime();
+
+      if(vm.projectUpdate.state != 'FINISHED')
+        vm.projectUpdate.completedOn = null;
+      else vm.projectUpdate.completedOn = vm.projectUpdate.completedOn.toDate().getTime();
+
+
+
+      ProjectDetailsService.updateProject(vm.projectUpdate).then(
+        function(data){
+          //success callback
+          vm.project = data;
+          vm.uiState.showInfo = true;
+
+          vm.projectUpdate = copyProject(vm.project);
+          vm.projectUpdate = projectUpdateParsing(vm.projectUpdate);
+
+          vm.datesRestrictions.updateProject.completedOn.max = moment(new Date(vm.project.deadline));
+
+          console.log(vm.projectUpdate);
+
+          vm.project = projectParsing(vm.project);
+
+          if(vm.project.state!='BREACH_OF_DEADLINE' && vm.project.state!='FINISHED')
+            vm.uiState.addNewTask.button = true;
+          else{
+            vm.uiState.addNewTask.button = false;
+          }
+
+          //counters for project info start
+          vm.project.tasksNum = vm.entitiesData.tasks.length;
+
+          if(vm.uiState.comments.loaded)
+            vm.project.commentsNum = vm.entitiesData.comments.length;
+
+          if(vm.uiState.documents.loaded)
+            vm.project.documentsNum = vm.entitiesData.documents.length;
+          //counter for project info end
+
+          //dateRestriction start
+          var nowDate = new Date();
+          var projectCreatedOnDate = new Date(vm.project.createdOn);
+          if(nowDate > projectCreatedOnDate)
+            vm.datesRestrictions.newTask.createdOn.min = moment(nowDate);
+          else
+            vm.datesRestrictions.newTask.createdOn.min = moment(projectCreatedOnDate);
+          vm.datesRestrictions.newTask.createdOn.max = moment(new Date(vm.project.deadline));
+          vm.datesRestrictions.newTask.deadline.max = vm.datesRestrictions.newTask.createdOn.max;
+          //dateRestriction end
+
+          vm.uiState.update.updatingGif = false;
+          vm.uiState.update.successUpdateProject = "Project with name \"" + data.name + "\" was successfully updated!";
+
+        },
+        function(){
+          //error callback
+          vm.uiState.showInfo = false;
+          vm.uiState.update.updatingGif = false;
+          vm.uiState.update.errorUpdateProject = "Project was not successfully updated" +
+            "! Try again later!";
+        }
+      );
     }
 
     //helper functions
@@ -570,40 +715,95 @@
       var finished = 0;
       var breach  = 0;
 
+
+
+      var maxTaskDeadlineDate = null;
+      var maxTaskCompletedOnDate = null;
+
       for(var i=0 ; i<size ; i++){
         var currTask = tasks[i];
+        if(i == 0) {
+
+
+          maxTaskDeadlineDate = new Date(currTask.deadline);
+
+          maxTaskCompletedOnDate = new Date(currTask.completedOn);
+
+        }
+        else {
+          var currTaskDeadline = new Date(currTask.deadline);
+          var currTaskCompletedOn = new Date(currTask.completedOn);
+
+          if(currTaskDeadline > maxTaskDeadlineDate)
+            maxTaskDeadlineDate = currTaskDeadline;
+
+          if(currTaskCompletedOn > maxTaskCompletedOnDate)
+            maxTaskCompletedOnDate = currTaskDeadline;
+
+        }
 
         currTask.createdOn = dateMillisecondsToDate(currTask.createdOn);
         currTask.completedOn = dateMillisecondsToDate(currTask.completedOn);
         currTask.deadline = dateMillisecondsToDate(currTask.deadline);
 
+        if(currTask.state != 'FINISHED' && vm.uiState.leader){
+          currTask.disabledDeleteButton = false;
+        }
+        else{
+          currTask.disabledDeleteButton = true;
+        }
+
         if(currTask.state == 'NOT_STARTED'){
           currTask.cssClass = 'label label-info';
-          currTask.state = 'NOT STARTED';
+          currTask.stateString = 'NOT STARTED';
           notStarted++;
         }
         else if(currTask.state == 'IN_PROGRESS'){
           currTask.cssClass = 'label label-warning';
-          currTask.state = 'IN PROGRESS';
+          currTask.stateString = 'IN PROGRESS';
           inProgress++;
         }
         else if(currTask.state == 'FINISHED'){
           currTask.cssClass = 'label label-success';
+          currTask.stateString = 'FINISHED';
           finished++;
         }
         else{
           currTask.cssClass = 'label label-danger';
-          currTask.state = 'BREACH OF DEADLINE';
+          currTask.stateString = 'BREACH OF DEADLINE';
           breach++;
         }
 
         tasks[i] = currTask;
       }
 
+      if(vm.project.state == 'BREACH_OF_DEADLINE') {
+        if (finished == size)
+          vm.projectUpdate.eligibleProjectStates = [{'name': 'Up to date', 'enum': 'UP_TO_DATE'}];
+        else vm.projectUpdate.eligibleProjectStates = [{'name': 'In progress', 'enum': 'IN_PROGRESS'}];
+      }
+
       vm.c3DataTest.donuts.points.tasks[0]["Not started"] = notStarted;
       vm.c3DataTest.donuts.points.tasks[1]["In progress"] = inProgress;
       vm.c3DataTest.donuts.points.tasks[2]["Finish"] = finished;
       vm.c3DataTest.donuts.points.tasks[3]["Deadline braech"] = breach;
+      console.log("STATE: "+tasks[0].project.state);
+
+      if(tasks[0].project.state != 'BREACH_OF_DEADLINE') {
+        console.log("DIKSI 1");
+        if(new Date() < maxTaskDeadlineDate )
+          vm.datesRestrictions.updateProject.deadline.min = moment(new Date(maxTaskDeadlineDate));
+        else vm.datesRestrictions.updateProject.deadline.min = moment(new Date());
+      }
+      else {
+        console.log("DIKSI");
+        vm.datesRestrictions.updateProject.deadline.min = moment(new Date()).add(1, 'd');
+        // vm.datesRestrictions.updateProject.deadline.min = moment(new Date(tasks[0].project.deadline)).add(1, 'd');
+
+      }
+
+      if(maxTaskCompletedOnDate != null)
+        vm.datesRestrictions.updateProject.completedOn.min = moment(new Date(maxTaskCompletedOnDate));
 
     }
 
@@ -619,7 +819,6 @@
     }
 
     function dateMillisecondsToDate(milliseconds){
-      console.log(milliseconds);
       if(milliseconds != null) {
         var d = new Date(milliseconds);
         var month = parseInt(d.getMonth()) + 1;
@@ -648,6 +847,7 @@
       if(project.state == 'CREATED'){
         project.cssClass = 'label label-default';
         project.stateString = 'CREATED';
+        // vm.eligibleProjectStates = [{'name':'In progress', 'enum': 'IN_PROGRESS'}];
       }
       else if(project.state == 'NOT_STARTED'){
         project.cssClass = 'label label-info';
@@ -660,21 +860,91 @@
       else if(project.state == 'UP_TO_DATE'){
         project.cssClass = 'label label-primary';
         project.stateString = 'UP TO DATE';
+        // vm.eligibleProjectStates = [{'name':'Up to date', 'enum': 'UP_TO_DATE'}, {'name':'Finished', 'enum': 'FINISHED'}];
       }
       else if(project.state == 'FINISHED'){
         project.cssClass = 'label label-success';
         project.stateString = 'FINISHED';
+        // vm.eligibleProjectStates = [{'name':'Up to date', 'enum': 'UP_TO_DATE'}, {'name':'Finished', 'enum': 'FINISHED'}];
 
       }
       else{
         project.cssClass = 'label label-danger';
         project.stateString = 'BREACH OF DEADLINE';
+
+
+
       }
+
+      return project;
 
     }
 
+    function projectUpdateParsing(project){
 
+      // project.completedOn = moment(new Date(project.completedOn));
+      project.deadline = moment(new Date(project.deadline));
 
+      if(project.state == 'CREATED'){
+        // project.currState = {'name':'Created', 'enum': 'CREATED'};
+        project.eligibleProjectStates = [{'name':'Created', 'enum': 'CREATED'}];
+      }
+      else if(project.state == 'NOT_STARTED'){
+        // project.currState = {'name':'Not started', 'enum': 'NOT_STARTED'};
+        project.eligibleProjectStates = [{'name':'Not started', 'enum': 'NOT_STARTED'}];
+      }
+      else if(project.state == 'IN_PROGRESS'){
+        //project.currState = {'name':'In progress', 'enum': 'IN_PROGRESS'};
+        project.eligibleProjectStates = [{'name':'In progress', 'enum': 'IN_PROGRESS'}];
+      }
+      else if(project.state == 'UP_TO_DATE'){
+        project.eligibleProjectStates = [{'name':'Up to date', 'enum': 'UP_TO_DATE'}, {'name':'Finished', 'enum': 'FINISHED'}];
+        project.currState = {'name':'Up to date', 'enum': 'UP_TO_DATE'};
+      }
+      else if(project.state == 'FINISHED'){
+        project.eligibleProjectStates = [{'name':'Up to date', 'enum': 'UP_TO_DATE'}];
+        // project.currState = {'name':'Finished', 'enum': 'FINISHED'};
+        // vm.datesRestrictions.updateProject.deadline.min = moment(new Date(project.deadline)).add(1, 'd');
+        project.deadline = null;
+      }
+      else{
+        // project.eligibleProjectStates = [{'name':'In progress', 'enum': 'IN_PROGRESS'}];
+
+        //listata eligibleProjectStates se inicijalizira vo threeInOneFunction vednash posle for ciklusot
+        project.deadline = null;
+      }
+
+      return project;
+
+    }
+
+    function copyProject(project){
+      var projectUpdate = {};
+      projectUpdate.id = project.id;
+      projectUpdate.name = project.name;
+      projectUpdate.description = project.description;
+      projectUpdate.createdOn = project.createdOn;
+      projectUpdate.completedOn = project.completedOn;
+      projectUpdate.deadline = project.deadline;
+      projectUpdate.state = project.state;
+      projectUpdate.team = project.team;
+
+      return projectUpdate;
+    }
+
+    $scope.$watch('vm.inputDates.createdOn', function(){
+      vm.datesRestrictions.newTask.deadline.min = moment(vm.inputDates.createdOn).add(1, 'h');
+    }, true)
+
+    $scope.$watch('vm.projectUpdate.currState', function(){
+      console.log("DADADADADA");
+      if(vm.projectUpdate.currState.enum == 'FINISHED'){
+        vm.uiState.update.completedOnPickerDisabled = false;
+      }
+      else{
+        vm.uiState.update.completedOnPickerDisabled = true;
+      }
+    }, true)
   }
 
 

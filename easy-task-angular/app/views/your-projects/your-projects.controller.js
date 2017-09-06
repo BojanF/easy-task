@@ -95,7 +95,7 @@
           currProject.cssClass = 'label label-success';
         }
         else{
-          currProject.cssClass == 'label label-danger';
+          currProject.cssClass = 'label label-danger';
           currProject.state = 'BREACH OF DEADLINE';
         }
 

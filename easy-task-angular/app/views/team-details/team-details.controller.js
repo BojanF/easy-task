@@ -24,6 +24,8 @@
       projects: []
     };
 
+    vm.teamForUpdate = {};
+
     vm.uiState = {
       showPage: true,
       leader: false,
@@ -112,6 +114,9 @@
 
           if(vm.fetchedData.team.id != undefined){
             vm.uiState.showPage = true;
+            // console.log(vm.fetchedData.team.id);
+            vm.teamForUpdate = copyTeam(vm.fetchedData.team);
+
             if(vm.fetchedData.team.leader.id == vm.USER_ID)
               vm.uiState.leader = true;
             getTeamProjects();
@@ -235,16 +240,21 @@
 
 
         var teamMembersIds = [];
-        for(var i=0 ; i<vm.fetchedData.team.users.length ; i++)
-          teamMembersIds.push(vm.fetchedData.team.users[i].id);
+        for(var i=0 ; i<vm.teamForUpdate.users.length ; i++)
+          teamMembersIds.push(vm.teamForUpdate.users[i].id);
+
         if(!teamMembersIds.includes(vm.fetchedData.team.leader.user.id)){
-          vm.fetchedData.team.users.push(vm.fetchedData.team.leader.user);
+          vm.teamForUpdate.users.push(vm.fetchedData.team.leader.user);
         }
 
-        TeamDetailsService.updateTeam(vm.fetchedData.team).then(
+        TeamDetailsService.updateTeam(vm.teamForUpdate).then(
 
           function (data) {
-
+            vm.fetchedData.team = data;
+            vm.teamForUpdate = copyTeam(vm.fetchedData.team);
+            if(vm.uiState.projects.showProjects)
+              vm.fetchedData.team.projectNum = vm.fetchedData.projects.length;
+            else vm.fetchedData.team.projectNum = 'error';
             vm.uiState.update.updatingTeam = false;
             vm.uiState.update.successUpdate = "Successfully updated \"" + data.name + "\" team";
           },
@@ -320,6 +330,18 @@
       else{
         return "Not finished yet";
       }
+    }
+
+    function copyTeam(team){
+      var copy = {};
+
+      copy.id = team.id;
+      copy.id = team.id;
+      copy.name = team.name;
+      copy.leader = team.leader;
+      copy.users = team.users;
+
+      return copy;
     }
   }
 

@@ -23,3 +23,11 @@ td, th{
 .nav-tabs>li>a{
   cursor: pointer;
 }
+
+hr {
+  border: none;
+  height: 1px;
+  /* Set the hr color */
+  margin:0;
+  background-color: #333; /* Modern Browsers */
+}

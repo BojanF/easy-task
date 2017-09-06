@@ -1,9 +1,11 @@
 package com.easytask.persistence.impl;
 
+import com.easytask.model.enums.ProjectState;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
 import com.easytask.persistence.IProjectRepository;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -235,6 +237,38 @@ public class ProjectRepositoryImpl implements IProjectRepository {
                 )
         );
         return entityManager.createQuery(cq).getResultList().size();
+    }
+
+    public List<Project> getBreachedProjects(DateTime now){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> cq = cb.createQuery(Project.class);
+        Root<Project> from = cq.from(Project.class);
+
+        cq.select(from).where(
+                cb.or(
+                    cb.equal(from.get(Project.FIELDS.STATE), ProjectState.CREATED),
+                    cb.equal(from.get(Project.FIELDS.STATE), ProjectState.NOT_STARTED),
+                    cb.equal(from.get(Project.FIELDS.STATE), ProjectState.IN_PROGRESS)
+                ),
+                cb.lessThan(from.get(Project.FIELDS.DEADLINE).as(DateTime.class), now)
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    public List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Project> cq = cb.createQuery(Project.class);
+        Root<Project> from = cq.from(Project.class);
+
+        cq.select(from).where(
+
+                cb.equal(from.get(Project.FIELDS.STATE), ProjectState.UP_TO_DATE),
+                cb.lessThan(from.get(Project.FIELDS.DEADLINE).as(DateTime.class), now)
+
+        );
+
+        return entityManager.createQuery(cq).getResultList();
     }
 
 

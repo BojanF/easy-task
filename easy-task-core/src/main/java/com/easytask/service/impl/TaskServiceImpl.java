@@ -41,11 +41,10 @@ public class TaskServiceImpl implements ITaskService {
         ProjectState currentState = p.getState();
 
         if(currentState == ProjectState.CREATED){
-            p.setState(ProjectState.NOT_STARTED);
-            //projectRepository.update(p);
+            p.setState(ProjectState.NOT_STARTED); //tested
         }
-        else if (currentState==ProjectState.FINISHED || currentState==ProjectState.UP_TO_DATE) {
-            p.setState(ProjectState.IN_PROGRESS);
+        else if (currentState==ProjectState.UP_TO_DATE) {
+            p.setState(ProjectState.IN_PROGRESS); //tested
         }
 
         if(currentState != p.getState())
@@ -61,7 +60,7 @@ public class TaskServiceImpl implements ITaskService {
         if (old != null) {
             task = taskRepository.update(task);
 
-            projectStateManagement(task);
+            projectStateManagementAfterUpdate(task);
 
         }
 
@@ -78,24 +77,32 @@ public class TaskServiceImpl implements ITaskService {
 
             TasksByProject tasksByProject = projectRepository.getTasksStatesByProject(p.getId());
             Long totalTaskNumber = tasksByProject.getTotal();
-
+            int x = 0;
             if(totalTaskNumber.equals(0l)){
-                p.setState(ProjectState.CREATED);
+                if(DateTime.now().compareTo(p.getDeadline())<=0) //tested
+                    p.setState(ProjectState.CREATED);
+                else p.setState(ProjectState.BREACH_OF_DEADLINE); //tested
             }
             else if(tasksByProject.getNotStarted().equals(totalTaskNumber)){
-                p.setState(ProjectState.NOT_STARTED);
+                p.setState(ProjectState.NOT_STARTED); //tested
             }
             else if(tasksByProject.getFinished().equals(totalTaskNumber)){
-
+//                p.setState(ProjectState.UP_TO_DATE);
                 if(DateTime.now().compareTo(p.getDeadline())<=0)
                     p.setState(ProjectState.UP_TO_DATE);
-                else //if(DateTime.now().compareTo(p.getDeadline())>0)
-                    p.setState(ProjectState.FINISHED);
+
+//                else if(DateTime.now().compareTo(p.getDeadline())>0 && p.getState()!=ProjectState.BREACH_OF_DEADLINE)
+//                    p.setState(ProjectState.FINISHED);
+                else{
+                    p.setState(ProjectState.BREACH_OF_DEADLINE);
+                }
             }
             else if(tasksByProject.getBreach().equals(totalTaskNumber)){
-                p.setState(ProjectState.BREACH_OF_DEADLINE);
+                if(DateTime.now().compareTo(p.getDeadline())<=0)
+                    p.setState(ProjectState.IN_PROGRESS); //tested
+                else p.setState(ProjectState.BREACH_OF_DEADLINE); //tested
             }
-            else p.setState(ProjectState.IN_PROGRESS);
+            else p.setState(ProjectState.IN_PROGRESS); //tested
 
             if(currentState != p.getState())
                 projectRepository.update(p);
@@ -114,7 +121,7 @@ public class TaskServiceImpl implements ITaskService {
         return taskRepository.getDeadlineBreachedTasks(now);
     };
 
-    private void projectStateManagement(Task task){
+    private void projectStateManagementAfterUpdate(Task task){
         Project p = task.getProject();
         ProjectState currentState = p.getState();
 
@@ -122,13 +129,13 @@ public class TaskServiceImpl implements ITaskService {
 
         if(task.getState()==TaskState.NOT_STARTED ){
             if( tasksByProject.getNotStarted().equals(tasksByProject.getTotal()))
-                p.setState(ProjectState.NOT_STARTED);
+                p.setState(ProjectState.NOT_STARTED); //tested
             else{
                 p.setState(ProjectState.IN_PROGRESS);
             }
         }
         else if(task.getState() == TaskState.IN_PROGRESS){
-            p.setState(ProjectState.IN_PROGRESS);
+            p.setState(ProjectState.IN_PROGRESS); //tested
         }
         else if(task.getState() == TaskState.FINISHED){
             if(!tasksByProject.getFinished().equals(tasksByProject.getTotal())){
@@ -138,16 +145,16 @@ public class TaskServiceImpl implements ITaskService {
                 p.setState(ProjectState.UP_TO_DATE);
             }
             else if(tasksByProject.getFinished().equals(tasksByProject.getTotal()) && DateTime.now().compareTo(p.getDeadline())>0){
-                p.setState(ProjectState.FINISHED);
+                p.setState(ProjectState.FINISHED); //??????????????
             }
         }
         else{
-            if(tasksByProject.getBreach().equals(tasksByProject.getTotal()) && DateTime.now().compareTo(p.getDeadline())>0){
+            if(/*tasksByProject.getBreach().equals(tasksByProject.getTotal()) &&*/ DateTime.now().compareTo(p.getDeadline())>0){
                 //tested
-                p.setState(ProjectState.BREACH_OF_DEADLINE);
+                p.setState(ProjectState.BREACH_OF_DEADLINE);//tested
             }
             else{
-                p.setState(ProjectState.IN_PROGRESS);
+                p.setState(ProjectState.IN_PROGRESS);//tested
             }
         }
 

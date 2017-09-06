@@ -170,6 +170,7 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     public List<Task> getTasksForUserByState(Long userId, TaskState state){
+        //only for active projects
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Task> cq = cb.createQuery(Task.class);
         Root<Task> from = cq.from(Task.class);
@@ -178,6 +179,12 @@ public class UserRepositoryImpl implements IUserRepository {
                 cb.equal(
                         join.get(User.FIELDS.ID),
                         userId
+                ),
+                cb.or(
+                        cb.equal(from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.STATE), ProjectState.NOT_STARTED),
+                        cb.equal(from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.STATE), ProjectState.IN_PROGRESS),
+                        cb.equal(from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.STATE), ProjectState.UP_TO_DATE),
+                        cb.equal(from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.STATE), ProjectState.BREACH_OF_DEADLINE)
                 ),
                 cb.equal(from.get(Task.FIELDS.STATE),
                         state

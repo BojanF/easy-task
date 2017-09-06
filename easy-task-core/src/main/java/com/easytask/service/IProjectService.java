@@ -3,6 +3,7 @@ package com.easytask.service;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -43,4 +44,7 @@ public interface IProjectService {
 
     int deleteAllDocumentsForProject(Long projectId);
 
+    List<Project> getBreachedProjects(DateTime now);
+
+    List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now);
 }

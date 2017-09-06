@@ -13,8 +13,6 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">
-        <!--{{vm.title}} <small>dashboard</small>-->
-        <!--Task name-->
         {{vm.task.name}}
       </h1>
       <ol class="breadcrumb">
@@ -34,7 +32,7 @@
 
   <ul ng-show="vm.uiState.showUpdate" class="nav nav-tabs">
     <li class="active">
-      <a id="details" data-toggle="tab"><i class="fa fa-fw fa-handshake-o"></i>Details</a>
+      <a id="details" ng-click="vm.taskDetails()" data-toggle="tab"><i class="fa fa-fw fa-handshake-o"></i>Details</a>
     </li>
     <li>
       <a id="update" data-toggle="tab"><i class="fa fa-fw fa-pencil-square"></i>Update</a>
@@ -48,6 +46,37 @@
   <div class="tab-content clearfixtab-pane">
 
     <div class="tab-pane active" id="details-tab">
+
+      <div class="panel panel-default" >
+        <!--ng-show="vm.uiState.changeStateOnly"-->
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-fw fa-pencil-square"></i>Update state</h3>
+        </div>
+        <div class="panel-body">
+          <form id="changeState" name="changeStateForm" ng-submit="vm.changeState()">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-offset-3 col-md-3">
+                  <!--<label> Change state </label>-->
+                  <single-select model="vm.updatedTaskState"
+                                 entities="vm.states"
+                                 required="true"
+                                 placeholder="Select state">
+                  </single-select>
+                </div>
+                <div class="col-md-3">
+                  <!--<label>&nbsp;</label>-->
+                  <button class="btn btn-primary btn btn-block" form="changeState" ng-disabled="changeStateForm.$invalid" type="submit">
+                    <i class="fa fa-fw fa-pencil-square"></i>
+                    Change
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title"><i class="fa fa-fw fa-hourglass-half"></i> Task details</h3>
@@ -60,42 +89,46 @@
           <div ng-show="vm.uiState.showDetails">
             <table class="table table-striped">
               <tbody>
-                <tr>
-                  <th class="td-right-align col-md-2"> Name:</th>
-                  <td class="td-left-align col-md-10">{{vm.task.name}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Project:</th>
-                  <td class="td-left-align"> <a href="#project-details/{{vm.task.project.id}}">{{vm.task.project.name}}</a></td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Leader:</th>
-                  <td class="td-left-align">{{vm.task.leader.user.name + vm.task.leader.user.surname}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Description:</th>
-                  <td class="td-left-align">{{vm.task.description}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Created:</th>
-                  <td class="td-left-align">{{vm.task.createdOnString}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Deadline:</th>
-                  <td class="td-left-align">{{vm.task.deadlineString}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Finished:</th>
-                  <td class="td-left-align">{{vm.task.completedOnString}}</td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Task state </th>
-                  <td class="td-left-align"><span ng-class="vm.task.cssClass">{{vm.task.stateString}}</span></td>
-                </tr>
-                <tr>
-                  <th class="td-right-align"> Working on: </th>
-                  <td class="td-left-align"> <span ng-repeat="u in vm.task.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}<span ng-show="!$last">, &nbsp;</span></span></td>
-                </tr>
+              <tr>
+                <th class="td-right-align col-md-2"> Name:</th>
+                <td class="td-left-align col-md-10">{{vm.task.name}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Project:</th>
+                <td class="td-left-align"> <a href="#project-details/{{vm.task.project.id}}">{{vm.task.project.name}}</a></td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Leader:</th>
+                <td class="td-left-align">{{vm.task.leader.user.name + vm.task.leader.user.surname}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Description:</th>
+                <td class="td-left-align">{{vm.task.description}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Created:</th>
+                <td class="td-left-align">{{vm.task.createdOnString}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Finished:</th>
+                <td class="td-left-align">{{vm.task.completedOnString}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Deadline:</th>
+                <td class="td-left-align">{{vm.task.deadlineString}}</td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Task state </th>
+                <td class="td-left-align"><span ng-class="vm.task.cssClass">{{vm.task.stateString}}</span></td>
+              </tr>
+              <tr>
+                <th class="td-right-align"> Working on: </th>
+                <td class="td-left-align">
+                  <span ng-repeat="u in vm.task.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}
+                    <span ng-show="!$last">, &nbsp;</span>
+                  </span>
+                </td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -129,7 +162,7 @@
                       <input-component placeholder="name for task"
                                        label="Task name"
                                        type="text"
-                                       model="vm.task.name"
+                                       model="vm.taskForUpdate.name"
                                        required="true"
                                        focus="true">
                       </input-component>
@@ -146,7 +179,7 @@
                   <div class="row">
                     <div class="col-md-12">
                       <label> Description for the project </label>
-                      <textarea ng-model="vm.task.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
+                      <textarea ng-model="vm.taskForUpdate.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
                     </div>
                   </div>
                   <br>
@@ -156,16 +189,19 @@
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                         <input class="form-control"
-                               ng-model="vm.task.completedOn"
+                               ng-model="vm.taskForUpdate.completedOn"
                                locale="en-gb"
                                ng-model-options="{ updateOn: 'blur' }"
                                placeholder="Select completed on date..."
                                format="DD/MM/YYYY HH:mm"
-                               moment-picker="vm.task.completedOn"
-                               ng-disabled="vm.updatedTaskState.enum!='FINISHED'"
-                               ng-required="vm.updatedTaskState.enum=='FINISHED'"
-                               min-date="vm.task.createdOn"
-                               max-date="vm.task.deadline">
+                               moment-picker="vm.taskForUpdate.completedOn"
+                               ng-disabled="vm.uiState.completedOnPickerDisabled"
+                               ng-required="!vm.uiState.completedOnPickerDisabled"
+                               min-date="vm.datesRestrictions.completedOn.min"
+                               max-date="vm.datesRestrictions.completedOn.max"
+                               today="true"
+                               keyboard="true"
+                               ng-readonly="true">
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -175,13 +211,16 @@
                         <input class="form-control"
                                format="DD/MM/YYYY HH:mm"
                                ng-required="true"
-                               ng-model="vm.task.deadline"
+                               ng-model="vm.taskForUpdate.deadline"
                                locale="en-gb"
                                ng-model-options="{ updateOn: 'blur' }"
                                placeholder="Select deadline date..."
-                               moment-picker="vm.task.deadline"
-                               min-date="vm.task.createdOn"
-                               max-date="vm.projectDeadline">
+                               moment-picker="vm.taskForUpdate.deadline"
+                               min-date="vm.datesRestrictions.deadline.min"
+                               max-date="vm.datesRestrictions.deadline.max"
+                               today="true"
+                               keyboard="true"
+                               ng-readonly="true">
                       </div>
                     </div>
                   </div>
@@ -191,7 +230,7 @@
                     <div class="col-md-8">
                       <label> Select users </label>
                       <multiple-select users="vm.task.project.team.users"
-                                       model="vm.task.users"
+                                       model="vm.taskForUpdate.users"
                                        required="true">
                       </multiple-select>
                     </div>
@@ -237,7 +276,7 @@
         <div class="panel-footer text-right">
 
           <!--<button class="btn btn-default" ng-click="vm.clearNewTeam()" type="reset">-->
-            <!--<i class="fa fa-fw fa-refresh"></i>	Clear-->
+          <!--<i class="fa fa-fw fa-refresh"></i>	Clear-->
           <!--</button>-->
           <button class="btn btn-primary" form="updateTask" ng-disabled="updateTaskForm.$invalid" type="submit">
             <i class="fa fa-fw fa-pencil-square"></i>

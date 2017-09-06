@@ -9,10 +9,10 @@
     .module('easy-task-angular')
     .controller('NewProjectsController', NewProjectsController);
 
-  NewProjectsController.$inject = ['$log', 'NewProjectService'];
+  NewProjectsController.$inject = ['$log', '$scope', 'NewProjectService'];
 
   /* @ngInject */
-  function NewProjectsController($log, NewProjectService) {
+  function NewProjectsController($log, $scope, NewProjectService) {
     var vm = this;
     //variables declaration
     vm.USER_ID = 1;
@@ -21,12 +21,25 @@
     // vm.test = [];
     vm.teamsLedByUser = [];
 
+    vm.inputDates = {
+      createdOn: null,
+      deadline: null
+    };
+
+    vm.datesRestrictions = {
+      createdOn:{
+        min: moment(new Date())
+      },
+      deadline:{
+        min:null
+      }
+    };
     vm.uiState = {
       errorNewProject: null,
       successNewProject: null,
       fetchingTeamsMessage: null,
       loadGif: true
-    }
+    };
 
     //functions declaration
     vm.saveNewProject = saveNewProjectFn;
@@ -43,15 +56,15 @@
       vm.uiState.successNewProject = null;
       vm.uiState.errorNewProject = null;
 
-      vm.newProject.createdOn = vm.newProject.createdOn.toDate().getTime();
-      vm.newProject.deadline = vm.newProject.deadline.toDate().getTime();
-      vm.newProject.state = 'FINISHED';
+      vm.newProject.createdOn = vm.inputDates.createdOn.toDate().getTime();
+      vm.newProject.deadline = vm.inputDates.deadline.toDate().getTime();
+      vm.newProject.state = 'CREATED';
       console.log(vm.newProject);
       NewProjectService.saveNewProject(vm.newProject).then(successCallbackNewProject, errorCallbackNewProject);
 
       function successCallbackNewProject(data){
         $("#savingProject").hide();
-        vm.uiState.successNewProject = "Project with name \"" + data.name + "\" was successfully created!"
+        vm.uiState.successNewProject = "Project with name \"" + data.name + "\" was successfully created!";
         clearNewProjectFn();
       }
 
@@ -65,6 +78,10 @@
 
     function clearNewProjectFn() {
       vm.newProject = {};
+      vm.inputDates = {
+        createdOn: null,
+        deadline: null
+      };
     }
 
     //helper functions
@@ -86,6 +103,10 @@
         vm.uiState.loadGif = false;
       }
     }
+
+    $scope.$watch('vm.inputDates.createdOn', function(){
+      vm.datesRestrictions.deadline.min = moment(vm.inputDates.createdOn).add(3, 'h');
+    }, true);
 
 
   }

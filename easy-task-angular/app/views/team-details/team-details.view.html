@@ -200,7 +200,7 @@
                 <input-component placeholder="name for team"
                                  label="Team name"
                                  type="text"
-                                 model="vm.fetchedData.team.name"
+                                 model="vm.teamForUpdate.name"
                                  required="true"
                                  focus="true">
                 </input-component>
@@ -213,7 +213,7 @@
                   <img src="pictures//loading.gif" style="width:20px; height:20px;">
                 </div>
                 <multiple-select users="vm.fetchedData.coworkers"
-                                 model="vm.fetchedData.team.users"
+                                 model="vm.teamForUpdate.users"
                                  info="{{vm.uiState.update.fetchingCoworkersMessage}}">
                 </multiple-select>
 

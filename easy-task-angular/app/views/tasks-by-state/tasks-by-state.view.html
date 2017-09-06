@@ -54,13 +54,24 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
-              <td><a href="#">{{t.name}}</a></td>
+            <tr ng-repeat-start="t in tasks | orderBy:['name'] | filter:searchProfName">
+              <td>{{t.name}}</td>
               <td>{{t.createdOn}}</td>
               <td>{{t.deadline}}</td>
-              <td><a href="#/project-details">{{t.project.name}}</a></td>
+              <td><a href="#/project-details/{{t.project.id}}">{{t.project.name}}</a></td>
               <td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>
               <td><span ng-class="vm.cssClassState">{{t.state}}</span></td>
+            </tr>
+            <tr ng-repeat-end>
+              <td colspan="6" class="td-left-align">
+                <div><strong>Description:</strong></div>
+                {{t.description}}
+                <hr/>
+                <div><strong>Working on:</strong></div>
+                <span ng-repeat="u in t.users" ng-class="{'last': $last}">{{u.name+" "+u.surname}}
+                  <span ng-show="!$last">, &nbsp;</span>
+                </span>
+              </td>
             </tr>
             </tbody>
             <tfoot>

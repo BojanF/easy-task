@@ -11,6 +11,7 @@ import com.easytask.service.ICommentService;
 import com.easytask.service.IDocumentService;
 import com.easytask.service.IProjectService;
 import com.easytask.service.ITaskService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -108,4 +109,12 @@ public class ProjectServiceImpl implements IProjectService {
     public int deleteAllDocumentsForProject(Long projectId){
         return projectRepository.deleteAllDocumentsForProject(projectId);
     };
+
+    public List<Project> getBreachedProjects(DateTime now){
+        return projectRepository.getBreachedProjects(now);
+    }
+
+    public List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now){
+        return projectRepository.getUpToDateProjectsWithBreachedDeadline(now);
+    }
 }

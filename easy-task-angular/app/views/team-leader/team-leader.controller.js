@@ -94,8 +94,8 @@
 
           setTimeout(function(){
             button.html('<i class="fa fa-times"></i>&nbsp; Delete team &nbsp;');
-            button.prop('disabled',true);
-            console.log("DISABLE DELETE TASK");
+            button.prop('disabled',false);
+
           }, 300);
           console.log("NE SE IZBRISA");
           vm.uiState.errorDeleteTeam = " We run into an error! Try again later!";

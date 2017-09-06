@@ -43,6 +43,7 @@
       }
     });
     var documentResource = $resource('http://localhost:8000/api/document/:id', {}, {});
+    var projectUpdateResource = $resource('http://localhost:8000/api/project/update:id', {}, {});
 
     var service = {
       getUser: getUserFn,
@@ -55,7 +56,8 @@
       fileUpload: fileUploadFn,
       removeDocument: removeDocumentFn,
       removeTask: removeTaskFn,
-      removeComment: removeCommentFn
+      removeComment: removeCommentFn,
+      updateProject: updateProjectFn
     };
     return service;
 
@@ -113,6 +115,10 @@
 
     function removeCommentFn(commentId){
       return newCommentsResource.delete({id:commentId}).$promise;
+    }
+
+    function updateProjectFn(project){
+      return projectUpdateResource.save(project).$promise;
     }
   }
 

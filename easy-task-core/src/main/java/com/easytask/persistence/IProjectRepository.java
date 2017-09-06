@@ -3,6 +3,7 @@ package com.easytask.persistence;
 import com.easytask.model.enums.TaskState;
 import com.easytask.model.jpa.*;
 import com.easytask.model.pojos.DocumentResponse;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -46,6 +47,10 @@ public interface IProjectRepository {
     Integer getNumberOfDocumentsForProject(Long projectId);
 
     Integer getNumberOfTasksForProject(Long projectId);
+
+    List<Project> getBreachedProjects(DateTime now);
+
+    List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now);
 
 
 }

@@ -64,11 +64,15 @@
                   <input class="form-control"
                          ng-required="true"
                          format="DD/MM/YYYY HH:mm"
-                         ng-model="vm.newProject.createdOn"
+                         ng-model="vm.inputDates.createdOn"
                          locale="en-gb"
                          ng-model-options="{ updateOn: 'blur' }"
                          placeholder="Created on..."
-                         moment-picker="vm.newProject.createdOn">
+                         moment-picker="vm.inputDates.createdOn"
+                         min-date="vm.datesRestrictions.createdOn.min"
+                         today="true"
+                         keyboard="true"
+                         ng-readonly="true">
                 </div>
               </div>
               <div class="col-md-6">
@@ -78,13 +82,16 @@
                   <input class="form-control"
                          ng-required="true"
                          format="DD/MM/YYYY HH:mm"
-                         ng-model="vm.newProject.deadline"
+                         ng-model="vm.inputDates.deadline"
                          locale="en-gb"
                          ng-model-options="{ updateOn: 'blur' }"
                          placeholder="Select deadline..."
-                         moment-picker="vm.newProject.deadline"
-                         ng-disabled="!vm.newProject.createdOn"
-                         min-date="vm.newProject.createdOn">
+                         moment-picker="vm.inputDates.deadline"
+                         ng-disabled="!vm.inputDates.createdOn"
+                         min-date="vm.datesRestrictions.deadline.min"
+                         today="true"
+                         keyboard="true"
+                         ng-readonly="true">
                 </div>
               </div>
             </div>
@@ -109,10 +116,11 @@
         </div>
 
       </form>
+
       <div class="panel panel-info" id="savingProject" hidden>
         <div class="panel-heading text-center">
           <img src="pictures//loading.gif" style="width:20px; height:20px;">
-          <span>&nbsp;Saving new project ...</span>
+          <span>&nbsp;Saving new project...</span>
         </div>
       </div>
       <div class="panel panel-success" ng-show="vm.uiState.successNewProject">

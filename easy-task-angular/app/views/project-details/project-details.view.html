@@ -57,7 +57,7 @@
 
       <br>
       <!-- Button trigger modal -->
-      <button ng-show="vm.uiState.leader" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
+      <button ng-show="vm.uiState.addNewTask.button" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalTask">
         <i class="fa fa-fw fa-plus-square"> </i>
         Add new task
       </button>
@@ -74,9 +74,9 @@
         </div>
       </div>
       <!--<div id="TaskErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewTask.errorMsg">-->
-        <!--<div class="panel-heading text-center" >-->
-          <!--{{vm.uiState.addNewTask.errorMsg}}-->
-        <!--</div>-->
+      <!--<div class="panel-heading text-center" >-->
+      <!--{{vm.uiState.addNewTask.errorMsg}}-->
+      <!--</div>-->
       <!--</div>-->
 
       <!-- Modal -->
@@ -106,7 +106,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
-                        <label> Description for the project </label>
+                        <label> Description for the task </label>
                         <textarea ng-model="vm.newEntities.task.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
                       </div>
                     </div>
@@ -119,13 +119,18 @@
                           <input class="form-control"
                                  format="DD/MM/YYYY HH:mm"
                                  ng-required="true"
-                                 ng-model="vm.newEntities.task.createdOn"
+                                 ng-model="vm.inputDates.createdOn"
                                  locale="en-gb"
                                  ng-model-options="{ updateOn: 'blur' }"
                                  placeholder="Created on..."
-                                 moment-picker="vm.newEntities.task.createdOn"
-                                 min-date="vm.datesRestriction.createdOn"
-                                 max-date="vm.datesRestriction.deadline">
+                                 moment-picker="vm.inputDates.createdOn"
+                                 keyboard="true"
+                                 today="true"
+                                 min-date="vm.datesRestrictions.newTask.createdOn.min"
+                                 max-date="vm.datesRestrictions.newTask.createdOn.max"
+                                 today="true"
+                                 keyboard="true"
+                                 ng-readonly="true">
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -135,14 +140,17 @@
                           <input class="form-control"
                                  format="DD/MM/YYYY HH:mm"
                                  ng-required="true"
-                                 ng-model="vm.newEntities.task.deadline"
+                                 ng-model="vm.inputDates.deadline"
                                  locale="en-gb"
                                  ng-model-options="{ updateOn: 'blur' }"
                                  placeholder="Select deadline..."
-                                 moment-picker="vm.newEntities.task.deadline"
-                                 ng-disabled="!vm.newEntities.task.createdOn"
-                                 min-date="vm.newEntities.task.createdOn"
-                                 max-date="vm.datesRestriction.deadline">
+                                 moment-picker="vm.inputDates.deadline"
+                                 ng-disabled="!vm.inputDates.createdOn"
+                                 min-date="vm.datesRestrictions.newTask.deadline.min"
+                                 max-date="vm.datesRestrictions.newTask.deadline.max"
+                                 today="true"
+                                 keyboard="true"
+                                 ng-readonly="true">
                         </div>
                       </div>
                     </div>
@@ -166,6 +174,12 @@
                   </div>
                 </div>
               </form>
+              <div class="panel panel-info" id="taskSaving" hidden>
+                <div class="panel-heading text-center">
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                  <span>&nbsp;Saving task "{{vm.newEntities.task.name}}"...</span>
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" ng-click="vm.clearNewTask()" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -192,59 +206,6 @@
           <div ng-show="vm.uiState.tasks.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="tasks" st-safe-src="vm.entitiesData.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <!--<th st-sort="name">Name</th>-->
-                <!--<th st-sort="shortName">Short name</th>-->
-                <th>Name</th>
-                <th>Created on</th>
-                <th>Comleted on</th>
-                <th>Deadline</th>
-                <th>Working on</th>
-                <th>State</th>
-                <th>Actions</th>
-              </tr>
-              <tr>
-                <th colspan="7"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
-                <td valign="center"><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
-                <!--<td>{{t.id}}</td>-->
-                <td>{{t.createdOn}}</td>
-                <td>{{t.completedOn}}</td>
-                <td >{{t.deadline}}</td>
-                <td>
-                  <div ng-repeat="u in t.users" ng-class="{'last': $last}">
-                    {{u.name+" "+u.surname+"\n"}}
-                    <span ng-show="!$last">, &nbsp;</span>
-                    <span ng-show="$last"> &nbsp;</span>
-                  </div>
-                </td>
-                <!--<td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>-->
-                <td>
-                  <span ng-class="t.cssClass"> {{t.state}} </span>
-                </td>
-                <td>
-                  <button class="btn btn-danger btn-xs removeTask"
-                          ng-disabled="!vm.uiState.leader"
-                          confirm-click="vm.removeTask(t.id)"
-                          confirm-message="Are you sure?">
-                    <i class="fa fa-times"></i>&nbsp; Delete task &nbsp;
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="7" class="text-center">
-                  <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
           <div class="panel panel-info" ng-show="vm.uiState.tasks.showNoTasksPanel">
             <div class="panel-heading text-center text-info">
               This project doesn`t have any tasks!
@@ -253,9 +214,63 @@
           <div class="panel panel-danger" ng-show="vm.uiState.tasks.showErrorPanel">
             <div class="panel-heading text-center text-danger">
               <div> We run into an error!</div>
-              <div> Try again later!</div>
+              <div> Reload the page!</div>
             </div>
           </div>
+          <table st-table="tasks" st-safe-src="vm.entitiesData.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>Name</th>
+              <th>Created on</th>
+              <th>Comleted on</th>
+              <th>Deadline</th>
+              <th>Working on</th>
+              <th>State</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <th colspan="7"> <input type="text" class="form-control" st-search="name" st-delay="400" type="search" placeholder="search by task name..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="t in tasks | orderBy:['name'] | filter:searchProfName">
+              <td valign="center"><a href="#/task-details/{{t.id}}">{{t.name}}</a></td>
+              <!--<td>{{t.id}}</td>-->
+              <td>{{t.createdOn}}</td>
+              <td>{{t.completedOn}}</td>
+              <td >{{t.deadline}}</td>
+              <td>
+                <div ng-repeat="u in t.users" ng-class="{'last': $last}">
+                  {{u.name+" "+u.surname+"\n"}}
+                  <span ng-show="!$last">, &nbsp;</span>
+                  <span ng-show="$last"> &nbsp;</span>
+                </div>
+              </td>
+              <!--<td>{{t.leader.user.name+" "+t.leader.user.surname}}</td>-->
+              <td>
+                <span ng-class="t.cssClass"> {{t.stateString}} </span>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-xs removeTask"
+                        ng-disabled="t.disabledDeleteButton"
+                        confirm-click="vm.removeTask(t.id, t.disabledDeleteButton)"
+                        confirm-message="Are you sure?">
+                  <i class="fa fa-times"></i>&nbsp; Delete task &nbsp;
+                </button>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="7" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+
         </div>
       </div>
     </div>
@@ -265,15 +280,21 @@
       <br>
 
       <!-- Button trigger modal -->
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
-          <i class="fa fa-fw fa-plus-square"> </i>
-          Upload file
-        </button>
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDoc">
+        <i class="fa fa-fw fa-plus-square"> </i>
+        Upload file
+      </button>
       <br>
       <br>
       <div class="panel panel-success" ng-show="vm.uiState.addNewDocument.successMsg">
         <div class="panel-heading text-center text-success" >
-        {{vm.uiState.addNewDocument.successMsg}}
+          {{vm.uiState.addNewDocument.successMsg}}
+        </div>
+      </div>
+
+      <div class="panel panel-danger" ng-show="vm.uiState.documents.deleteErrorPanel">
+        <div class="panel-heading text-center text-danger" >
+          Document is not deleted successfully!
         </div>
       </div>
 
@@ -289,18 +310,18 @@
               <form id="newDocument" name="newDocumentFrom" ng-submit="vm.saveNewDocument()" enctype="multipart/form-data" >
                 <div class="form-group">
                   <input id="file"
-                       type="file"
-                       file-model="myFile"
-                       class="btn btn-danger"
-                       required/>
+                         type="file"
+                         file-model="myFile"
+                         class="btn btn-danger"
+                         required/>
                 </div>
               </form>
               <br>
               <div class="panel panel-info" id="fileUploading" hidden>
                 <div class="panel-heading text-center">
-                <img src="pictures//loading.gif" style="width:20px; height:20px;">
-                <span id="fileUploadingText">&nbsp;Uploading {{vm.file.name}} ...</span>
-                  </div>
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                  <span id="fileUploadingText">&nbsp;Uploading {{vm.file.name}} ...</span>
+                </div>
               </div>
               <div id="documentErrorPanel" class="panel panel-danger" ng-show="vm.uiState.addNewDocument.errorMsg">
                 <div class="panel-heading text-center" >
@@ -325,7 +346,7 @@
         <span class="pull-left>">
             <span class="panel-title"><i class="fa fa-file fa-fw"></i> Documents </span>
           </span>
-        <span class="pull-right">
+          <span class="pull-right">
             <button class="btn btn-xs btn-success" ng-click="vm.refreshDocuments()"> <i class="fa fa-fw fa-refresh"></i> REFRESH</button>
           </span>
         </div>
@@ -356,9 +377,9 @@
               <td>{{d.user.name}}</td>
               <td>
                 <button class="btn btn-danger btn-xs removeDocument"
-                          ng-disabled="{{d.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
-                          confirm-click="vm.removeDocument(d.id, d.user.id)"
-                          confirm-message="Are you sure?">
+                        ng-disabled="{{d.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
+                        confirm-click="vm.removeDocument(d.id, d.user.id)"
+                        confirm-message="Are you sure?">
                   <i class="fa fa-times"></i>&nbsp; Remove document
                 </button>
               </td>
@@ -410,30 +431,30 @@
           </div>
           <table st-table="comments" st-safe-src="vm.entitiesData.comments" ng-show="vm.uiState.comments.showComments" class="table">
             <tbody>
-              <tr ng-repeat="c in comments">
-                <td class="td-left-align">
-                  <div class="media">
-                    <div class="media-left">
-                      <a href="#">
-                        <img class="media-object" src="pictures/64x64.svg" alt="...">
-                      </a>
-                    </div>
-                    <div class="media-body">
-                      <h4 class="media-heading">{{c.user.name+" "+c.user.surname}} </h4>
-                      <small> {{c.date}} </small>
-                      <p> {{c.text}} </p>
-                    </div>
+            <tr ng-repeat="c in comments">
+              <td class="td-left-align">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="#">
+                      <img class="media-object" src="pictures/64x64.svg" alt="...">
+                    </a>
                   </div>
-                </td>
-                <td>
-                  <button class="btn btn-danger btn-xs removeComment"
-                          ng-disabled="{{c.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
-                          confirm-click="vm.removeComment(c.id, c.user.id)"
-                          confirm-message="Are you sure?">
-                    <i class="fa fa-times"></i><!--&nbsp; Remove comment-->
-                  </button>
-                </td>
-              </tr>
+                  <div class="media-body">
+                    <h4 class="media-heading">{{c.user.name+" "+c.user.surname}} </h4>
+                    <small> {{c.date}} </small>
+                    <p> {{c.text}} </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-xs removeComment"
+                        ng-disabled="{{c.user.id!=vm.USER_ID && !vm.uiState.leader ? true : false }}"
+                        confirm-click="vm.removeComment(c.id, c.user.id)"
+                        confirm-message="Are you sure?">
+                  <i class="fa fa-times"></i><!--&nbsp; Remove comment-->
+                </button>
+              </td>
+            </tr>
 
             </tbody>
             <tfoot>
@@ -477,8 +498,8 @@
             </div>
           </div>
         </div>
-        <div class="panel-footer text-right" ng-show="vm.uiState.comments.canComment">
-
+        <div class="panel-footer text-right" >
+          <!--ng-show="vm.uiState.comments.canComment"-->
           <form ng-submit="vm.saveNewComment()" name="newCommentForm">
             <textarea class="form-control" ng-required="true" ng-model="vm.newEntities.comment.text" placeholder="Your comment" rows="3"></textarea> <br>
             <button class="btn btn-success" type="submit" ng-disabled="newCommentForm.$invalid">	<i class="fa fa-fw fa-paper-plane"></i>	Comment </button>
@@ -499,7 +520,7 @@
           <h3 class="panel-title"><i class="fa fa-info-circle"></i> Information for project</h3>
         </div>
         <div class="panel-body">
-          <table class="table table-striped">
+          <table ng-show="vm.uiState.showInfo"class="table table-striped">
             <tbody>
             <tr>
               <th class="td-right-align col-md-2"> Name:</th>
@@ -524,19 +545,19 @@
               <td class="td-left-align">{{vm.project.createdOnString}}</td>
             </tr>
             <tr>
-              <th class="td-right-align"> Deadline:</th>
-              <td class="td-left-align">{{vm.project.deadlineString}}</td>
-            </tr>
-            <tr>
               <th class="td-right-align"> Finished:</th>
               <td class="td-left-align">{{vm.project.completedOnString}}</td>
+            </tr>
+            <tr>
+              <th class="td-right-align"> Deadline:</th>
+              <td class="td-left-align">{{vm.project.deadlineString}}</td>
             </tr>
             <tr>
               <th class="td-right-align"> Tasks:</th>
               <td class="td-left-align">{{vm.project.tasksNum==undefined ? 'First load the tasks!' : vm.project.tasksNum}}</td>
             </tr>
             <tr>
-              <th class="td-right-align"> Projects:</th>
+              <th class="td-right-align"> Documents:</th>
               <td class="td-left-align">{{vm.project.documentsNum==undefined ? 'First load the documents!' : vm.project.documentsNum}}</td>
             </tr>
             <tr>
@@ -545,6 +566,13 @@
             </tr>
             </tbody>
           </table>
+
+          <div class="panel panel-danger" ng-hide="vm.uiState.showInfo">
+            <div class="panel-heading text-center text-danger">
+              <div>We run into an error!</div>
+              <div>Reload the page!</div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -586,9 +614,106 @@
         </div>
         <div class="panel-body">
 
+          <form id="updateProject" name="updateProjectForm" ng-submit="vm.updateProject()">
+            <div class="container-fluid">
+              <div class="form-group">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <input-component placeholder="name for project"
+                                     label="Project name"
+                                     type="text"
+                                     model="vm.projectUpdate.name"
+                                     required="true"
+                                     focus="true">
+                    </input-component>
+                  </div>
+                  <div class="col-md-6">
+                    <label> Change state </label>
+                    <single-select model="vm.projectUpdate.currState"
+                                   entities="vm.projectUpdate.eligibleProjectStates"
+                                   required="true"
+                                   placeholder="Select state">
+                    </single-select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label> Description for the projects </label>
+                    <textarea ng-model="vm.projectUpdate.description" ng-required="true" class="form-control" placeholder="Description..." rows="3"></textarea>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label> Completed on</label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                      <input class="form-control"
+                             format="DD/MM/YYYY HH:mm"
+                             ng-model="vm.projectUpdate.completedOn"
+                             locale="en-gb"
+                             ng-model-options="{ updateOn: 'blur' }"
+                             placeholder="Completed on..."
+                             min-date="vm.datesRestrictions.updateProject.completedOn.min"
+                             max-date="vm.datesRestrictions.updateProject.completedOn.max"
+                             ng-disabled="vm.uiState.update.completedOnPickerDisabled"
+                             ng-required="!vm.uiState.update.completedOnPickerDisabled"
+                             moment-picker="vm.projectUpdate.completedOn"
+                             today="true"
+                             keyboard="true"
+                             ng-readonly="true">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label> Deadline </label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                      <input class="form-control"
+                             ng-required="true"
+                             format="DD/MM/YYYY HH:mm"
+                             ng-model="vm.projectUpdate.deadline"
+                             locale="en-gb"
+                             ng-model-options="{ updateOn: 'blur' }"
+                             placeholder="Select deadline..."
+                             moment-picker="vm.projectUpdate.deadline"
+                             min-date="vm.datesRestrictions.updateProject.deadline.min"
+                             today="true"
+                             keyboard="true"
+                             ng-readonly="true">
+                    </div>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </div>
+
+          </form>
+
+          <div class="panel panel-info" ng-show="vm.uiState.update.updatingGif">
+            <div class="panel-heading text-center">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+              <span>&nbsp;Updating project...</span>
+            </div>
+          </div>
+          <div class="panel panel-success" ng-show="vm.uiState.update.successUpdateProject">
+            <div class="panel-heading text-center text-success">
+              Project with name {{vm.uiState.update.successUpdateProject}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.update.errorUpdateProject">
+            <div class="panel-heading text-center text-danger">
+              {{vm.uiState.update.errorUpdateProject}}
+            </div>
+          </div>
+
         </div>
         <div class="panel-footer text-right">
-          <button class="btn btn-success" type="submit" ng-disabled="">	<i class="fa fa-fw fa-pencil-square"></i>	Update </button>
+          <button class="btn btn-success" form="updateProject" type="submit" ng-disabled="updateProjectForm.$invalid">
+            <i class="fa fa-fw fa-pencil-square"></i>	Update
+          </button>
         </div>
       </div>
     </div>

@@ -50,14 +50,14 @@
         successMsg: null,
         errorMsg: null
       }
-    }
+    };
 
     vm.fetchedData = {
       coworkers: [],
       receivedRequests: [],
       sentRequests: [],
       user: {}
-    }
+    };
 
 
 
@@ -71,7 +71,7 @@
     vm.cancelRequest = cancelRequestFn;
 
     vm.refreshCoworkers = refreshCoworkersFn;
-    // vm.refreshSentRequests = refreshSentRequests;
+    vm.refreshSentRequests = refreshSentRequests;
     vm.refreshReceivedRequests = refreshReceivedRequestsFn;
 
     getCoworkers();
@@ -109,7 +109,7 @@
         showErrorPanel: false,
         successMsg: null,
         errorMsg: null
-      }
+      };
       getCoworkers();
 
     }
@@ -128,6 +128,9 @@
 
       function errorRemove(){
         vm.uiState.coworkers.errorMsg = "Refresh the page and try again later!";
+        var button = $(".removeCoworker");
+        button.html('<i class="fa fa-times"></i> Remove as coworker');
+        button.prop('disabled',true);
       }
     }
 
@@ -207,7 +210,7 @@
         CoworkersService.getUser(vm.USER_ID).then(
 
           function(data) {
-            //success
+            //success fetching user
             vm.fetchedData.user = data;
             coworkers = {
               id: {
@@ -222,8 +225,11 @@
 
           },
           function () {
-            //error
+            //error fetching user
             vm.uiState.received.errorMsg = "Try again later";
+            var button = $(".acceptRequest");
+            button.html('<i class="fa fa-plus"></i> Accept');
+            button.prop('disabled',true);
           }
         );
       }
@@ -257,6 +263,9 @@
 
       function errorRefuse(){
         vm.uiState.received.errorMsg = "Try again later!";
+        var button = $(".refuseRequest");
+        button.html('<i class="fa fa-times"></i> Turn down');
+        button.prop('disabled',true);
       }
     }
 
@@ -306,6 +315,9 @@
         function(){
           //errorCallback
           vm.uiState.sent.errorMsg = "Try again later!";
+          var button = $(".cancelRequest");
+          button.html('<i class="fa fa-ban"></i> Cancel request');
+          button.prop('disabled',true);
         }
       );
     }
@@ -323,6 +335,7 @@
         errorMsg: null
       };
       getSentRequestsFn();
+      refreshCoworkersFn();
     }
 
     function saveCoworkers(coworkers){
@@ -338,6 +351,9 @@
         function(){
           //error
           vm.uiState.received.errorMsg = "Try again later";
+          var button = $(".acceptRequest");
+          button.html('<i class="fa fa-plus"></i> Accept');
+          button.prop('disabled',true);
         }
       );
     }
