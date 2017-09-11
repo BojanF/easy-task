@@ -9,15 +9,14 @@
     .module('easy-task-angular')
     .controller('TasksByStateController', TasksByStateController);
 
-  TasksByStateController.$inject = ['$log', 'TasksByStateService', '$stateParams'];
+  TasksByStateController.$inject = ['$log', 'TasksByStateService', '$stateParams','$cookies','$location'];
 
   /* @ngInject */
-  function TasksByStateController($log,  TasksByStateService, $stateParams) {
+  function TasksByStateController($log,  TasksByStateService, $stateParams,$cookies,$location) {
 
     //variables declaration
     var vm = this;
     vm.title = 'easy-task';
-    vm.USER_ID = 1;
 
     vm.tasks = [];
     vm.cssClassState = "";
@@ -38,8 +37,15 @@
     //functions declaration
     vm.getTasks = getTasksFn;
 
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getState();
+    }
+    else {
+      $location.path('/login');
+    }
     //functions invocation
-    getState();
+
 
 
     //functions implementation

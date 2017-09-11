@@ -9,14 +9,14 @@
     .module('easy-task-angular')
     .controller('TeamsWorkingOnController', TeamsWorkingOnController);
 
-  TeamsWorkingOnController.$inject = ['$log', 'TeamsWorkingOnService'];
+  TeamsWorkingOnController.$inject = ['$log', 'TeamsWorkingOnService','$cookies','$location'];
 
   /* @ngInject */
-  function TeamsWorkingOnController($log, TeamsWorkingOnService) {
+  function TeamsWorkingOnController($log, TeamsWorkingOnService,$cookies,$location) {
     var vm = this;
 
     //variables declaration
-    vm.USER_ID = 1;
+
     vm.teams = [];
     vm.uiState={
       loadGif: true,
@@ -29,7 +29,13 @@
 
 
     //functions invocation
-    getTeams();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getTeams();
+    }
+    else {
+      $location.path('/login');
+    }
 
     //functions implementation
     function getTeams(){

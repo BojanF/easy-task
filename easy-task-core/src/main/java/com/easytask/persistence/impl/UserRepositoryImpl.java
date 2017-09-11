@@ -8,6 +8,7 @@ import com.easytask.persistence.IUserRepository;
 
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
@@ -99,6 +100,9 @@ public class UserRepositoryImpl implements IUserRepository {
     public List<Project> getProjectsByUser(Long userId) {
         Set<Team> teams = new HashSet<Team>();
         List<Team> teamsList = getTeamsForUser(userId);
+        if(teamsList.size()==0){
+            return null;}
+        else {
         for (Team t: teamsList) {
             teams.add(t);
         }
@@ -117,6 +121,7 @@ public class UserRepositoryImpl implements IUserRepository {
                 )
         );
         return entityManager.createQuery(cq).getResultList();
+        }
     }
 
     public List<Project> getProjectsLeadByUser(Long userId) {
@@ -198,7 +203,8 @@ public class UserRepositoryImpl implements IUserRepository {
     public List<Project> getUrgentProjectsForUser(Long userId){
 
         List<Team> teamsList = getTeamsForUser(userId);
-
+        if(teamsList.size()==0) return null;
+        else {
         TypedQuery<Project> urgentProjects = entityManager.createQuery("select p\n" +
                 "from Project p\n" +
                 "where\n" +
@@ -210,7 +216,7 @@ public class UserRepositoryImpl implements IUserRepository {
                 "  p.state = 'BREACH_OF_DEADLINE')", Project.class);
         urgentProjects.setParameter("teamsList", teamsList);
         List<Project> queryResults = urgentProjects.getResultList();
-        return queryResults;
+        return queryResults;}
     }
 
     public List<Team> getTeamsLeadByUser(Long userId){
@@ -258,13 +264,17 @@ public class UserRepositoryImpl implements IUserRepository {
 
     public List<TeamLeader> getTeamsInfoTeamsForUser(Long userId){
         List<Team> helperList = getTeamsMemberOf(userId);
+        if(helperList.size()==0){
+            return null;
+        }
+        else{
         TypedQuery<TeamLeader> teamsInfo = entityManager.createQuery("select tl\n" +
                 "from Team t, TeamLeader tl\n" +
                 "where\n" +
                 "t in (:teams) and\n" +
                 "t.id = tl.id", TeamLeader.class);
         teamsInfo.setParameter("teams", helperList);
-        return teamsInfo.getResultList();
+        return teamsInfo.getResultList();}
     }
 
     @Transactional
@@ -303,5 +313,25 @@ public class UserRepositoryImpl implements IUserRepository {
 
         return entityManager.createQuery(cq).getResultList();
     }
+
+    public User getUserByUsername(String username) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> from= cq.from(User.class);
+        cq.where(
+                cb.equal(
+                        from.get(User.FIELDS.USERNAME),
+                        username
+                )
+        );
+        return entityManager.createQuery(cq).getSingleResult();
+    }
+
+
+
+
+
+
+
 }
 

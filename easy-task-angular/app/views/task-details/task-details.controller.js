@@ -9,13 +9,13 @@
     .module('easy-task-angular')
     .controller('TaskDetailsController', TaskDetailsController);
 
-  TaskDetailsController.$inject = ['$log', '$scope', '$stateParams', 'TaskDetailsService'];
+  TaskDetailsController.$inject = ['$log', '$scope', '$stateParams', 'TaskDetailsService','$cookies','$location'];
 
   /* @ngInject */
-  function TaskDetailsController($log, $scope, $stateParams, TaskDetailsService) {
+  function TaskDetailsController($log, $scope, $stateParams, TaskDetailsService,$cookies,$location) {
     var vm = this;
     vm.title = ' Teams that you are member of';
-    vm.USER_ID = 1;
+
     vm.TASK_ID = 0;
     vm.task = {};
     vm.taskForUpdate = {};
@@ -54,7 +54,14 @@
     vm.updateTask = updateTaskFn;
     vm.changeState = changeStateFn;
 
-    getTaskIdFn();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getTaskIdFn();
+    }
+    else {
+      $location.path('/login');
+    }
+
 
     function getTaskIdFn(){
       vm.TASK_ID = $stateParams.taskId;

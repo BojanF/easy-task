@@ -9,14 +9,14 @@
     .module('easy-task-angular')
     .controller('NewTeamController', NewTeamController);
 
-  NewTeamController.$inject = ['$log', 'NewTeamService'];
+  NewTeamController.$inject = ['$log', 'NewTeamService','$cookies','$location'];
 
   /* @ngInject */
-  function NewTeamController($log, NewTeamService) {
+  function NewTeamController($log, NewTeamService,$cookies,$location) {
     //variables declaration
 
     var vm = this;
-    vm.USER_ID = 1;
+
 
     vm.fetchedData = {
       leader: {},
@@ -43,10 +43,17 @@
     vm.clearNewTeam = clearNewTeamFn;
     vm.disableSubmit = disableSubmitFn;
 
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getCoworkers();
+      getLeader();
+    }
+    else {
+      $location.path('/login');
+    }
 
     //functions invocation
-    getCoworkers();
-    getLeader();
+
 
     //functions implementation
 

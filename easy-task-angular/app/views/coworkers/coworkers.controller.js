@@ -9,12 +9,12 @@
     .module('easy-task-angular')
     .controller('CoworkersController', CoworkersController);
 
-  CoworkersController.$inject = ['$log', 'CoworkersService'];
+  CoworkersController.$inject = ['$log', 'CoworkersService','$cookies','$location'];
 
   /* @ngInject */
-  function CoworkersController($log, CoworkersService) {
+  function CoworkersController($log, CoworkersService,$cookies,$location) {
     var vm = this;
-    vm.USER_ID = 1;
+
     vm.uiState = {
       coworkers: {
         loadGif: true,
@@ -59,7 +59,13 @@
       user: {}
     };
 
-
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getCoworkers();
+    }
+    else {
+      $location.path('/login');
+    }
 
     vm.getEligibleUsers = getEligibleUsersFn;
     vm.getSentRequests = getSentRequestsFn;
@@ -74,7 +80,7 @@
     vm.refreshSentRequests = refreshSentRequests;
     vm.refreshReceivedRequests = refreshReceivedRequestsFn;
 
-    getCoworkers();
+
 
     function getCoworkers(){
       CoworkersService.getCoworkers(vm.USER_ID).then(successCallbackCoworkers, errorCallbackCoworkers);

@@ -52,4 +52,10 @@ public interface IUserRepository {
     List<Task> getUrgentTask(Long userId);
 
     List<Team> getTeamsMemberOf(Long userId);
+
+    User getUserByUsername(String username);
+
+
+
+
 }

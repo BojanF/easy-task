@@ -87,12 +87,26 @@ var JS_APP = [
   //components
   'app/components/single-select/single-select-component.component.js',
   'app/components/input-component/input-component.component.js',
-  'app/components/multiple-select/multiple-select-component.component.js'
+  'app/components/multiple-select/multiple-select-component.component.js',
 
+  //login
+  'app/views/login/login.state.js',
+  'app/views/login/login.controller.js',
+  'app/views/login/login.service.js',
+
+  //logout
+  'app/views/logout/logout.state.js',
+  'app/views/logout/logout.controller.js',
+
+  //profile
+  'app/views/profile/profile.state.js',
+  'app/views/profile/profile.controller.js',
+  'app/views/profile/profile.service.js',
 
 ];
 
 var TEMPLATES_SRC = [
+  'app/views/login/login.view.html',
   'app/views/home-page/home-page.view.html',
   'app/views/stats-charts/stats-charts.view.html',
   'app/views/project-details/project-details.view.html',
@@ -105,7 +119,8 @@ var TEMPLATES_SRC = [
   'app/views/new-team/new-team.view.html',
   'app/views/tasks-by-state/tasks-by-state.view.html',
   'app/views/task-details/task-details.view.html',
-  'app/views/team-details/team-details.view.html'
+  'app/views/team-details/team-details.view.html',
+  'app/views/profile/profile.view.html',
 ];
 
 var CSS_APP = [
@@ -135,7 +150,9 @@ var JS_LIB = [
   'bower_components/angular-resource/angular-resource.js',
   'bower_components/d3/d3.min.js',
   'bower_components/c3/c3.min.js',
-  'bower_components/c3-angular/c3-angular.min.js'
+  'bower_components/c3-angular/c3-angular.min.js',
+  'bower_components/angular-bcrypt/dist/dtrw.bcrypt.js',
+  'bower_components/angular-cookies/angular-cookies.js'
 ];
 
 

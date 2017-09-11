@@ -1,5 +1,8 @@
 /**
- * Created by Bojan on 8/7/2017.
+ * Created by Marijo on 10-Sep-17.
+ */
+/**
+ * Created by Marijo on 02-Sep-17.
  */
 
 (function (angular) {
@@ -14,11 +17,9 @@
 
   function registerState($stateProvider) {
 
-    $stateProvider.state('home-page', {
-      url: '/',
-      controller: 'HomePageController',
-      templateUrl: 'app/views/home-page/home-page.view.html',
-
+    $stateProvider.state('logout', {
+      url: '/logout',
+      controller: 'LogoutController',
       controllerAs: 'vm'
     });
   }

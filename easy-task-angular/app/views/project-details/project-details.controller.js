@@ -9,17 +9,16 @@
     .module('easy-task-angular')
     .controller('ProjectDetailsController', ProjectDetailsController);
 
-  ProjectDetailsController.$inject = ['$log', '$location', 'ProjectDetailsService','$scope','$stateParams'];
+  ProjectDetailsController.$inject = ['$log', '$location', 'ProjectDetailsService','$scope','$stateParams','$cookies'];
 
   /* @ngInject */
-  function ProjectDetailsController($log, $location, ProjectDetailsService,$scope,$stateParams) {
+  function ProjectDetailsController($log, $location, ProjectDetailsService,$scope,$stateParams,$cookies) {
     var vm = this;
 
     //variables declaration
     vm.title = 'project-details';
     vm.PROJECT_ID = 0;
     vm.path="";
-    vm.USER_ID = 1; //jas go stavam fiksno
     vm.user = {};
     vm.file={};
     vm.project = {};
@@ -161,8 +160,15 @@
     vm.updateProject = updateProjectFn;
 
 
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getProjectIdFn();
+    }
+    else {
+      $location.path('/login');
+    }
     //functions invocation
-    getProjectIdFn();
+
 
 
     //functions implementation

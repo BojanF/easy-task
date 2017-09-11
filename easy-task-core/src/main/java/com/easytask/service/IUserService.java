@@ -52,4 +52,8 @@ public interface IUserService {
 
     List<Team> getTeamsMemberOf(Long userId);
 
+    User getUserByUsername(String username);
+
+
+
 }

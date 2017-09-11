@@ -9,14 +9,14 @@
     .module('easy-task-angular')
     .controller('StatsChartsController', StatsChartsController);
 
-  StatsChartsController.$inject = ['$log', 'StatsChartsService'];
+  StatsChartsController.$inject = ['$log', 'StatsChartsService','$cookies','$location'];
 
   /* @ngInject */
-  function StatsChartsController($log, StatsChartsService) {
+  function StatsChartsController($log, StatsChartsService,$cookies,$location) {
     var vm = this;
 
     //variables declaration
-    vm.USER_ID = 1;
+
     vm.teamStats = [];
     vm.uiState = {
       donuts:{
@@ -125,8 +125,15 @@
 
 
     //functions invocation
-    getProjectStats();
-    getTeamStats();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getProjectStats();
+      getTeamStats();
+    }
+    else {
+      $location.path('/login');
+    }
+
 
 
     //functions implementation

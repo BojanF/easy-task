@@ -1,0 +1,82 @@
+<div class="container-fluid ng-scope">
+<h1 class="page-header">{{vm.user.name+" "+vm.user.surname}}</h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><i class="fa fa-info-circle"></i> Information for user</h3>
+  </div>
+  <div class="panel-body">
+    <div ng-show="vm.loadGif">
+      <img src="pictures//loading.gif" style="width:20px; height:20px;">
+    </div>
+    <div class="panel panel-danger" ng-show="vm.loadErr">
+      <div class="panel-heading text-center text-danger">
+        <div> We run into an error!</div>
+        <div> Please try again</div>
+      </div>
+    </div>
+    <table class="table table-striped" ng-show="!vm.loadGif && !vm.loadErr">
+      <tbody style="font-size:1.5em">
+      <tr>
+        <th class="td-right-align col-md-2"> Name:</th>
+        <td class="td-left-align col-md-10">{{vm.user.name}}</td>
+      </tr>
+      <tr>
+        <th class="td-right-align">Surname: </th>
+        <td class="td-left-align">{{vm.user.surname}}</td>
+      </tr>
+      <tr>
+        <th class="td-right-align">Username:</th>
+        <td class="td-left-align">{{vm.user.username}} </td>
+      </tr>
+      <tr>
+        <th class="td-right-align">Email:</th>
+        <td class="td-left-align" id="show_email" >{{vm.user.email}}&nbsp;&nbsp;<a id="change_email_a">edit</a></td>
+        <td class="td-left-align" id="change_email" hidden><form id="email_form" class="form-inline " ng-submit="vm.editEmail()">
+            <input type="email" ng-model="vm.user.email" class="form-control" id="email" value="{{vm.user.email}}">
+          <button type="submit" class="btn btn-default">Change</button>
+          <span class="text-danger" ng-show="vm.emailErrorMessage"> We run into an error! Please try again.</span>
+        </form>
+
+        </td>
+      </tr>
+      <tr>
+        <th class="td-right-align">Password:</th>
+        <td class="td-left-align" id="show_pass" ><a id="change_pass_a">Change Password</a></td>
+        <td class="td-left-align" id="change_pass" hidden><form id="pass_form" class="form-inline" ng-submit="vm.changePass()">
+          <input type="password" class="form-control" placeholder="Old Password" ng-model="vm.pass.oldPass1" id="old_pass_1" required>
+          <input type="password" class="form-control" placeholder="Repeat Old Password" ng-model="vm.pass.oldPass2" id="old_pass_2" required>
+          <input type="password" class="form-control" placeholder="New Password" ng-model="vm.pass.newPass" id="new_pass" required>
+          <button type="submit" class="btn btn-default">Change</button>
+          <span class="text-danger" ng-show="vm.passErrorMessage" id="error"></span>
+        </form>
+        </td>
+      </tr>
+      <tr>
+        <th class="td-right-align"></th>
+        <td class="td-left-align"><a ng-click="vm.deactivate()">Deactivate Account</a></td>
+      </tr>
+
+      </tbody>
+    </table>
+
+    <div class="panel panel-danger" hidden>
+      <div class="panel-heading text-center text-danger">
+        <div>We run into an error!</div>
+        <div>Reload the page!</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script>
+  $("#change_email_a").click(function(){
+    $("#show_email").hide();
+    $("#change_email").show();
+  })
+
+  $("#change_pass_a").click(function(){
+    $("#show_pass").hide();
+    $("#change_pass").show();
+  })
+  </script>

@@ -113,4 +113,13 @@ public class UserServiceImpl implements IUserService {
     public List<Team> getTeamsMemberOf(Long userId){
         return userRepository.getTeamsMemberOf(userId);
     };
+
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
+    }
+
+
+
+
+
 }

@@ -6,10 +6,14 @@
       'ui.router',
       'ui.select',
       'smart-table',
+      'dtrw.bcrypt',
+      'ngCookies',
       'ngResource',
       'gridshore.c3js.chart',
       'moment-picker',
       'confirmClick'
-    ]);
+    ])
+
+
 
 })(angular);

@@ -9,14 +9,14 @@
     .module('easy-task-angular')
     .controller('TeamDetailsController', TeamDetailsController);
 
-  TeamDetailsController.$inject = ['$log', '$stateParams', 'TeamDetailsService'];
+  TeamDetailsController.$inject = ['$log', '$stateParams', 'TeamDetailsService','$cookies','$location'];
 
   /* @ngInject */
-  function TeamDetailsController($log, $stateParams, TeamDetailsService) {
+  function TeamDetailsController($log, $stateParams, TeamDetailsService,$cookies,$location) {
     var vm = this;
 
     //variables declaration
-    vm.USER_ID = 1;
+
     vm.TEAM_ID = 0;
     vm.fetchedData = {
       team: {},
@@ -81,7 +81,14 @@
     vm.getTeamStats = getTeamStatsFn;
 
     //functions invocation
-    getTeamId();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getTeamId();
+    }
+    else {
+      $location.path('/login');
+    }
+
 
     //functions implementation
     function getTeamId(){

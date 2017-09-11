@@ -9,13 +9,12 @@
     .module('easy-task-angular')
     .controller('NewProjectsController', NewProjectsController);
 
-  NewProjectsController.$inject = ['$log', '$scope', 'NewProjectService'];
+  NewProjectsController.$inject = ['$log', '$scope', 'NewProjectService','$cookies','$location'];
 
   /* @ngInject */
-  function NewProjectsController($log, $scope, NewProjectService) {
+  function NewProjectsController($log, $scope, NewProjectService,$cookies,$location) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 1;
     vm.user = {};
     vm.newProject = {};
     // vm.test = [];
@@ -41,12 +40,20 @@
       loadGif: true
     };
 
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getTeamsLedByUser();
+    }
+    else {
+      $location.path('/login');
+    }
+
     //functions declaration
     vm.saveNewProject = saveNewProjectFn;
     vm.clearNewProject = clearNewProjectFn;
 
     //functions invocation
-    getTeamsLedByUser();
+
 
     //functions implementation
     function saveNewProjectFn() {

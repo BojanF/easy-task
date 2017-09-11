@@ -9,13 +9,13 @@
     .module('easy-task-angular')
     .controller('YourProjectsController', YourProjectsController);
 
-  YourProjectsController.$inject = ['$log', 'YourProjectsService'];
+  YourProjectsController.$inject = ['$log', 'YourProjectsService','$cookies','$location'];
 
   /* @ngInject */
-  function YourProjectsController($log, YourProjectsService) {
+  function YourProjectsController($log, YourProjectsService,$cookies,$location) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 1;
+
     vm.projects = [];
     vm.uiState = {
       loadGif: true,
@@ -28,7 +28,16 @@
     vm.getProjectThatUserWorksOn = getProjectThatUserWorksOnFn;
 
     //functions invocation
-    getProjectThatUserWorksOnFn();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getProjectThatUserWorksOnFn();
+    }
+    else {
+      $location.path('/login');
+    }
+
+
+
 
     //functions implementation
     function getProjectThatUserWorksOnFn(){

@@ -9,13 +9,12 @@
     .module('easy-task-angular')
     .controller('TeamLeaderController', TeamLeaderController);
 
-  TeamLeaderController.$inject = ['$log', 'TeamLeaderService'];
+  TeamLeaderController.$inject = ['$log', 'TeamLeaderService','$cookies','$location'];
 
   /* @ngInject */
-  function TeamLeaderController($log, TeamLeaderService) {
+  function TeamLeaderController($log, TeamLeaderService,$cookies,$location) {
     var vm = this;
     //variables declaration
-    vm.USER_ID = 1;
     vm.teams = [];
     vm.uiState={
       loadGif: true,
@@ -30,7 +29,14 @@
     vm.deleteTeam = deleteTeamFn;
 
     //functions invocation
-    getTeams();
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getTeams();
+    }
+    else {
+      $location.path('/login');
+    }
+
 
     //functions implementation
 

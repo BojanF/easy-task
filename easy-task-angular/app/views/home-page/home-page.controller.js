@@ -11,15 +11,26 @@
     .module('easy-task-angular')
     .controller('HomePageController', HomePageController);
 
-  HomePageController.$inject = ['$log', '$scope', 'HomePageService'];
+  HomePageController.$inject = ['$log', '$scope', 'HomePageService','$cookies','$location'];
 
   /* @ngInject */
-  function HomePageController($log, $scope, HomePageService) {
+  function HomePageController($log, $scope, HomePageService,$cookies,$location) {
     var vm = this;
-
-    //variables declaration
-    vm.USER_ID = 1;
     vm.user = null;
+    //variables declaration
+    if($cookies.get('id')) {
+      vm.USER_ID=$cookies.get('id');
+      getUserFn();
+      $("#page-wrapper").show();
+      getTasksStatesFn();
+      getActiveTasksFn();
+      getUrgentProjectsFn();
+    }
+    else {
+      $location.path('/login');
+    }
+
+
     vm.title = 'easy-task';
     vm.listTasksStates = null;
     vm.group = null
@@ -49,16 +60,14 @@
 
 
     //functions declaration
-    // vm.getUser = getUserFn;
+    vm.getUser = getUserFn;
     vm.getTasksStates = getTasksStatesFn;
     vm.getActiveTasks = getActiveTasksFn;
     vm.getUrgentProjects = getUrgentProjectsFn;
 
     //functions invocation
-    // getUserFn();
-    getTasksStatesFn();
-    getActiveTasksFn();
-    getUrgentProjectsFn();
+
+
 
 
 
@@ -68,11 +77,11 @@
 
     //functions implementation
 
-    // function getUserFn(){
-    //     HomePageService.getUser(vm.USER_ID).then(function (data) {
-    //     vm.user = data;
-    //   });
-    // }
+     function getUserFn(){
+        HomePageService.getUser(vm.USER_ID).then(function (data) {
+        vm.user = data;
+       });
+     }
 
     function getTasksStatesFn(){
       HomePageService.getTasksStates(vm.USER_ID).then(function (data) {
