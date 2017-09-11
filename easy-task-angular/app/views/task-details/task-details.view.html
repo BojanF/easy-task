@@ -47,8 +47,8 @@
 
     <div class="tab-pane active" id="details-tab">
 
-      <div class="panel panel-default" >
-        <!--ng-show="vm.uiState.changeStateOnly"-->
+      <div class="panel panel-default" ng-show="vm.uiState.updateStateOnly.show">
+
         <div class="panel-heading">
           <h3 class="panel-title"><i class="fa fa-fw fa-pencil-square"></i>Update state</h3>
         </div>
@@ -59,7 +59,7 @@
                 <div class="col-md-offset-3 col-md-3">
                   <!--<label> Change state </label>-->
                   <single-select model="vm.updatedTaskState"
-                                 entities="vm.states"
+                                 entities="vm.eligibleTaskStates"
                                  required="true"
                                  placeholder="Select state">
                   </single-select>
@@ -74,6 +74,25 @@
               </div>
             </div>
           </form>
+
+          <div class="panel panel-info" ng-show="vm.uiState.updateStateOnly.updatingGif">
+            <div class="panel-heading text-center text-info">
+              <img src="pictures//loading.gif" style="width:20px; height:20px;">
+              <span>&nbsp;Updating state...</span>
+            </div>
+          </div>
+          <div class="panel panel-success" ng-show="vm.uiState.updateStateOnly.successMsg">
+            <div class="panel-heading text-center text-success">
+              {{vm.uiState.updateStateOnly.successMsg}}
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.updateStateOnly.errorMsg">
+            <div class="panel-heading text-center text-danger">
+              {{vm.uiState.updateStateOnly.errorMsg}}
+            </div>
+          </div>
+
+
         </div>
       </div>
 
@@ -170,7 +189,7 @@
                     <div class="col-md-6">
                       <label> Change state </label>
                       <single-select model="vm.updatedTaskState"
-                                     entities="vm.states"
+                                     entities="vm.eligibleTaskStates"
                                      required="true"
                                      placeholder="Select state">
                       </single-select>
@@ -246,10 +265,10 @@
               </div>
             </form>
 
-            <div class="panel panel-info" id="savingTeam" ng-show="vm.uiState.updatingGif">
+            <div class="panel panel-info" ng-show="vm.uiState.updatingGif">
               <div class="panel-heading text-center">
                 <img src="pictures//loading.gif" style="width:20px; height:20px;">
-                <span id="fileUploadingText">&nbsp;Updating ...</span>
+                <span>&nbsp;Updating ...</span>
               </div>
             </div>
             <div class="panel panel-success" ng-show="vm.uiState.successMsg">

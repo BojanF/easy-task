@@ -35,4 +35,6 @@ public interface ICoworkersRepository {
 
     List<User> getNonEngagedUsersForUser(Long userId);
 
+    List<User> searchNonEngagedUsersForUser(Long userId, String searchCriteria);
+
 }

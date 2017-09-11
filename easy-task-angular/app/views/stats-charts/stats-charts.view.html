@@ -21,66 +21,10 @@
 
   <div class="row">
 
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-line-chart"></i> Time series chart</h3>
-        </div>
-        <div class="panel-body">
-          <!--<div id="chart3" style="max-height: 320px; position: relative;"></div>-->
-          <!--<c3chart bindto-id="chart1"-->
-                   <!--show-labels="false"-->
-                   <!--chart-data="vm.c3DataTest.time_chart.points"-->
-                   <!--chart-columns="vm.c3DataTest.time_chart.columns"-->
-                   <!--chart-x="vm.c3DataTest.time_chart.tickValues2">-->
-            <!--<chart-column column-id="line1"-->
-                          <!--column-name="Created"-->
-                          <!--column-values="30, 5, 3, 10, 18, 25"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-column column-id="line2"-->
-                          <!--column-name="Not started"-->
-                          <!--column-values="0, 10, 20, 15, 25, 20"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-column column-id="line3"-->
-                          <!--column-name="In progress"-->
-                          <!--column-values="0, 10, 45, 70, 60, 85"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-column column-id="line4"-->
-                          <!--column-name="Up to date"-->
-                          <!--column-values="0, 5, 30, 45, 27, 35"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-column column-id="line5"-->
-                          <!--column-name="Finished"-->
-                          <!--column-values="0, 5, 35, 38, 40, 45"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-column column-id="line6"-->
-                          <!--column-name="Deadline breach"-->
-                          <!--column-values="0, 0, 1, 0, 2, 0"-->
-                          <!--column-type="line"/>-->
-            <!--<chart-axis>-->
-              <!--<chart-axis-x axis-id="x" axis-type="timeseries">-->
-                <!--<chart-axis-x-tick tick-format="%Y-%d-%m"/>-->
-              <!--</chart-axis-x>-->
-            <!--</chart-axis>-->
-            <!--<chart-axes values-xs="x"/>-->
-            <!--<chart-points point-radius="5"-->
-                          <!--show-point="true"-->
-                          <!--point-expand-enabled="true"-->
-                          <!--point-expand-radius="10"/>-->
-          <!--</c3chart>-->
-
-        </div>
-        <!--TODO da se napise description-->
-        <div class="panel-footer">
-          <p> Descrption for this statistic category</p>
-        </div>
-      </div>
-    </div>
-
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Projects state </h3>
+          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Projects states </h3>
         </div>
         <div class="panel-body">
           <div ng-show="vm.uiState.donuts.projects.loadGif">
@@ -108,7 +52,7 @@
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">
-          <p> Descrption for this statistic category</p>
+          Project states for projects that you are leader.
         </div>
       </div>
     </div>
@@ -116,7 +60,7 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks stage</h3>
+          <h3 class="panel-title"><i class="fa fa-pie-chart"></i> Tasks states</h3>
         </div>
         <div class="panel-body">
           <div ng-show="vm.uiState.donuts.tasks.loadGif">
@@ -144,7 +88,7 @@
         </div>
         <!--TODO da se napise description-->
         <div class="panel-footer">
-          <p> Descrption for this statistic category</p>
+          Task stages for all tasks that are part from projects that you are leading.
         </div>
       </div>
     </div>
@@ -184,7 +128,7 @@
 
         <!--TODO da se napise description-->
         <div class="panel-footer">
-          <p> Descrption for this statistic category</p>
+          How many projects has each team that you are leading.
         </div>
       </div>
     </div>

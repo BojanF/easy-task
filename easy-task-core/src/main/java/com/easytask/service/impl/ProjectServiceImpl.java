@@ -117,4 +117,8 @@ public class ProjectServiceImpl implements IProjectService {
     public List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now){
         return projectRepository.getUpToDateProjectsWithBreachedDeadline(now);
     }
+
+    public List<Task> getDeadlineBreachedTasksForProject(Long projectId, DateTime now){
+        return projectRepository.getDeadlineBreachedTasksForProject(projectId, now);
+    }
 }

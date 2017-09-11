@@ -17,23 +17,25 @@
 
     var getCoworkersResource = $resource('http://localhost:8000/api/coworkers/get-coworkers/:id', {}, {});
     var coworkersResource = $resource('http://localhost:8000/api/coworkers/delete/:userA/:userB', {}, {});
-    var getEligibleUsersResource = $resource('http://localhost:8000/api/coworkers/eligible/:id', {}, {});
+    var searchEligibleUsersResource = $resource('http://localhost:8000/api/coworkers/eligible/:id/:criteria', {}, {});
     var getReceivedRequestsResource = $resource('http://localhost:8000/api/coworkers/received/:id', {}, {});
     var getUserResource = $resource('http://localhost:8000/api/user/:id', {}, {});
     var deleteRequestResource = $resource('http://localhost:8000/api/coworkers/delete-request/:userA/:userB', {}, {}); //za cance Req isto delete req ke se vika
     var acceptRequestResource = $resource('http://localhost:8000/api/coworkers/accept-request/:id', {}, {});
     var getSentRequestsResource = $resource('http://localhost:8000/api/coworkers/sent/:id', {}, {});
+    var sendRequestResource = $resource('http://localhost:8000/api/coworkers/send-request/:id', {}, {});
 
     var service = {
 
       getCoworkers: getCoworkersFn,
-      getEligibleUsers: getEligibleUsersFn,
+      searchEligibleUsers: searchEligibleUsersFn,
       getSentRequests: getSentRequestsFn,
       getReceivedRequests: getReceivedRequestsFn,
       getUser: getUserFn,
       acceptRequest: acceptRequestFn,
       deleteRequest: deleteRequestFn,
-      removeAsCoworker: removeAsCoworkerFn
+      removeAsCoworker: removeAsCoworkerFn,
+      sendRequest: sendRequestFn
 
     };
     return service;
@@ -50,8 +52,8 @@
 
     }
 
-    function getEligibleUsersFn(userId){
-      return getEligibleUsersResource.query({id:userId}).$promise;
+    function searchEligibleUsersFn(userId, searchCriteria){
+      return searchEligibleUsersResource.query({id:userId, criteria:searchCriteria}).$promise;
     }
 
     function getReceivedRequestsFn(userId){
@@ -75,7 +77,9 @@
       return getSentRequestsResource.query({id:userId}).$promise;
     }
 
-
+    function sendRequestFn(coworkers){
+      return sendRequestResource.save(coworkers).$promise;
+    }
 
 
   }

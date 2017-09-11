@@ -30,9 +30,12 @@ public interface ICoworkersService {
 
     List<User> getNonEngagedUsersForUser(Long userId);
 
+    List<User> searchNonEngagedUsersForUser(Long userId, String searchCriteria);
+
     Coworkers acceptRequest(Coworkers coworkers);
 
     void removeAsCoworker(CoworkerId id);
 
     void refuseRequest(CoworkerId id);
+
 }

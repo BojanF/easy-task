@@ -57,6 +57,10 @@ public class CoworkersServiceImpl implements ICoworkersService {
         return coworkerRepository.getNonEngagedUsersForUser(userId);
     }
 
+    public List<User> searchNonEngagedUsersForUser(Long userId, String searchCriteria) {
+        return coworkerRepository.searchNonEngagedUsersForUser(userId, searchCriteria);
+    }
+
     public Coworkers acceptRequest(Coworkers coworkers){
         CoworkerId existingEntry = new CoworkerId(coworkers.getId().getUserB(), coworkers.getId().getUserA());
         Coworkers request = findById(existingEntry);

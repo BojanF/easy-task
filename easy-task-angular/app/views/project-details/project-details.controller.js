@@ -191,8 +191,6 @@
     }
 
     function getProjectFn(){
-      // getProjectIdFn();
-      console.log("asd");
       ProjectDetailsService.getProject(vm.PROJECT_ID).then(
 
         function (data) {
@@ -215,18 +213,8 @@
             console.log(vm.projectUpdate);
 
             vm.project = projectParsing(vm.project);
-            // vm.projectUpdate = projectParsing(vm.projectUpdate);
 
-            //dateRestriction start
-            var nowDate = new Date();
-            var projectCreatedOnDate = new Date(vm.project.createdOn);
-            if(nowDate > projectCreatedOnDate)
-              vm.datesRestrictions.newTask.createdOn.min = moment(nowDate);
-            else
-              vm.datesRestrictions.newTask.createdOn.min = moment(projectCreatedOnDate);
-            vm.datesRestrictions.newTask.createdOn.max = moment(new Date(vm.project.deadline));
-            vm.datesRestrictions.newTask.deadline.max = vm.datesRestrictions.newTask.createdOn.max;
-            //dateRestriction end
+            newTaskDatesRestrictions();
 
             if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
               vm.uiState.leader = true;
@@ -252,6 +240,7 @@
         function(){
           //error callback
           vm.uiState.showInfo = false;
+          vm.uiState.showStats = false;
           vm.uiState.tasks.loadGif = false;
           vm.uiState.tasks.showTasks = false;
           vm.uiState.tasks.showNoTasksPanel = false;
@@ -683,16 +672,7 @@
             vm.project.documentsNum = vm.entitiesData.documents.length;
           //counter for project info end
 
-          //dateRestriction start
-          var nowDate = new Date();
-          var projectCreatedOnDate = new Date(vm.project.createdOn);
-          if(nowDate > projectCreatedOnDate)
-            vm.datesRestrictions.newTask.createdOn.min = moment(nowDate);
-          else
-            vm.datesRestrictions.newTask.createdOn.min = moment(projectCreatedOnDate);
-          vm.datesRestrictions.newTask.createdOn.max = moment(new Date(vm.project.deadline));
-          vm.datesRestrictions.newTask.deadline.max = vm.datesRestrictions.newTask.createdOn.max;
-          //dateRestriction end
+          newTaskDatesRestrictions();
 
           vm.uiState.update.updatingGif = false;
           vm.uiState.update.successUpdateProject = "Project with name \"" + data.name + "\" was successfully updated!";
@@ -709,6 +689,17 @@
     }
 
     //helper functions
+
+    function newTaskDatesRestrictions(){
+      var nowDate = new Date();
+      var projectCreatedOnDate = new Date(vm.project.createdOn);
+      if(nowDate > projectCreatedOnDate)
+        vm.datesRestrictions.newTask.createdOn.min = moment(nowDate);
+      else
+        vm.datesRestrictions.newTask.createdOn.min = moment(projectCreatedOnDate);
+      vm.datesRestrictions.newTask.createdOn.max = moment(new Date(vm.project.deadline));
+      vm.datesRestrictions.newTask.deadline.max = vm.datesRestrictions.newTask.createdOn.max;
+    }
 
     function threeInOneFunction(tasks){
       //set css class for task state
@@ -796,16 +787,12 @@
       console.log("STATE: "+tasks[0].project.state);
 
       if(tasks[0].project.state != 'BREACH_OF_DEADLINE') {
-        console.log("DIKSI 1");
         if(new Date() < maxTaskDeadlineDate )
           vm.datesRestrictions.updateProject.deadline.min = moment(new Date(maxTaskDeadlineDate));
-        else vm.datesRestrictions.updateProject.deadline.min = moment(new Date());
+        else vm.datesRestrictions.updateProject.deadline.min = moment(new Date()).add(1, 'd');
       }
       else {
-        console.log("DIKSI");
         vm.datesRestrictions.updateProject.deadline.min = moment(new Date()).add(1, 'd');
-        // vm.datesRestrictions.updateProject.deadline.min = moment(new Date(tasks[0].project.deadline)).add(1, 'd');
-
       }
 
       if(maxTaskCompletedOnDate != null)

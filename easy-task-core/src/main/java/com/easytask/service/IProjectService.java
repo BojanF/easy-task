@@ -47,4 +47,6 @@ public interface IProjectService {
     List<Project> getBreachedProjects(DateTime now);
 
     List<Project> getUpToDateProjectsWithBreachedDeadline(DateTime now);
+
+    List<Task> getDeadlineBreachedTasksForProject(Long projectId, DateTime now);
 }

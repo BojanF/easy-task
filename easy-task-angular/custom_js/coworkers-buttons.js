@@ -20,3 +20,8 @@ $(document).on('click',".refuseRequest",function(){
   $(this).html('<img src="pictures//loading.gif" style="width:15px; height:15px;">&nbsp;Turning down...');
   $(this).prop('disabled',true);
 });
+
+;$(document).on('click',".sendRequest",function(){
+  $(this).html('<img src="pictures//loading.gif" style="width:15px; height:15px;">&nbsp;Sending...');
+  $(this).prop('disabled',true);
+});

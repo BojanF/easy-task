@@ -33,6 +33,12 @@ public class CoworkersController implements ApplicationContextAware {
         this.coworkersService = coworkersService;
     }
 
+    @RequestMapping(value = "/send-request", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Coworkers sendRequest(@RequestBody Coworkers coworkers){
+        int x = 0;
+        return coworkersService.insert(coworkers);
+    }
     @RequestMapping(value = "/accept-request", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Coworkers acceptedRequest(@RequestBody Coworkers coworkers){
@@ -56,9 +62,9 @@ public class CoworkersController implements ApplicationContextAware {
         coworkersService.removeAsCoworker(new CoworkerId(userA, userB));
     }
 
-    @RequestMapping(value = "/eligible/{id}", method = RequestMethod.GET)
-    public List<User> getEligibleUsers(@PathVariable Long id){
-        return coworkersService.getNonEngagedUsersForUser(id);
+    @RequestMapping(value = "/eligible/{id}/{criteria}", method = RequestMethod.GET)
+    public List<User> getEligibleUsers(@PathVariable Long id, @PathVariable String criteria){
+        return coworkersService.searchNonEngagedUsersForUser(id, criteria);
     }
 
     @RequestMapping(value = "/received/{id}", method = RequestMethod.GET)
@@ -75,6 +81,5 @@ public class CoworkersController implements ApplicationContextAware {
     public void refuseRequest(@PathVariable Long userA, @PathVariable Long userB){
         coworkersService.deleteById(new CoworkerId(userA, userB));
     }
-
 
 }

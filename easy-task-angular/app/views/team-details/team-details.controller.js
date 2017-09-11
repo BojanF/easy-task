@@ -124,7 +124,7 @@
             // console.log(vm.fetchedData.team.id);
             vm.teamForUpdate = copyTeam(vm.fetchedData.team);
 
-            if(vm.fetchedData.team.leader.id == vm.USER_ID)
+            if(vm.fetchedData.team.leader.user.id == vm.USER_ID)
               vm.uiState.leader = true;
             getTeamProjects();
           }

@@ -200,4 +200,32 @@ public class CoworkersRepositoryImpl implements ICoworkersRepository {
         return entityManager.createQuery(cq).getResultList();
     }
 
+    public List<User> searchNonEngagedUsersForUser(Long userId, String searchCriteria) {
+
+        List<Long> engagedUsersIdentifiers = new ArrayList<Long>();
+        List<Long> acceptedI = getCoworkersForUserIdentifiers(userId);
+        List<Long> sentRequestsI = getCoworkerRequestsSentIdentifiers(userId);
+        List<Long> receivedRequestsI = getCoworkerRequestsReceivedIdentifiers(userId);
+
+        //user can`t send coworker request to himself
+        engagedUsersIdentifiers.add(userId);
+        engagedUsersIdentifiers.addAll(acceptedI);
+        engagedUsersIdentifiers.addAll(sentRequestsI);
+        engagedUsersIdentifiers.addAll(receivedRequestsI);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> from= cq.from(User.class);
+        cq.select(from).where(
+                cb.or(
+                        cb.like(from.<String>get(User.FIELDS.NAME), searchCriteria),
+                        cb.like(from.<String>get(User.FIELDS.SURNAME), searchCriteria),
+                        cb.like(from.<String>get(User.FIELDS.USERNAME), searchCriteria)
+                ),
+                from.get(User.FIELDS.ID).in(engagedUsersIdentifiers).not()
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
 }

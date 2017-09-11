@@ -271,5 +271,25 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         return entityManager.createQuery(cq).getResultList();
     }
 
+    public List<Task> getDeadlineBreachedTasksForProject(Long projectId, DateTime now){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> cq = cb.createQuery(Task.class);
+        Root<Task> from = cq.from(Task.class);
+
+        cq.select(from).where(
+                cb.equal(
+                        from.get(Task.FIELDS.PROJECT).get(Project.FIELDS.ID), projectId
+                ),
+                cb.or(
+                        cb.equal(from.get(Task.FIELDS.STATE),
+                                TaskState.NOT_STARTED),
+                        cb.equal(from.get(Task.FIELDS.STATE),
+                                TaskState.IN_PROGRESS)
+                ),
+                cb.lessThan(from.get(Task.FIELDS.DEADLINE).as(DateTime.class), now)
+        );
+
+        return entityManager.createQuery(cq).getResultList();
+    }
 
 }

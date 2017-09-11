@@ -129,19 +129,78 @@
           <!--</span>-->
         </div>
         <div class="panel-body">
-          <div ng-show="vm.uiState.eligibleUsers.loadGif">
-            <img src="pictures//loading.gif" style="width:20px; height:20px;">
-          </div>
+          <form id="searchUser" name="searchUserForm" ng-submit="vm.searchEligibleUsers()">
+            <div class="row">
+              <div class="col-md-9">
+                <input-component placeholder="search criteria"
+                                 type="text"
+                                 model="vm.searchCriteria"
+                                 required="true"
+                                 focus="true">
+                </input-component>
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-primary btn btn-block search"
+                        form="searchUser"
+                        ng-disabled="searchUserForm.$invalid"
+                        type="submit"
+                        style="margin-top:8%">
+                  <i class="fa fa-fw fa-search"></i>
+                  Search
+                </button>
+              </div>
+            </div>
+          </form>
 
-          <div class="panel panel-info" ng-show="vm.uiState.eligibleUsers.showNoEligibleUsers">
-            <div class="panel-heading text-center text-info">
-              Everybody in the system is your coworker!
+          <table st-table="searchResults" st-safe-src="vm.fetchedData.searchResults" ng-show="vm.uiState.eligibleUsers.showEligibleUsers" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <!--<th st-sort="name">Name</th>-->
+              <!--<th st-sort="shortName">Short name</th>-->
+              <th>User</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+            <tr>
+              <th colspan="4"> <input type="text" class="form-control" st-search st-delay="400" type="search" placeholder="search..."> </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="sr in searchResults">
+              <td><a href="#">{{sr.name+" "+sr.surname}}</a></td>
+              <!--<td>{{t.id}}</td>-->
+              <td>{{sr.username}}</td>
+              <td>{{sr.email}}</td>
+              <td>
+                <button class="btn btn-success btn-xs sendRequest" ng-click="vm.sendRequest(sr)">
+                  <i class="fa fa-plus-square"></i> Send request
+                </button>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                <div st-pagination="" st-items-by-page="10" st-displayed-pages="5"></div>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+
+          <div class="panel panel-success" ng-show="vm.uiState.eligibleUsers.successPanel">
+            <div class="panel-heading text-center text-success">
+              {{vm.uiState.eligibleUsers.successPanel}}
             </div>
           </div>
-          <div class="panel panel-danger" ng-show="vm.uiState.eligibleUsers.showErrorPanel">
+          <div class="panel panel-info" ng-show="vm.uiState.eligibleUsers.showNoEligibleUsers">
+            <div class="panel-heading text-center text-info">
+              No user matches your search!
+            </div>
+          </div>
+          <div class="panel panel-danger" ng-show="vm.uiState.eligibleUsers.errorPanel">
             <div class="panel-heading text-center text-danger">
-              <div> We run into an error!</div>
-              <div> Try again later!</div>
+              {{vm.uiState.eligibleUsers.errorPanel}}
             </div>
           </div>
         </div>

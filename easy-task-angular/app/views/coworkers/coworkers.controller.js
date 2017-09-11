@@ -9,12 +9,12 @@
     .module('easy-task-angular')
     .controller('CoworkersController', CoworkersController);
 
-  CoworkersController.$inject = ['$log', 'CoworkersService','$cookies','$location'];
+  CoworkersController.$inject = ['$log', 'CoworkersService', '$cookies', '$location'];
 
   /* @ngInject */
-  function CoworkersController($log, CoworkersService,$cookies,$location) {
+  function CoworkersController($log, CoworkersService, $cookies, $location) {
     var vm = this;
-
+    vm.USER_ID = 1;
     vm.uiState = {
       coworkers: {
         loadGif: true,
@@ -25,12 +25,10 @@
         errorMsg: null
       },
       eligibleUsers: {
-        loadGif: true,
-        showTable: false,
         showEligibleUsers: false,
         showNoEligibleUsers: false,
-        showErrorPanel: false,
-        loaded: false
+        successPanel: null,
+        errorPanel: null
       },
       sent: {
         loadGif: true,
@@ -51,13 +49,32 @@
         errorMsg: null
       }
     };
-
+    vm.searchCriteria = null;
     vm.fetchedData = {
       coworkers: [],
+      searchResults: [],
       receivedRequests: [],
       sentRequests: [],
       user: {}
     };
+
+
+
+    vm.searchEligibleUsers = searchEligibleUsersFn;
+
+    vm.getSentRequests = getSentRequestsFn;
+    vm.getReceivedRequests = getReceivedRequestsFn;
+
+    vm.acceptRequest = acceptRequestFn;
+    vm.refuseRequest = refuseRequestFn;
+    vm.removeAsCoworker = removeAsCoworkerFn;
+    vm.cancelRequest = cancelRequestFn;
+    vm.sendRequest = sendRequestFn;
+
+    vm.refreshCoworkers = refreshCoworkersFn;
+    vm.refreshSentRequests = refreshSentRequests;
+    vm.refreshReceivedRequests = refreshReceivedRequestsFn;
+
 
     if($cookies.get('id')) {
       vm.USER_ID=$cookies.get('id');
@@ -66,21 +83,6 @@
     else {
       $location.path('/login');
     }
-
-    vm.getEligibleUsers = getEligibleUsersFn;
-    vm.getSentRequests = getSentRequestsFn;
-    vm.getReceivedRequests = getReceivedRequestsFn;
-
-    vm.acceptRequest = acceptRequestFn;
-    vm.refuseRequest = refuseRequestFn;
-    vm.removeAsCoworker = removeAsCoworkerFn;
-    vm.cancelRequest = cancelRequestFn;
-
-    vm.refreshCoworkers = refreshCoworkersFn;
-    vm.refreshSentRequests = refreshSentRequests;
-    vm.refreshReceivedRequests = refreshReceivedRequestsFn;
-
-
 
     function getCoworkers(){
       CoworkersService.getCoworkers(vm.USER_ID).then(successCallbackCoworkers, errorCallbackCoworkers);
@@ -136,27 +138,49 @@
         vm.uiState.coworkers.errorMsg = "Refresh the page and try again later!";
         var button = $(".removeCoworker");
         button.html('<i class="fa fa-times"></i> Remove as coworker');
-        button.prop('disabled',true);
+        button.prop('disabled',false);
       }
     }
 
-    function getEligibleUsersFn(){
-      if(!vm.uiState.eligibleUsers.loaded){
-        vm.uiState.eligibleUsers.loaded = true;
+    function searchEligibleUsersFn(){
+      vm.uiState.eligibleUsers = {showEligibleUsers:false,
+        showNoEligibleUsers:false,
+        successPanel: null,
+        errorPanel:null};
+      var searchButton = $(".search");
+      searchButton.html('<img src="pictures//loading.gif" style="width:15px; height:15px;">&nbsp;Searching...');
+      searchButton.prop('disabled',true);
+      var firstWord = vm.searchCriteria.split(" ")[0];
+      CoworkersService.searchEligibleUsers(vm.USER_ID, firstWord).then(
+        function(data){
+          //successCallback
 
-        CoworkersService.getEligibleUsers(vm.USER_ID).then(
-          function(data){
-            //successCallback
+          vm.fetchedData.searchResults = data;
+          console.log(vm.fetchedData.searchResults);
+          searchButton.html('<i class="fa fa-fw fa-search"></i> Search');
+          searchButton.prop('disabled',false);
 
-          },
-          function(){
-            //errorCallback
+          if(vm.fetchedData.searchResults.length > 0){
+            vm.uiState.eligibleUsers.showEligibleUsers = true;
+            vm.uiState.eligibleUsers.showNoEligibleUsers = false;
           }
-        );
+          else{
+            vm.uiState.eligibleUsers.showEligibleUsers = false;
+            vm.uiState.eligibleUsers.showNoEligibleUsers = true;
+          }
+        },
+        function(){
+          //errorCallback
 
+          searchButton.html('<i class="fa fa-fw fa-search"></i> Search');
+          searchButton.prop('disabled',false);
+          vm.uiState.eligibleUsers = {showEligibleUsers:false,
+            showNoEligibleUsers:false,
+            successPanel: null,
+            errorPanel:'We run into an error! Try again later!'};
 
-
-      }
+        }
+      );
     }
 
     function getReceivedRequestsFn(){
@@ -191,6 +215,54 @@
           }
         );
 
+      }
+    }
+
+    function sendRequestFn(userB){
+      var coworkers = {};
+      vm.uiState.eligibleUsers.successPanel = null;
+      vm.uiState.eligibleUsers.errorPanel = null;
+      if(vm.fetchedData.user.id == undefined) {
+        console.log("ZEMAM USER");
+        CoworkersService.getUser(vm.USER_ID).then(
+
+          function(data) {
+            //success fetching user
+            vm.fetchedData.user = data;
+            coworkers = {
+              id: {
+                userA: vm.fetchedData.user.id,
+                userB: userB.id
+              },
+              userA: vm.fetchedData.user,
+              userB: userB,
+              state: 'PENDING'
+            };
+            saveCoworkersRequest(coworkers);
+
+          },
+          function () {
+            //error fetching user
+            vm.uiState.eligibleUsers.errorPanel = "Try again later";
+            var button = $(".sendRequest");
+            button.html('<i class="fa fa-plus-square"></i> Send request');
+            button.prop('disabled',false);
+          }
+        );
+      }
+      else{
+        console.log("IMAM USER");
+        coworkers = {
+          id: {
+            userA: vm.fetchedData.user.id,
+            userB: userB.id
+          },
+          userA: vm.fetchedData.user,
+          userB: userB,
+          state: 'PENDING'
+        };
+
+        saveCoworkersRequest(coworkers);
       }
     }
 
@@ -235,7 +307,7 @@
             vm.uiState.received.errorMsg = "Try again later";
             var button = $(".acceptRequest");
             button.html('<i class="fa fa-plus"></i> Accept');
-            button.prop('disabled',true);
+            button.prop('disabled',false);
           }
         );
       }
@@ -271,7 +343,7 @@
         vm.uiState.received.errorMsg = "Try again later!";
         var button = $(".refuseRequest");
         button.html('<i class="fa fa-times"></i> Turn down');
-        button.prop('disabled',true);
+        button.prop('disabled',false);
       }
     }
 
@@ -323,7 +395,7 @@
           vm.uiState.sent.errorMsg = "Try again later!";
           var button = $(".cancelRequest");
           button.html('<i class="fa fa-ban"></i> Cancel request');
-          button.prop('disabled',true);
+          button.prop('disabled',false);
         }
       );
     }
@@ -347,19 +419,38 @@
     function saveCoworkers(coworkers){
       console.log(coworkers);
       CoworkersService.acceptRequest(coworkers).then(
-        function(data){
+        function(){
           //success
 
           refreshCoworkersFn();
           refreshReceivedRequestsFn();
-          vm.uiState.received.successMsg = "Successfully accepted request from ";
+          vm.uiState.received.successMsg = "Successfully accepted request!";
         },
         function(){
           //error
           vm.uiState.received.errorMsg = "Try again later";
           var button = $(".acceptRequest");
           button.html('<i class="fa fa-plus"></i> Accept');
-          button.prop('disabled',true);
+          button.prop('disabled',false);
+        }
+      );
+    }
+
+    function saveCoworkersRequest(coworkers){
+      console.log(coworkers);
+      CoworkersService.sendRequest(coworkers).then(
+        function(){
+          //success
+          refreshSentRequests();
+          searchEligibleUsersFn();
+          vm.uiState.eligibleUsers.successPanel = "Request is successfully sent! ";
+        },
+        function(){
+          //error
+          vm.uiState.eligibleUsers.errorPanel = "Try again later";
+          var button = $(".sendRequest");
+          button.html('<i class="fa fa-plus-square"></i> Send request');
+          button.prop('disabled',false);
         }
       );
     }

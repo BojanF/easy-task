@@ -58,6 +58,8 @@ public class TaskServiceImpl implements ITaskService {
         Task old = taskRepository.findById(task.getId());
 
         if (old != null) {
+            if(task.getState() == TaskState.IN_PROGRESS)
+                task.setCompletedOn(null);
             task = taskRepository.update(task);
 
             projectStateManagementAfterUpdate(task);
@@ -89,7 +91,7 @@ public class TaskServiceImpl implements ITaskService {
             else if(tasksByProject.getFinished().equals(totalTaskNumber)){
 //                p.setState(ProjectState.UP_TO_DATE);
                 if(DateTime.now().compareTo(p.getDeadline())<=0)
-                    p.setState(ProjectState.UP_TO_DATE);
+                    p.setState(ProjectState.UP_TO_DATE); //tested
 
 //                else if(DateTime.now().compareTo(p.getDeadline())>0 && p.getState()!=ProjectState.BREACH_OF_DEADLINE)
 //                    p.setState(ProjectState.FINISHED);
@@ -114,7 +116,7 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     public Task removeUserFromTask(Task task, User user) {
-       return taskRepository.removeUserFromTask(task, user);
+        return taskRepository.removeUserFromTask(task, user);
     }
 
     public List<Task> getDeadlineBreachedTasks(DateTime now){
@@ -146,6 +148,8 @@ public class TaskServiceImpl implements ITaskService {
             }
             else if(tasksByProject.getFinished().equals(tasksByProject.getTotal()) && DateTime.now().compareTo(p.getDeadline())>0){
                 p.setState(ProjectState.FINISHED); //??????????????
+                //vajda ne moze da odneses nekoj task vo finished state ako e proektot breach, poso ako proektot e breach
+                //site taskovi vo proektot bi bile breach, osven onie koi se finished
             }
         }
         else{

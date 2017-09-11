@@ -23,9 +23,9 @@ public class AutomationProcess {
     @Autowired
     IProjectService projectService;
 
-    @Scheduled(cron = "0 0 */1 * * *")
+    @Scheduled(cron = "0 1 */1 * * *")
     public void setBreachDeadlineTasks() {
-        System.out.println("            Every hour in minute 0 " + DateTime.now());
+        System.out.println("            Every hour in minute 1 " + DateTime.now());
 
         List<Task> list = taskService.getDeadlineBreachedTasks(DateTime.now());
         System.out.println("Size: " + list.size());
@@ -36,9 +36,9 @@ public class AutomationProcess {
         }
     }
 
-    @Scheduled(cron = "0 15 */1 * * *")
+    @Scheduled(cron = "0 16 */1 * * *")
     public void setFinishToUTDProjects() {
-        System.out.println("            Every hour in minute 15 " + DateTime.now());
+        System.out.println("            Every hour in minute 16 " + DateTime.now());
 
         List<Project> list = projectService.getUpToDateProjectsWithBreachedDeadline(DateTime.now());
         System.out.println("Size: " + list.size());
@@ -57,16 +57,28 @@ public class AutomationProcess {
         }
     }
 
-    @Scheduled(cron = "0 30 */1 * * *")
+    @Scheduled(cron = "0 31 */1 * * *")
     public void setBreachDeadlineToProjects() {
-        System.out.println("            Every hour in minute 30 " + DateTime.now());
+        System.out.println("            Every hour in minute 31 " + DateTime.now());
 
-        List<Project> list = projectService.getBreachedProjects(DateTime.now());
+        DateTime now = DateTime.now();
+        List<Project> list = projectService.getBreachedProjects(now);
         System.out.println("Size: " + list.size());
 
         for(Project p : list){
-            p.setState(ProjectState.BREACH_OF_DEADLINE);
-            projectService.update(p);
+            List<Task> breachedTasks = projectService.getDeadlineBreachedTasksForProject(p.getId(), now);
+            for(Task t : breachedTasks){
+                t.setState(TaskState.BREACH_OF_DEADLINE);
+                taskService.update(t);
+            }
+            if(breachedTasks.size() == 0) {
+                System.out.println("            VLEZE UPDATE");
+                p.setState(ProjectState.BREACH_OF_DEADLINE);
+                projectService.update(p);
+            }
+            else{
+                System.out.println("            NE UPDATE");
+            }
         }
     }
 
