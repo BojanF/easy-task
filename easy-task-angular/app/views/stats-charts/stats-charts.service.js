@@ -17,9 +17,9 @@
   function StatsChartsServiceFn($log, $resource) {
 
 
-    var projectStatsResource = $resource('http://localhost:8000/api/user/project-stats/:id', {}, {});
-    var taskStatsResource = $resource('http://localhost:8000/api/user/task-stats/:id', {}, {});
-    var getLeaderResource = $resource("http://localhost:8000/api/user/team-stats/:id", {}, {});
+    var projectStatsResource = $resource('https://kostancev.com:8080/api/user/project-stats/:id', {}, {});
+    var taskStatsResource = $resource('https://kostancev.com:8080/api/user/task-stats/:id', {}, {});
+    var getLeaderResource = $resource("https://kostancev.com:8080/api/user/team-stats/:id", {}, {});
 
     var service = {
 

@@ -56,8 +56,9 @@
 
               });
               return promise = $timeout(function () {
-                // console.log("SVETLO SE GASNE");
+                console.log("SVETLO SE GASNE");
                 return scope.confirmingAction = false;
+
               }, 1500);
             } else {
 
@@ -66,9 +67,9 @@
               //dodadeno od Bojan sledni 2 linii
               element.html('<img src="pictures//loading.gif" style="width:15px; height:15px;">&nbsp;Removing...');
               element.prop('disabled', true);
-              // console.log("DA DA DA");
+              console.log("DA DA DA");
               element.removeClass('confirming');
-
+              element.prop('id', "delete");
               element.addClass('confirmed');
 
               actionText = element.html();

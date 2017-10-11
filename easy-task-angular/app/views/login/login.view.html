@@ -16,6 +16,28 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-lg-12" >
+              <div class="panel panel-success" ng-show="vm.registerSuccessful">
+                <div class="panel-heading text-center text-danger">
+                  <div> You have been successfully registered. Please log in.</div>
+                </div>
+              </div>
+              <div class="panel panel-default" ng-show="vm.logging">
+                <div class="panel-heading text-center text-danger">
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                  <span>&nbsp; Logging in...</span>
+                </div>
+              </div>
+              <div class="panel panel-default" ng-show="vm.registering">
+                <div class="panel-heading text-center text-danger">
+                  <img src="pictures//loading.gif" style="width:20px; height:20px;">
+                  <span>&nbsp; Creating account...</span>
+                </div>
+              </div>
+              <div class="panel panel-warning" ng-show="vm.deactivateMessage">
+                <div class="panel-heading text-center text-danger">
+                  <div> Account deactivated!</div>
+                </div>
+              </div>
               <div class="panel panel-danger" ng-show="vm.invalidLoginCredentials">
                 <div class="panel-heading text-center text-danger">
                   <div> Invalid username or password!</div>
@@ -51,6 +73,7 @@
                   </div>
                 </div>
               </form>
+
               <form id="register-form" ng-submit="vm.register()" method="post" role="form" style="display: none;">
                 <div class="form-group">
                   <input type="text" ng-model=vm.user.name name="name" id="name" tabindex="1" class="form-control" placeholder="Name" value="" required>

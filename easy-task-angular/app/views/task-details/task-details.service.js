@@ -15,8 +15,8 @@
   function TaskDetailsServiceFn($log, $resource) {
 
 
-    var taskResource = $resource('http://localhost:8000/api/task/:id', {}, {});
-    var taskUpdateResource = $resource('http://localhost:8000/api/task/update/:id', {}, {});
+    var taskResource = $resource('https://kostancev.com:8080/api/task/:id', {}, {});
+    var taskUpdateResource = $resource('https://kostancev.com:8080/api/task/update/:id', {}, {});
 
     var service = {
 

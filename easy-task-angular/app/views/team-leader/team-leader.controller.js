@@ -100,10 +100,11 @@
 
           setTimeout(function(){
             button.html('<i class="fa fa-times"></i>&nbsp; Delete team &nbsp;');
-            button.prop('disabled',false);
+            $("#delete").removeAttr("disabled");
+            $("#delete").removeAttr("id");
 
           }, 300);
-          console.log("NE SE IZBRISA");
+          //console.log("NE SE IZBRISA");
           vm.uiState.errorDeleteTeam = " We run into an error! Try again later!";
         }
 

@@ -15,8 +15,8 @@
   /* @ngInject */
   function NewProjectServiceFn($log, $resource) {
 
-    var insertProjectResource = $resource("http://localhost:8000/api/project/:id", {}, {});
-    var getTeamsResource = $resource("http://localhost:8000/api/user/led-teams/:id", {}, {});
+    var insertProjectResource = $resource("https://kostancev.com:8080/api/project/:id", {}, {});
+    var getTeamsResource = $resource("https://kostancev.com:8080/api/user/led-teams/:id", {}, {});
 
     var service = {
       saveNewProject: saveNewProjectFn,

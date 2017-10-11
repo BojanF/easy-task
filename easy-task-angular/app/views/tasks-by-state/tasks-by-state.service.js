@@ -14,7 +14,7 @@
   /* @ngInject */
   function TasksByStateServiceFn($log, $resource) {
 
-    var tasksByStateResource = $resource('http://localhost:8000/api/home-page/tasks-by-state/:id/:state', {}, {});
+    var tasksByStateResource = $resource('https://kostancev.com:8080/api/home-page/tasks-by-state/:id/:state', {}, {});
 
     var service = {
       getTasks: getTasksFn

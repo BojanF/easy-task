@@ -30,14 +30,16 @@
           <div ng-show="vm.uiState.donuts.projects.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
+	<div class="table-responsive">
           <c3chart bindto-id="project-chart"
                    chart-data="vm.c3DataTest.donuts.points.projects"
                    chart-columns="vm.c3DataTest.donuts.columns.projects"
                    ng-show="vm.uiState.donuts.projects.showStats">
             <chart-legend show-legend="true" legend-position="right"/>
-            <chart-size chart-height="350" chart-width="450"/>
+            <chart-size chart-height="300" chart-width="450"/>
             <chart-donut title="Projects state percentages" width="60"/>
           </c3chart>
+	</div>
           <div class="panel panel-info" ng-show="vm.uiState.donuts.projects.showNoStatsPanel">
             <div class="panel-heading text-center text-info">
               You are not leader to any project!
@@ -66,14 +68,16 @@
           <div ng-show="vm.uiState.donuts.tasks.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
+	<div class="table-responsive">
           <c3chart bindto-id="tasks-chart"
                    chart-data="vm.c3DataTest.donuts.points.tasks"
                    chart-columns="vm.c3DataTest.donuts.columns.tasks"
                    ng-show="vm.uiState.donuts.tasks.showStats">
             <chart-legend show-legend="true" legend-position="right"/>
-            <chart-size chart-height="350" chart-width="450"/>
+            <chart-size chart-height="300" chart-width="450"/>
             <chart-donut title="Tasks stage percentages" width="60"/>
           </c3chart>
+	</div>
           <div class="panel panel-info" ng-show="vm.uiState.donuts.tasks.showNoStatsPanel">
             <div class="panel-heading text-center text-info">
               Your projects don`t have any tasks!

@@ -14,11 +14,11 @@
   /* @ngInject */
   function TeamDetailsServiceFn($log, $resource) {
 
-    var teamResource = $resource("http://localhost:8000/api/team/:id", {}, {});
-    var teamProjectsResource = $resource("http://localhost:8000/api/team/team-projects/:id", {}, {});
-    var getCoworkersResource = $resource("http://localhost:8000/api/coworkers/get-coworkers/:id", {}, {});
-    var updateTeamResource = $resource("http://localhost:8000/api/team/update/:id", {}, {});
-    var teamStatsResource = $resource("http://localhost:8000/api/team/stats/:id", {}, {});
+    var teamResource = $resource("https://kostancev.com:8080/api/team/:id", {}, {});
+    var teamProjectsResource = $resource("https://kostancev.com:8080/api/team/team-projects/:id", {}, {});
+    var getCoworkersResource = $resource("https://kostancev.com:8080/api/coworkers/get-coworkers/:id", {}, {});
+    var updateTeamResource = $resource("https://kostancev.com:8080/api/team/update/:id", {}, {});
+    var teamStatsResource = $resource("https://kostancev.com:8080/api/team/stats/:id", {}, {});
 
     var service = {
       getTeam: getTeamFn,

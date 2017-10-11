@@ -37,7 +37,8 @@
       <div ng-show="vm.uiState.loadGif">
         <img src="pictures//loading.gif" style="width:20px; height:20px;">
       </div>
-      <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table table-bordered table-striped">
+      <div class="table-responsive">
+      <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table  table-responsive table-bordered table-striped">
         <thead>
         <tr>
           <!--<th st-sort="name">Name</th>-->
@@ -71,6 +72,7 @@
         </tr>
         </tfoot>
       </table>
+        </div>
       <div class="panel panel-info" ng-show="vm.uiState.showNoProjectsPanel">
         <div class="panel-heading text-center text-info">
           You don`t participate in any project!

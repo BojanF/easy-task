@@ -8,13 +8,15 @@
     <div ng-show="vm.loadGif">
       <img src="pictures//loading.gif" style="width:20px; height:20px;">
     </div>
-    <div class="panel panel-danger" ng-show="vm.loadErr">
+
+    <div class="panel panel-danger" ng-show="vm.loadErr || vm.deactivateErr ">
       <div class="panel-heading text-center text-danger">
         <div> We run into an error!</div>
-        <div> Please try again</div>
+        <div> Please try again.</div>
       </div>
     </div>
-    <table class="table table-striped" ng-show="!vm.loadGif && !vm.loadErr">
+    <div class="table-responsive">
+    <table class="table  table-responsive table-striped" ng-show="!vm.loadGif && !vm.loadErr">
       <tbody style="font-size:1.5em">
       <tr>
         <th class="td-right-align col-md-2"> Name:</th>
@@ -58,7 +60,7 @@
 
       </tbody>
     </table>
-
+    </div>
     <div class="panel panel-danger" hidden>
       <div class="panel-heading text-center text-danger">
         <div>We run into an error!</div>

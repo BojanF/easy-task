@@ -98,7 +98,8 @@
           var button = $(".removeProject");
           setTimeout(function(){
             button.html('<i class="fa fa-times"></i>&nbsp; Delete project');
-            button.prop('disabled',false);
+            $("#delete").removeAttr("disabled");
+            $("#delete").removeAttr("id");
           }, 300);
 
           vm.uiState.errorDelete = "Something happened. Try again later to delete the project!";

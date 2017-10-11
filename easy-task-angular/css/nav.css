@@ -74,6 +74,7 @@ body {
     background-color: #000;
 }
 
+
 .top-nav>.open>.dropdown-menu {
     float: left;
     position: absolute;
@@ -137,15 +138,27 @@ ul.alert-dropdown {
         width: 225px;
     }
 
-    .side-nav li a:hover,
+
+
+
+  .side-nav li a:hover,
     .side-nav li a:focus {
         outline: none;
         background-color: #000 !important;
     }
+
+
+
+
 }
 
 .side-nav>li>ul {
     padding: 0;
+}
+.side-nav li .notSelectable:hover,
+.side-nav li .notSelectable:focus {
+  color: #999 !important;
+  background-color: #222 !important;
 }
 
 .side-nav>li>ul>li>a {

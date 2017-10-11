@@ -36,8 +36,8 @@
         <a href="#/stats-charts"><i class="fa fa-fw fa-bar-chart-o"></i> Statistics </a>
       </li>
       <li>
-        <a href="javascript:;" *data-toggle="collaps" data-target="#demo"><i class="fa fa-fw fa-flask"></i> Projects <i class="fa fa-fw fa-caret-down"></i></a>
-        <ul id="demo" class="collape">
+        <a class="notSelectable" data-target="#demo"><i class="fa fa-fw fa-flask"></i> Projects <i class="fa fa-fw fa-caret-down"></i></a >
+        <ul id="demo" >
           <li>
             <a href="#/administrating-projects"><i class="fa fa-fw fa-cogs font-awesome-padding-right"></i>Administrating</a>
           </li>
@@ -50,8 +50,8 @@
         </ul>
       </li>
       <li>
-        <a href="javascript:;" data-toggle="collase" data-target="#demo2"><i class="fa fa-fw fa-users"></i> Teams <i class="fa fa-fw fa-caret-down"></i></a>
-        <ul id="demo2" class="collase">
+        <a class="notSelectable" data-target="#demo2"><i class="fa fa-fw fa-users"></i> Teams <i class="fa fa-fw fa-caret-down"></i></a>
+        <ul id="demo2" >
           <li class="active">
             <a href="#/team-leader"><i class="fa fa-fw fa-cogs font-awesome-padding-right"></i>Leader</a>
           </li>
@@ -71,6 +71,12 @@
   <!-- /.navbar-collapse -->
 </nav>
 <script>
+  $(document).ready(function () {
+    $(".navbar-nav li a").click(function(event) {
+      $(".navbar-collapse").collapse('hide');
+    });
+  });
+
   if(document.cookie.split(";")[1]!=null){
     $("#name_surname").html(" "+document.cookie.split(";")[1].split('=')[1].replace('%20'," "));
   }

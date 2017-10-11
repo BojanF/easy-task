@@ -14,11 +14,11 @@
   /* @ngInject */
   function NewTeamServiceFn($log, $resource) {
 
-    var saveTeamResource = $resource("http://localhost:8000/api/team/:id", {}, {});
-    var getCoworkersResource = $resource("http://localhost:8000/api/coworkers/get-coworkers/:id", {}, {});
-    var getLeaderResource = $resource("http://localhost:8000/api/leader/get-leader/:id", {}, {});
-    var getUserResource = $resource("http://localhost:8000/api/user/:id");
-    var saveNewLeader = $resource("http://localhost:8000/api/leader/:id", {}, {});
+    var saveTeamResource = $resource("https://kostancev.com:8080/api/team/:id", {}, {});
+    var getCoworkersResource = $resource("https://kostancev.com:8080/api/coworkers/get-coworkers/:id", {}, {});
+    var getLeaderResource = $resource("https://kostancev.com:8080/api/leader/get-leader/:id", {}, {});
+    var getUserResource = $resource("https://kostancev.com:8080/api/user/:id");
+    var saveNewLeader = $resource("https://kostancev.com:8080/api/leader/:id", {}, {});
 
     var service = {
       saveNewTeam: saveNewTeamFn,

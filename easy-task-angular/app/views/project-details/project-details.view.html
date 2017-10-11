@@ -217,7 +217,8 @@
               <div> Reload the page!</div>
             </div>
           </div>
-          <table st-table="tasks" st-safe-src="vm.entitiesData.tasks" ng-show="vm.uiState.tasks.showTasks" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="tasks" st-safe-src="vm.entitiesData.tasks" ng-show="vm.uiState.tasks.showTasks" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -256,7 +257,8 @@
                 <button class="btn btn-danger btn-xs removeTask"
                         ng-disabled="t.disabledDeleteButton"
                         confirm-click="vm.removeTask(t.id, t.disabledDeleteButton)"
-                        confirm-message="Are you sure?">
+                        confirm-message="Are you sure?"
+                        onclick="deleteButtonClicked(this)">
                   <i class="fa fa-times"></i>&nbsp; Delete task &nbsp;
                 </button>
               </td>
@@ -270,6 +272,7 @@
             </tr>
             </tfoot>
           </table>
+            </div>
 
         </div>
       </div>
@@ -354,7 +357,8 @@
           <div ng-show="vm.uiState.documents.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="documents" st-safe-src="vm.entitiesData.documents" ng-show="vm.uiState.documents.showDocuments" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="documents" st-safe-src="vm.entitiesData.documents" ng-show="vm.uiState.documents.showDocuments" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -371,7 +375,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="d in documents | orderBy:['date']:reverse = true| filter:searchProfName">
-              <td><i class="fa fa-file{{d.icon}}"></i><a href={{"http://localhost:8080/api/document/"+d.id}}>&nbsp;{{d.name}}</a></td>
+              <td><i class="fa fa-file{{d.icon}}"></i><a href={{"https://kostancev.com:8080/api/document/"+d.id}}>&nbsp;{{d.name}}</a></td>
               <td>{{d.size/1024 | number:0 }}&nbsp; KB</td>
               <td>{{d.date}}</td>
               <td>{{d.user.name}}</td>
@@ -393,6 +397,7 @@
             </tr>
             </tfoot>
           </table>
+          </div>
 
           <div class="panel panel-info" ng-show="vm.uiState.documents.showNoDocumentsPanel">
             <div class="panel-heading text-center text-info">
@@ -520,7 +525,8 @@
           <h3 class="panel-title"><i class="fa fa-info-circle"></i> Information for project</h3>
         </div>
         <div class="panel-body">
-          <table ng-show="vm.uiState.showInfo"class="table table-striped">
+          <div class="table-responsive">
+          <table ng-show="vm.uiState.showInfo"class="table  table-responsive table-striped">
             <tbody>
             <tr>
               <th class="td-right-align col-md-2"> Name:</th>
@@ -566,6 +572,7 @@
             </tr>
             </tbody>
           </table>
+          </div>
 
           <div class="panel panel-danger" ng-hide="vm.uiState.showInfo">
             <div class="panel-heading text-center text-danger">
@@ -605,6 +612,7 @@
     </div>
 
     <div class="tab-pane" id="update-tab">
+
 
       <br/><br/>
 
@@ -726,4 +734,12 @@
 <script src="custom_js/tabs.js"></script>
 <script src="custom_js/bootstrap-filestyle.min.js"></script>
 <script src="custom_js/file_upload.js"></script>
+<script >
+  function deleteButtonClicked(btn){
+    btn.className+=" clicked";
+    btn.setAttribute( "onClick", "confirmClick(this)" );
+  }
+
+  function confirmClick(btn){}
+</script>
 

@@ -96,30 +96,41 @@
           vm.uiState.loadGif = false;
           if(vm.task.id != undefined) {
             console.log(vm.task);
-            var workersOnTaskIDs = [];
-            for(var i=0 ; i<vm.task.users.length ; i++)
-              workersOnTaskIDs.push(vm.task.users[i].id);
 
-            if(workersOnTaskIDs.includes(vm.USER_ID) &&
-              new Date() < vm.task.deadline &&
-              vm.task.state!='BREACH_OF_DEADLINE' &&
-              vm.task.leader.user.id!=vm.USER_ID) {
-              vm.uiState.updateStateOnly.show = true;
-            }
+            var teamMembersIds = [];
+            for(var i=0 ; i<vm.task.project.team.users.length ; i++)
+              teamMembersIds.push(vm.task.project.team.users[i].id);
 
-            vm.taskForUpdate = copyTask(vm.task);
+            if(teamMembersIds.includes(parseInt(vm.USER_ID))){
 
-            vm.uiState.showPage = true;
-            vm.uiState.showDetails = true;
-            vm.uiState.showError = false;
-            if (vm.task.leader.user.id==vm.USER_ID) {
-              vm.uiState.showUpdate = true;
-              datesRestrictionFunc();
+              var workersOnTaskIDs = [];
+              for(var j=0 ; j<vm.task.users.length ; j++)
+                workersOnTaskIDs.push(vm.task.users[j].id);
+
+              if (workersOnTaskIDs.includes(parseInt(vm.USER_ID)) &&
+                new Date() < vm.task.deadline &&
+                vm.task.state != 'BREACH_OF_DEADLINE' &&
+                vm.task.leader.user.id != vm.USER_ID) {
+                vm.uiState.updateStateOnly.show = true;
+              }
+
+              vm.taskForUpdate = copyTask(vm.task);
+
+              vm.uiState.showPage = true;
+              vm.uiState.showDetails = true;
+              vm.uiState.showError = false;
+              if (vm.task.leader.user.id == vm.USER_ID) {
+                vm.uiState.showUpdate = true;
+                datesRestrictionFunc();
+              }
+              else {
+                vm.uiState.showUpdate = false;
+              }
+              taskParsing();
             }
             else{
-              vm.uiState.showUpdate = false;
+              vm.uiState.showPage = false;
             }
-            taskParsing();
           }
           else{
             vm.uiState.showPage = false;

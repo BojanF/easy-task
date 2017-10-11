@@ -13,12 +13,12 @@
 
   /* @ngInject */
   function HomePageServiceFn($log, $resource) {
-    var userResource = $resource('http://localhost:8000/api/user/:id', {}, {
+    var userResource = $resource('https://kostancev.com:8080/api/user/:id', {}, {
       // update:{isArray:false, method:'PUT'}
     });
-    var homePageResource = $resource('http://localhost:8000/api/home-page/tasks-states/:id', {}, {});
-    var activeTasksResource = $resource('http://localhost:8000/api/home-page/active-tasks/:id', {}, {});
-    var urgentProjectsResource = $resource('http://localhost:8000/api/home-page/urgent-projects/:id', {}, {});
+    var homePageResource = $resource('https://kostancev.com:8080/api/home-page/tasks-states/:id', {}, {});
+    var activeTasksResource = $resource('https://kostancev.com:8080/api/home-page/active-tasks/:id', {}, {});
+    var urgentProjectsResource = $resource('https://kostancev.com:8080/api/home-page/urgent-projects/:id', {}, {});
 
     var service = {
       getUser: getUserFn,

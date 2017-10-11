@@ -15,8 +15,8 @@
   function AdministratingProjectsServiceFn($log, $resource) {
 
 
-    var administratingProjectsResource = $resource('http://localhost:8000/api/user/administrating-projects/:id', {}, {});
-    var projectRepository = $resource('http://localhost:8000/api/project/:id', {}, {});
+    var administratingProjectsResource = $resource('https://kostancev.com:8080/api/user/administrating-projects/:id', {}, {});
+    var projectRepository = $resource('https://kostancev.com:8080/api/project/:id', {}, {});
 
     var service = {
       getAdministratingProjects: getAdministratingProjectsFn,

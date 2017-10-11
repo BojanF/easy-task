@@ -1,7 +1,7 @@
 <div ng-hide="vm.uiState.showPage" class="container-fluid">
   <div class="jumbotron">
     <h1>Ooooops!</h1>
-    <p>We can`t find team with that identificator!</p>
+    <p>We can't find that team!</p>
   </div>
 </div>
 
@@ -55,7 +55,8 @@
           <div ng-show="vm.uiState.team.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table class="table table-striped" ng-show="vm.uiState.team.showData">
+          <div class="table-responsive">
+          <table class="table  table-responsive table-striped" ng-show="vm.uiState.team.showData">
             <tbody>
             <tr>
               <th class="td-right-align col-md-2"> Name:</th>
@@ -79,7 +80,7 @@
             </tr>
             </tbody>
           </table>
-
+          </div>
           <div class="panel panel-danger  " ng-show="vm.uiState.team.showErrorPanel">
             <div class="panel-heading text-center text-danger">
               <div> We run into an error!</div>
@@ -99,7 +100,8 @@
           <div ng-show="vm.uiState.projects.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="projects" st-safe-src="vm.fetchedData.projects" ng-show="vm.uiState.projects.showProjects" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="projects" st-safe-src="vm.fetchedData.projects" ng-show="vm.uiState.projects.showProjects" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <th>Name</th>
@@ -129,6 +131,7 @@
             </tr>
             </tfoot>
           </table>
+            </div>
           <div class="panel panel-info" ng-show="vm.uiState.projects.showNoProjects">
             <div class="panel-heading text-center text-info">
               This team does not work on any projects!

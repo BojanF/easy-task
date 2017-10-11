@@ -120,13 +120,24 @@
           vm.uiState.team.showErrorPanel = false;
 
           if(vm.fetchedData.team.id != undefined){
-            vm.uiState.showPage = true;
-            // console.log(vm.fetchedData.team.id);
-            vm.teamForUpdate = copyTeam(vm.fetchedData.team);
 
-            if(vm.fetchedData.team.leader.user.id == vm.USER_ID)
-              vm.uiState.leader = true;
-            getTeamProjects();
+            var teamMembersIds = [];
+            for(var i=0 ; i<vm.fetchedData.team.users.length ; i++)
+              teamMembersIds.push(vm.fetchedData.team.users[i].id);
+
+            if(teamMembersIds.includes(parseInt(vm.USER_ID))) {
+              vm.uiState.showPage = true;
+              // console.log(vm.fetchedData.team.id);
+              vm.teamForUpdate = copyTeam(vm.fetchedData.team);
+
+              if (vm.fetchedData.team.leader.user.id == vm.USER_ID)
+                vm.uiState.leader = true;
+              getTeamProjects();
+            }
+            else{
+              vm.uiState.showPage = false;
+
+            }
           }
           else{
             vm.uiState.showPage = false;

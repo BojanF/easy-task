@@ -138,7 +138,8 @@
         vm.uiState.coworkers.errorMsg = "Refresh the page and try again later!";
         var button = $(".removeCoworker");
         button.html('<i class="fa fa-times"></i> Remove as coworker');
-        button.prop('disabled',false);
+        $("#delete").removeAttr("disabled");
+        $("#delete").removeAttr("id");
       }
     }
 

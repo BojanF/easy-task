@@ -48,8 +48,8 @@
           {{vm.uiState.errorDelete}}
         </div>
       </div>
-
-      <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table table-bordered table-striped">
+      <div class="table-responsive">
+      <table st-table="projects" st-safe-src="vm.projects" ng-show="vm.uiState.showProjects" class="table  table-bordered table-striped">
         <thead>
         <tr>
           <!--<th st-sort="name">Name</th>-->
@@ -92,7 +92,7 @@
         </tr>
         </tfoot>
       </table>
-
+      </div>
 
 
       <div class="panel panel-info" ng-show="vm.uiState.showNoProjectsPanel">

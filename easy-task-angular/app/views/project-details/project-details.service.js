@@ -29,21 +29,21 @@
   /* @ngInject */
   function ProjectDetailsServiceFn($log, $resource) {
 
-    var userResource = $resource('http://localhost:8000/api/user/:id', {}, {});
-    var projectResource = $resource('http://localhost:8000/api/project/:id', {}, {});
-    var tasksResource = $resource('http://localhost:8000/api/project/tasks/:id', {}, {});
-    var commentsResource = $resource('http://localhost:8000/api/project/comments/:id', {}, {});
-    var documentsResource = $resource('http://localhost:8000/api/project/documents/:id', {}, {});
-    var taskResource = $resource('http://localhost:8000/api/task/:id', {}, {});
-    var newCommentsResource = $resource('http://localhost:8000/api/comment/:id', {}, {});
-    var newDocumentResource = $resource('http://localhost:8000/api/document/', {},{
+    var userResource = $resource('https://kostancev.com:8080/api/user/:id', {}, {});
+    var projectResource = $resource('https://kostancev.com:8080/api/project/:id', {}, {});
+    var tasksResource = $resource('https://kostancev.com:8080/api/project/tasks/:id', {}, {});
+    var commentsResource = $resource('https://kostancev.com:8080/api/project/comments/:id', {}, {});
+    var documentsResource = $resource('https://kostancev.com:8080/api/project/documents/:id', {}, {});
+    var taskResource = $resource('https://kostancev.com:8080/api/task/:id', {}, {});
+    var newCommentsResource = $resource('https://kostancev.com:8080/api/comment/:id', {}, {});
+    var newDocumentResource = $resource('https://kostancev.com:8080/api/document/', {},{
       save: {
         method:'POST',
         headers: {'Content-Type': undefined}
       }
     });
-    var documentResource = $resource('http://localhost:8000/api/document/:id', {}, {});
-    var projectUpdateResource = $resource('http://localhost:8000/api/project/update:id', {}, {});
+    var documentResource = $resource('https://kostancev.com:8080/api/document/:id', {}, {});
+    var projectUpdateResource = $resource('https://kostancev.com:8080/api/project/update:id', {}, {});
 
     var service = {
       getUser: getUserFn,

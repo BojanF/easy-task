@@ -76,8 +76,8 @@
               {{vm.uiState.coworkers.errorMsg}}
             </div>
           </div>
-
-          <table st-table="coworkers" st-safe-src="vm.fetchedData.coworkers" ng-show="vm.uiState.coworkers.showCoworkers" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="coworkers" st-safe-src="vm.fetchedData.coworkers" ng-show="vm.uiState.coworkers.showCoworkers" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -112,7 +112,7 @@
             </tr>
             </tfoot>
           </table>
-
+          </div>
 
         </div>
       </div>
@@ -151,8 +151,8 @@
               </div>
             </div>
           </form>
-
-          <table st-table="searchResults" st-safe-src="vm.fetchedData.searchResults" ng-show="vm.uiState.eligibleUsers.showEligibleUsers" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="searchResults" st-safe-src="vm.fetchedData.searchResults" ng-show="vm.uiState.eligibleUsers.showEligibleUsers" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -187,6 +187,7 @@
             </tr>
             </tfoot>
           </table>
+          </div>
 
           <div class="panel panel-success" ng-show="vm.uiState.eligibleUsers.successPanel">
             <div class="panel-heading text-center text-success">
@@ -244,8 +245,8 @@
               {{vm.uiState.sent.errorMsg}}
             </div>
           </div>
-
-          <table st-table="sentRequests" st-safe-src="vm.fetchedData.sentRequests" ng-show="vm.uiState.sent.showSentRequests" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="sentRequests" st-safe-src="vm.fetchedData.sentRequests" ng-show="vm.uiState.sent.showSentRequests" class="table  table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -279,7 +280,7 @@
             </tr>
             </tfoot>
           </table>
-
+          </div>
         </div>
       </div>
     </div>
@@ -321,8 +322,8 @@
               {{vm.uiState.received.errorMsg}}
             </div>
           </div>
-
-          <table st-table="receivedRequests" st-safe-src="vm.fetchedData.receivedRequests" ng-show="vm.uiState.received.showReceivedRequests" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="receivedRequests" st-safe-src="vm.fetchedData.receivedRequests" ng-show="vm.uiState.received.showReceivedRequests" class="table  table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -360,7 +361,7 @@
             </tr>
             </tfoot>
           </table>
-
+          </div>
 
         </div>
       </div>

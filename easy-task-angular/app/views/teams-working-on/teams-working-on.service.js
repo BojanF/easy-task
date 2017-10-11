@@ -14,7 +14,7 @@
   /* @ngInject */
   function TeamsWorkingOnServiceFn($log, $resource) {
 
-    var getTeamsInfoResource = $resource("http://localhost:8000/api/user/teams-working-on/:id", {}, {});
+    var getTeamsInfoResource = $resource("https://kostancev.com:8080/api/user/teams-working-on/:id", {}, {});
 
     var service = {
       getTeamsInfo: getTeamsInfoFn

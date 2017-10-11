@@ -15,15 +15,15 @@
   function CoworkersServiceFn($log, $resource) {
 
 
-    var getCoworkersResource = $resource('http://localhost:8000/api/coworkers/get-coworkers/:id', {}, {});
-    var coworkersResource = $resource('http://localhost:8000/api/coworkers/delete/:userA/:userB', {}, {});
-    var searchEligibleUsersResource = $resource('http://localhost:8000/api/coworkers/eligible/:id/:criteria', {}, {});
-    var getReceivedRequestsResource = $resource('http://localhost:8000/api/coworkers/received/:id', {}, {});
-    var getUserResource = $resource('http://localhost:8000/api/user/:id', {}, {});
-    var deleteRequestResource = $resource('http://localhost:8000/api/coworkers/delete-request/:userA/:userB', {}, {}); //za cance Req isto delete req ke se vika
-    var acceptRequestResource = $resource('http://localhost:8000/api/coworkers/accept-request/:id', {}, {});
-    var getSentRequestsResource = $resource('http://localhost:8000/api/coworkers/sent/:id', {}, {});
-    var sendRequestResource = $resource('http://localhost:8000/api/coworkers/send-request/:id', {}, {});
+    var getCoworkersResource = $resource('https://kostancev.com:8080/api/coworkers/get-coworkers/:id', {}, {});
+    var coworkersResource = $resource('https://kostancev.com:8080/api/coworkers/delete/:userA/:userB', {}, {});
+    var searchEligibleUsersResource = $resource('https://kostancev.com:8080/api/coworkers/eligible/:id/:criteria', {}, {});
+    var getReceivedRequestsResource = $resource('https://kostancev.com:8080/api/coworkers/received/:id', {}, {});
+    var getUserResource = $resource('https://kostancev.com:8080/api/user/:id', {}, {});
+    var deleteRequestResource = $resource('https://kostancev.com:8080/api/coworkers/delete-request/:userA/:userB', {}, {}); //za cance Req isto delete req ke se vika
+    var acceptRequestResource = $resource('https://kostancev.com:8080/api/coworkers/accept-request/:id', {}, {});
+    var getSentRequestsResource = $resource('https://kostancev.com:8080/api/coworkers/sent/:id', {}, {});
+    var sendRequestResource = $resource('https://kostancev.com:8080/api/coworkers/send-request/:id', {}, {});
 
     var service = {
 

@@ -13,8 +13,8 @@
 
   /* @ngInject */
   function LoginServiceFn($log, $resource) {
-    var loginResource = $resource('http://localhost:8000/api/login/:user', {}, {});
-    var registerResource = $resource('http://localhost:8000/api/register/:user', {}, {});
+    var loginResource = $resource('https://kostancev.com:8080/api/login/:user', {}, {});
+    var registerResource = $resource('https://kostancev.com:8080/api/register/:user', {}, {});
 
     var service = {
        login: loginFn,

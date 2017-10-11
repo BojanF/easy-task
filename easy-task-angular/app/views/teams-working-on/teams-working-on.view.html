@@ -35,7 +35,8 @@
       <div ng-show="vm.uiState.loadGif">
         <img src="pictures//loading.gif" style="width:20px; height:20px;">
       </div>
-      <table st-table="teams" st-safe-src="vm.teams" ng-show="vm.uiState.showTeams" class="table table-bordered table-striped">
+      <div class="table-responsive">
+      <table st-table="teams" st-safe-src="vm.teams" ng-show="vm.uiState.showTeams" class="table  table-responsive table-bordered table-striped">
         <thead>
         <tr>
           <!--<th st-sort="name">Name</th>-->
@@ -65,7 +66,7 @@
         </tr>
         </tfoot>
       </table>
-
+      </div>
       <div class="panel panel-info" ng-show="vm.uiState.showNoTeamsPanel">
         <div class="panel-heading text-center text-info">
           <div>You are not member of any team!</div>

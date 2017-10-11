@@ -16,12 +16,11 @@
 
   /* @ngInject */
   function ProfileServiceFn($log, $resource) {
-    var userResource = $resource('http://localhost:8000/api/user/:id', {}, {});
-    var editUserResource = $resource('http://localhost:8000/api/user/:id',{},{save: {
+    var userResource = $resource('https://kostancev.com:8080/api/user/:id', {}, {});
+    var editUserResource = $resource('https://kostancev.com:8080/api/user/:id',{},{save: {
       method:'PUT',
     }}
     );
-    var projectsWorking = $resource('http://localhost:8000/api/user/your-projects/:id',{},{});
 
     var service = {
       findById: findByIdFn,
@@ -40,7 +39,7 @@
     }
 
     function deactivateFn(user){
-      return editUserResource.delete({id:user.id},user).$promise;
+      return editUserResource.save({id:user.id},user).$promise;
     }
   }
 

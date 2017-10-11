@@ -201,34 +201,46 @@
 
 
           if(vm.project.id != undefined){
-            console.log('loadiraj');
-            console.log(vm.project);
-            getTasksFn();
 
-            vm.projectUpdate = copyProject(vm.project);
-            vm.projectUpdate = projectUpdateParsing(vm.projectUpdate);
+            var teamMembersIds = [];
+            for(var i=0 ; i<vm.project.team.users.length ; i++)
+              teamMembersIds.push(vm.project.team.users[i].id);
 
-            vm.datesRestrictions.updateProject.completedOn.max = moment(new Date(vm.project.deadline));
-
-            console.log(vm.projectUpdate);
-
-            vm.project = projectParsing(vm.project);
-
-            newTaskDatesRestrictions();
-
-            if(vm.USER_ID == vm.project.team.leader.user.id.toString()){
-              vm.uiState.leader = true;
-
-              if(vm.project.state!='BREACH_OF_DEADLINE' && vm.project.state!='FINISHED')
-                vm.uiState.addNewTask.button = true;
+            if(teamMembersIds.includes(parseInt(vm.USER_ID))) {
 
 
+              console.log('loadiraj');
+              console.log(vm.project);
+              getTasksFn();
 
-              //ovoj if vajda, 99%, e vishok :)
-              if(vm.project.team.users.length > 0) {
-                console.log("proektot ima useri na nego");
-                vm.uiState.addNewTask.users = true;
+              vm.projectUpdate = copyProject(vm.project);
+              vm.projectUpdate = projectUpdateParsing(vm.projectUpdate);
+
+              vm.datesRestrictions.updateProject.completedOn.max = moment(new Date(vm.project.deadline));
+
+              console.log(vm.projectUpdate);
+
+              vm.project = projectParsing(vm.project);
+
+              newTaskDatesRestrictions();
+
+              if (vm.USER_ID == vm.project.team.leader.user.id.toString()) {
+                vm.uiState.leader = true;
+
+                if (vm.project.state != 'BREACH_OF_DEADLINE' && vm.project.state != 'FINISHED')
+                  vm.uiState.addNewTask.button = true;
+
+
+                //ovoj if vajda, 99%, e vishok :)
+                if (vm.project.team.users.length > 0) {
+                  console.log("proektot ima useri na nego");
+                  vm.uiState.addNewTask.users = true;
+                }
               }
+            }
+            else{
+              vm.uiState.showProject = false;
+              console.log('oops msg');
             }
           }
           else{
@@ -535,12 +547,13 @@
           },
           function () {
             //error callback
-            console.log("meeeeeeeh");
+
             vm.uiState.documents.deleteErrorPanel = true;
             var button = $(".removeDocument");
             setTimeout(function(){
               button.html('<i class="fa fa-times"></i>&nbsp;Remove document');
-              button.prop('disabled', false);
+              $("#delete").removeAttr("disabled");
+              $("#delete").removeAttr("id");
             }, 300);
           }
         );
@@ -575,7 +588,8 @@
 
             setTimeout(function(){
               button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-              button.prop('disabled',false);
+              $("#delete").removeAttr("disabled");
+              $("#delete").removeAttr("id");
             }, 300);
           }
         );
@@ -584,7 +598,8 @@
         var button = $(".removeTask");
         setTimeout(function(){
           button.html('<i class="fa fa-times"></i>&nbsp; Delete task');
-          button.prop('disabled',false);
+          $("#delete").removeAttr("disabled");
+          $("#delete").removeAttr("id");
         }, 300);
       }
     }
@@ -615,8 +630,8 @@
             vm.uiState.comments.errorMsg = "Try again later!";
             var button = $(".removeComment");
             setTimeout(function(){
-              button.html('<i class="fa fa-times"></i>');
-              button.prop('disabled',false);
+              $("#delete").removeAttr("disabled");
+              $("#delete").removeAttr("id");
             }, 300);
           }
 
@@ -931,7 +946,7 @@
 
     $scope.$watch('vm.projectUpdate.currState', function(){
       console.log("DADADADADA");
-      if(vm.projectUpdate.currState.enum == 'FINISHED'){
+      if( vm.projectUpdate.currState.enum == 'FINISHED'){
         vm.uiState.update.completedOnPickerDisabled = false;
       }
       else{

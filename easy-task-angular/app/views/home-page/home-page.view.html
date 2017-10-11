@@ -120,7 +120,8 @@
           <div ng-show="vm.uiState.activeTasks.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="activeTasks" st-safe-src="vm.activeTasks" ng-show="vm.uiState.activeTasks.showTasks" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="activeTasks" st-safe-src="vm.activeTasks" ng-show="vm.uiState.activeTasks.showTasks" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -154,6 +155,7 @@
             </tr>
             </tfoot>
           </table>
+            </div>
           <div class="panel panel-info" ng-show="vm.uiState.activeTasks.showNoActiveTasksPanel">
             <div class="panel-heading text-center text-info">
               You don`t have any active tasks!
@@ -176,7 +178,8 @@
           <div ng-show="vm.uiState.urgentProjects.loadGif">
             <img src="pictures//loading.gif" style="width:20px; height:20px;">
           </div>
-          <table st-table="urgentProjects" st-safe-src="vm.urgentProjects" ng-show="vm.uiState.urgentProjects.showUrgentProjects" class="table table-bordered table-striped">
+          <div class="table-responsive">
+          <table st-table="urgentProjects" st-safe-src="vm.urgentProjects" ng-show="vm.uiState.urgentProjects.showUrgentProjects" class="table  table-responsive table-bordered table-striped">
             <thead>
             <tr>
               <!--<th st-sort="name">Name</th>-->
@@ -208,6 +211,7 @@
             </tr>
             </tfoot>
           </table>
+            </div>
           <div class="panel panel-info" ng-show="vm.uiState.urgentProjects.showNoUrgentProjectsPanel">
             <div class="panel-heading text-center text-info">
               You don`t have any urgent projects!

@@ -15,7 +15,7 @@
   function YourProjectsServiceFn($log, $resource) {
 
 
-    var yourProjectsResource = $resource('http://localhost:8000/api/user/your-projects/:id', {}, {});
+    var yourProjectsResource = $resource('https://kostancev.com:8080/api/user/your-projects/:id', {}, {});
 
     var service = {
       getProjectThatUserWorksOn: getProjectThatUserWorksOnFn

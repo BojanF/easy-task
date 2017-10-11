@@ -27,9 +27,10 @@
     vm.loadGif=true;
     getUserFn();
     vm.loadErr=false;
-
+    vm.deactivateErr=false;
 
     function getUserFn(){
+      vm.deactivateErr=false;
       $("#email_form").removeClass("has-error");
       $("#pass_form").removeClass("has-error");
       vm.passErrorMessage=false;
@@ -54,7 +55,7 @@
     }
 
     function editEmailFn(){
-
+      vm.deactivateErr=false;
      ProfileService.updateUser(vm.user).then(function(){
        vm.loadGif=true;
 
@@ -68,6 +69,7 @@
     }
 
     function changePassFn(){
+      vm.deactivateErr=false;
       if(vm.pass.oldPass1==vm.pass.oldPass2)
       {
 
@@ -103,12 +105,20 @@
     }
 
     function deactivateFn(){
-      ProfileService.deactivate(vm.user).then(function(){
-
+      vm.deactivateErr=false;
+      vm.removeUser={};
+      vm.removeUser.id=vm.user.id;
+      vm.removeUser.username=$bcrypt.hashSync(vm.user.username,$bcrypt.genSaltSync(10));
+      vm.removeUser.email=$bcrypt.hashSync(vm.user.email,$bcrypt.genSaltSync(10));
+      vm.removeUser.password=vm.user.password;
+      vm.removeUser.name=vm.user.name;
+      vm.removeUser.surname=vm.user.surname;
+      ProfileService.deactivate(vm.removeUser).then(function(){
         $cookies.remove('id');
-        $location.path("/login");
+        $cookies.remove('name');
+        $location.path("/login").search('message','deactivate');
       },function(){
-
+      vm.deactivateErr=true;
       })
     }
   }

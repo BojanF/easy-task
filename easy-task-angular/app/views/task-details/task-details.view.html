@@ -106,7 +106,8 @@
           </div>
 
           <div ng-show="vm.uiState.showDetails">
-            <table class="table table-striped">
+            <div class="table-responsive">
+            <table class="table  table-responsive table-striped">
               <tbody>
               <tr>
                 <th class="td-right-align col-md-2"> Name:</th>
@@ -150,6 +151,7 @@
               </tr>
               </tbody>
             </table>
+              </div>
           </div>
 
           <div class="panel panel-danger" ng-show="vm.uiState.showError">

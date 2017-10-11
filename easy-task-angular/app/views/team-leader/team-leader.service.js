@@ -14,8 +14,8 @@
   /* @ngInject */
   function TeamLeaderServiceFn($log, $resource) {
 
-    var getLeaderResource = $resource("http://localhost:8000/api/user/team-stats/:id", {}, {});
-    var teamRepository = $resource("http://localhost:8000/api/team/:id", {}, {});
+    var getLeaderResource = $resource("https://kostancev.com:8080/api/user/team-stats/:id", {}, {});
+    var teamRepository = $resource("https://kostancev.com:8080/api/team/:id", {}, {});
 
     var service = {
       getTeamStats: getTeamStatsFn,
